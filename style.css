@@ -462,3 +462,78 @@ main { margin-top: 18px; }
 @media (min-width: 680px) {
   .share-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+
+/* v0.4 ロードマップ */
+.roadmap-container {
+  margin-bottom: 16px;
+}
+.roadmap-hero {
+  border: 1px solid rgba(114,255,185,0.28);
+  border-radius: 24px;
+  padding: 16px;
+  background:
+    linear-gradient(135deg, rgba(114,255,185,0.12), rgba(255,211,110,0.06)),
+    rgba(255,255,255,0.065);
+  box-shadow: 0 14px 42px rgba(0,0,0,0.22);
+  margin-bottom: 12px;
+}
+.roadmap-hero h3 {
+  margin: 6px 0 8px;
+  font-size: 22px;
+  letter-spacing: -0.035em;
+}
+.roadmap-hero p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.roadmap-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 13px;
+  background: rgba(255,255,255,0.065);
+}
+.roadmap-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+.roadmap-number {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  color: #061016;
+  background: var(--accent);
+  font-size: 12px;
+  font-weight: 900;
+}
+.roadmap-body {
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 14px;
+  margin: 0 0 10px;
+}
+.roadmap-button {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(114,255,185,0.28);
+  border-radius: 14px;
+  background: rgba(114,255,185,0.09);
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 800;
+}
+@media (min-width: 680px) {
+  .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
+}

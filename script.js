@@ -152,6 +152,188 @@ const gears = [
   }
 ];
 
+
+const roadmapSteps = [
+  {
+    id: "step0",
+    icon: "🏗️",
+    num: "0",
+    title: "地下1階：入口",
+    body: "AIと仕事する前の準備。iPhone操作、道具名、共有＝鍵の概念を知る。",
+    view: "viewTour"
+  },
+  {
+    id: "step1",
+    icon: "👁️",
+    num: "1",
+    title: "見学",
+    body: "ホワイトカラーAI仕事の1日の流れを知る。",
+    view: "viewTour"
+  },
+  {
+    id: "step2",
+    icon: "🔑",
+    num: "2",
+    title: "共有",
+    body: "閲覧権限、コメント権限、編集権限、公開URL、スクショ共有、画面共有を理解する。",
+    view: "viewShare"
+  },
+  {
+    id: "step3",
+    icon: "🧰",
+    num: "3",
+    title: "装備",
+    body: "Slack、Miro、Google Slides、GitHub Pages、Google Driveなどの役割を理解する。",
+    view: "viewGear"
+  },
+  {
+    id: "step4",
+    icon: "📍",
+    num: "4",
+    title: "今日",
+    body: "iPhoneだけでできる小ミッションを実行する。",
+    view: "viewToday"
+  },
+  {
+    id: "step5",
+    icon: "📦",
+    num: "5",
+    title: "納品",
+    body: "URL、スクショ、README、説明文、共有権限、作業ログをまとめる。",
+    view: "viewDelivery"
+  },
+  {
+    id: "step6",
+    icon: "🕵️",
+    num: "6",
+    title: "監督",
+    body: "AIの出力を貼る前に、完全版か差分か、上書きか貼り足しか、どのファイルかを確認する。",
+    view: "viewPrompt"
+  },
+  {
+    id: "step7",
+    icon: "🎯",
+    num: "7",
+    title: "ゴール",
+    body: "説明できて、再現できて、納品できる人になる。",
+    view: "viewPrompt"
+  }
+];
+
+const tourSlides = [
+  {
+    time: "AM 9:00",
+    title: "朝：Slackで連絡を見る",
+    body: "チームのチャットで、今日の連絡、質問、修正依頼を確認する。メールの山ではなく、現場の無線を見る時間。",
+    tools: ["Slack"],
+    relatedGearIds: ["slack"],
+    note: "ここで覚える概念：連絡、共有、確認。"
+  },
+  {
+    time: "AM 10:30",
+    title: "午前：Miroで作戦ボードを見る",
+    body: "付箋、矢印、図で、頭の中の流れを見える場所に置く。チームで見る黒板、ひとりでも使える作戦机。",
+    tools: ["Miro"],
+    relatedGearIds: ["miro"],
+    note: "ここで覚える概念：図にする、流れを見せる。"
+  },
+  {
+    time: "PM 1:00",
+    title: "昼：仕様や説明文を見る",
+    body: "Googleドキュメントのような文書で、何を作るか、誰の何を軽くするか、確認してほしい点を読む。",
+    tools: ["Google Docs", "Google Drive"],
+    relatedGearIds: ["drive"],
+    note: "ここで覚える概念：文書、仕様、共有リンク。"
+  },
+  {
+    time: "PM 3:00",
+    title: "午後：スライドで順番に説明する",
+    body: "Google SlidesやCanvaで、問題、画面、渡すものを紙芝居にする。相手の脳に順番通り見せる時間。",
+    tools: ["Google Slides", "Canva"],
+    relatedGearIds: ["slides", "canva"],
+    note: "ここで覚える概念：プレゼン、説明、見せ方。"
+  },
+  {
+    time: "PM 5:00",
+    title: "夕方：URLで成果物を共有する",
+    body: "GitHub Pagesの公開URLやGoogle Driveのリンクを送る。ファイルを投げるより、見える場所への入口を渡す感覚。",
+    tools: ["GitHub", "Google Drive"],
+    relatedGearIds: ["github", "drive"],
+    note: "ここで覚える概念：URL、閲覧、共有。"
+  },
+  {
+    time: "PM 6:00",
+    title: "最後：納品パックにまとめる",
+    body: "公開URL、スクショ3枚、README 3行、説明文をセットにする。作品を仕事っぽく渡すための最小核。",
+    tools: ["GitHub", "Google Drive", "Slack"],
+    relatedGearIds: ["github", "drive", "slack"],
+    note: "ここで覚える概念：納品、確認、次の修正。"
+  }
+];
+
+
+const shareModes = [
+  {
+    id: "private",
+    icon: "🔒",
+    title: "自分だけ",
+    body: "相手は見られない。リンクを知っていても、権限がなければ部屋の外で止まる。",
+    example: "Google DriveやDocsで『制限付き』になっている状態。まず自分だけで作る時の鍵。",
+    demoUrl: "https://example.com/freelance-gear/private"
+  },
+  {
+    id: "view",
+    icon: "👀",
+    title: "閲覧権限",
+    body: "相手は見るだけ。中身を勝手に直せない。確認してほしい時のいちばん基本の共有。",
+    example: "『これ見ておいてください』の鍵。納品前の確認、資料の共有、スライドの確認に使う。",
+    demoUrl: "https://example.com/freelance-gear/view"
+  },
+  {
+    id: "comment",
+    icon: "💬",
+    title: "コメント権限",
+    body: "本文は直せないけど、付箋やコメントを残せる。相手の意見をもらうための鍵。",
+    example: "『ここだけ確認してください』『修正点をコメントください』の時に使う。",
+    demoUrl: "https://example.com/freelance-gear/comment"
+  },
+  {
+    id: "edit",
+    icon: "✏️",
+    title: "編集権限",
+    body: "相手も中身を直接編集できる。共同作業向けだが、渡す相手は選ぶ。",
+    example: "チームで同じGoogleスライドやDocsを直す時の鍵。クライアントに渡す時は慎重に。",
+    demoUrl: "https://example.com/freelance-gear/edit"
+  },
+  {
+    id: "screen",
+    icon: "📺",
+    title: "画面共有",
+    body: "ファイルを渡すのではなく、今見ている画面を相手に映す。会議中の実況中継。",
+    example: "Zoom、Google Meet、Teamsで『今この画面です』と見せながら説明する。",
+    demoUrl: "https://example.com/freelance-gear/screen"
+  },
+  {
+    id: "public",
+    icon: "🌐",
+    title: "公開URL",
+    body: "URLを開けば見られる状態。GitHub PagesのアプリURLはこの感覚に近い。",
+    example: "『このURLで動きます』と渡せる。作品が仕事の入口になる瞬間。",
+    demoUrl: "https://example.com/freelance-gear/public"
+  },
+  {
+    id: "screenshot",
+    icon: "📸",
+    title: "スクショ共有",
+    body: "画面を画像として送る。速いが、相手はクリックも編集もできない。",
+    example: "iPhoneで今の画面を撮って『ここです』と伝える時の最短共有。",
+    demoUrl: "https://example.com/freelance-gear/screenshot"
+  }
+];
+
+let currentTourIndex = 0;
+
+
 const deliveryItems = [
   { id: "url", title: "公開URL", text: "GitHub Pagesや試作URL。まず相手が開けること。" },
   { id: "screens", title: "スクショ3枚", text: "入口、操作中、結果画面。スマホ確認が強い。" },
@@ -229,6 +411,100 @@ function renderProgress() {
   document.getElementById("progressText").textContent = `${done}/${max} 装備ポイント`;
   document.getElementById("progressBar").style.width = `${pct}%`;
 }
+
+
+
+function renderRoadmap() {
+  const container = document.getElementById("roadmapContainer");
+  if (!container) return;
+  container.innerHTML = `
+    <section class="roadmap-hero">
+      <p class="eyebrow">Roadmap</p>
+      <h3>フリーランスAI仕事ロードマップ</h3>
+      <p>このアプリは、道具名の暗記ではなく、見学、共有、装備、今日の一手、納品、監督の順で「仕事の型」を装備する訓練場です。</p>
+    </section>
+    <div class="roadmap-grid">
+      ${roadmapSteps.map(step => `
+        <article class="roadmap-card">
+          <div class="roadmap-title"><span class="roadmap-number">${step.num}</span><span>${step.icon} ${step.title}</span></div>
+          <p class="roadmap-body">${step.body}</p>
+          <button class="roadmap-button" type="button" data-roadmap-goto="${step.view}">対応タブを見る</button>
+        </article>
+      `).join("")}
+    </div>
+  `;
+  container.querySelectorAll("[data-roadmap-goto]").forEach(button => {
+    button.addEventListener("click", () => switchView(button.dataset.roadmapGoto));
+  });
+}
+
+function renderTour() {
+  renderRoadmap();
+  const slide = tourSlides[currentTourIndex];
+  const box = document.getElementById("tourSlide");
+  if (!box) return;
+  document.getElementById("tourCounter").textContent = `${currentTourIndex + 1}/${tourSlides.length}`;
+  box.innerHTML = `
+    <span class="tour-time">${slide.time}</span>
+    <h3>${slide.title}</h3>
+    <p>${slide.body}</p>
+    <div class="tour-tools">
+      ${slide.tools.map(tool => `<span class="pill">${tool}</span>`).join("")}
+    </div>
+    <p class="tour-note">${slide.note}</p>
+  `;
+  document.getElementById("tourPrevBtn").disabled = currentTourIndex === 0;
+  document.getElementById("tourNextBtn").textContent = currentTourIndex === tourSlides.length - 1 ? "最初へ" : "次へ";
+}
+
+
+function renderShare() {
+  const container = document.getElementById("shareContainer");
+  if (!container) return;
+  container.innerHTML = shareModes.map(mode => `
+    <article class="share-card">
+      <div class="share-card-head">
+        <span class="share-icon">${mode.icon}</span>
+        <div>
+          <p class="eyebrow">Share key</p>
+          <h3 class="share-title">${mode.title}</h3>
+        </div>
+      </div>
+      <p class="share-body">${mode.body}</p>
+      <p class="share-example">${mode.example}</p>
+      <div class="share-actions">
+        <button class="share-copy-button" type="button" data-share-copy="${mode.demoUrl}">🔗 ダミーURLをコピー</button>
+        <button class="share-copy-button secondary" type="button" data-share-ai="${mode.id}">🤖 AIに聞く文をコピー</button>
+      </div>
+    </article>
+  `).join("");
+
+  container.querySelectorAll("[data-share-copy]").forEach(button => {
+    button.addEventListener("click", () => copyText(button.dataset.shareCopy));
+  });
+
+  container.querySelectorAll("[data-share-ai]").forEach(button => {
+    const mode = shareModes.find(item => item.id === button.dataset.shareAi);
+    button.addEventListener("click", () => copyText(`共有の「${mode.title}」について、初心者向けに、何ができるか、何ができないか、仕事ではいつ使うか、iPhoneだけでどう練習するかを短く分けてください。`));
+  });
+}
+
+function switchView(viewId) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === viewId));
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === viewId));
+  if (viewId === "viewShare") renderShare();
+}
+
+function goToTourRelatedGear() {
+  const slide = tourSlides[currentTourIndex];
+  const firstGearId = slide.relatedGearIds.find(id => gears.some(g => g.id === id));
+  switchView("viewGear");
+  if (firstGearId) {
+    const gear = gears.find(g => g.id === firstGearId);
+    showToast(`${gear.name}の装備へ移動`);
+  }
+}
+
 
 function renderFilters() {
   const row = document.getElementById("filterRow");
@@ -427,16 +703,21 @@ function showToast(message) {
 
 function bindTabs() {
   document.querySelectorAll(".tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      tab.classList.add("active");
-      document.getElementById(tab.dataset.view).classList.add("active");
-    });
+    tab.addEventListener("click", () => switchView(tab.dataset.view));
   });
 }
 
 function bindButtons() {
+  document.getElementById("tourPrevBtn").addEventListener("click", () => {
+    currentTourIndex = Math.max(0, currentTourIndex - 1);
+    renderTour();
+  });
+  document.getElementById("tourNextBtn").addEventListener("click", () => {
+    currentTourIndex = currentTourIndex >= tourSlides.length - 1 ? 0 : currentTourIndex + 1;
+    renderTour();
+  });
+  document.getElementById("tourGearBtn").addEventListener("click", goToTourRelatedGear);
+
   document.getElementById("resetBtn").addEventListener("click", () => {
     state = { gear: {}, delivery: {}, missionsDone: 0 };
     saveState();
@@ -459,6 +740,8 @@ function bindButtons() {
 
 function init() {
   renderProgress();
+  renderTour();
+  renderShare();
   renderFilters();
   renderGear();
   renderConditions();

@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v0.2</title>
+  <title>フリーランス装備庫 v0.4</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v0.2</span>
+        <span class="badge">v0.4</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>覚える前に、まず見学する。ホワイトカラーAI仕事の流れをiPhoneでのぞき見して、必要な装備を体感する学習アプリ。</p>
+      <p>覚える前に、まず見学する。ロードマップで現在地を見て、共有を体感し、AI出力を監督して、iPhoneだけで仕事の型を装備する学習アプリ。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -27,6 +27,7 @@
     <main>
 
       <section id="viewTour" class="view active" aria-labelledby="tourTitle">
+        <div id="roadmapContainer" class="roadmap-container" aria-label="フリーランスAI仕事ロードマップ"></div>
         <div class="section-heading">
           <div>
             <p class="eyebrow">Work tour</p>
@@ -119,35 +120,8 @@
         </div>
       </section>
 
-      <section id="viewPrompt" class="view" aria-labelledby="promptTitle">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Prompt console</p>
-            <h2 id="promptTitle">AIに聞く文</h2>
-          </div>
-        </div>
-        <div class="prompt-stack">
-          <article class="prompt-card">
-            <h3>明智君へ</h3>
-            <p>構造化、現在地、次の一手を出す。</p>
-            <button class="copy-prompt mini-button" data-prompt="akechikun" type="button">コピー</button>
-          </article>
-          <article class="prompt-card">
-            <h3>Geminiへ</h3>
-            <p>外向き説明、スライド文、初見ユーザー向けに整える。</p>
-            <button class="copy-prompt mini-button" data-prompt="gemini" type="button">コピー</button>
-          </article>
-          <article class="prompt-card">
-            <h3>Copilotへ</h3>
-            <p>実装相談、ファイル構成、UIフロー、バグ確認に使う。</p>
-            <button class="copy-prompt mini-button" data-prompt="copilot" type="button">コピー</button>
-          </article>
-          <article class="prompt-card">
-            <h3>Claudeへ</h3>
-            <p>長文仕様の圧縮、コード監査、修正案の整理。</p>
-            <button class="copy-prompt mini-button" data-prompt="claude" type="button">コピー</button>
-          </article>
-        </div>
+      <section id="viewPrompt" class="view" aria-labelledby="directorTitle">
+        <div id="directorContainer"></div>
       </section>
     </main>
 
@@ -157,7 +131,7 @@
       <button class="tab" data-view="viewGear" type="button">🧰<span>装備</span></button>
       <button class="tab" data-view="viewToday" type="button">📍<span>今日</span></button>
       <button class="tab" data-view="viewDelivery" type="button">📦<span>納品</span></button>
-      <button class="tab" data-view="viewPrompt" type="button">🤖<span>AI</span></button>
+      <button class="tab" data-view="viewPrompt" type="button">🕵️<span>監督</span></button>
     </nav>
   </div>
 
