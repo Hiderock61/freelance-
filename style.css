@@ -217,7 +217,7 @@ main { margin-top: 18px; }
   transform: translateX(-50%);
   width: min(560px, calc(100% - 24px));
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 6px;
   padding: 8px;
   border: 1px solid var(--line);
@@ -299,4 +299,166 @@ main { margin-top: 18px; }
 @media (min-width: 680px) {
   .gear-grid { grid-template-columns: repeat(2, 1fr); }
   .condition-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+
+/* v0.2 見学モード */
+.tour-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: 16px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.2);
+}
+.tour-slide {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 18px;
+  background:
+    linear-gradient(135deg, rgba(114,255,185,0.12), rgba(255,211,110,0.06)),
+    rgba(255,255,255,0.06);
+  min-height: 285px;
+}
+.tour-slide:after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -70px;
+  top: -60px;
+  border-radius: 999px;
+  background: rgba(255,211,110,0.14);
+  filter: blur(4px);
+}
+.tour-time {
+  display: inline-flex;
+  border: 1px solid rgba(114,255,185,0.42);
+  border-radius: 999px;
+  padding: 5px 10px;
+  color: var(--accent);
+  background: rgba(114,255,185,0.08);
+  font-size: 12px;
+  font-weight: 800;
+  position: relative;
+  z-index: 1;
+}
+.tour-slide h3 {
+  margin: 14px 0 8px;
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 1;
+}
+.tour-slide p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+  position: relative;
+  z-index: 1;
+}
+.tour-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 16px;
+  position: relative;
+  z-index: 1;
+}
+.tour-note {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  color: var(--accent2) !important;
+  font-weight: 700;
+}
+.tour-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.tour-actions .mini-button {
+  grid-column: 1 / -1;
+  min-height: 44px;
+}
+.tour-actions button { min-height: 44px; }
+.tour-actions button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+
+/* v0.2 第2段階：共有タブ */
+.share-intro { margin-bottom: 12px; }
+.share-grid {
+  display: grid;
+  gap: 12px;
+}
+.share-card {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 16px;
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+.share-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.share-icon {
+  width: 42px;
+  height: 42px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(114,255,185,0.10);
+  border: 1px solid rgba(114,255,185,0.25);
+  font-size: 24px;
+}
+.share-title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.25;
+}
+.share-body {
+  color: var(--muted);
+  line-height: 1.72;
+  margin: 0 0 10px;
+}
+.share-example {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 10px;
+  color: var(--accent2);
+  line-height: 1.65;
+  font-weight: 700;
+}
+.share-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+.share-copy-button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 15px;
+  padding: 11px 12px;
+  color: #071018;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  font-weight: 900;
+  cursor: pointer;
+}
+.share-copy-button.secondary {
+  color: var(--text);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--line);
+}
+@media (min-width: 680px) {
+  .share-grid { grid-template-columns: repeat(2, 1fr); }
 }

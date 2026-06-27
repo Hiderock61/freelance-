@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v0.1</title>
+  <title>フリーランス装備庫 v0.2</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v0.1</span>
+        <span class="badge">v0.2</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>覚える前に、装備する。Slack、Miro、GitHub、スライド、Figma、AI制作班をタップで身体に入れる学習アプリ。</p>
+      <p>覚える前に、まず見学する。ホワイトカラーAI仕事の流れをiPhoneでのぞき見して、必要な装備を体感する学習アプリ。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -25,7 +25,41 @@
     </header>
 
     <main>
-      <section id="viewGear" class="view active" aria-labelledby="gearTitle">
+
+      <section id="viewTour" class="view active" aria-labelledby="tourTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Work tour</p>
+            <h2 id="tourTitle">見学モード</h2>
+          </div>
+          <span id="tourCounter" class="badge soft">1/6</span>
+        </div>
+        <div class="tour-panel">
+          <p class="panel-lead">まずは道具名を覚えない。ホワイトカラーAI仕事の1日を、6枚の紙芝居で見る。</p>
+          <div id="tourSlide" class="tour-slide" aria-live="polite"></div>
+          <div class="tour-actions">
+            <button id="tourPrevBtn" class="ghost-button" type="button">前へ</button>
+            <button id="tourNextBtn" class="primary-button" type="button">次へ</button>
+            <button id="tourGearBtn" class="mini-button" type="button">関連装備を見る</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="viewShare" class="view" aria-labelledby="shareTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Share simulator</p>
+            <h2 id="shareTitle">共有タブ</h2>
+          </div>
+          <span class="badge soft">鍵と権限</span>
+        </div>
+        <div class="share-intro panel">
+          <p class="panel-lead">共有は、ファイルを投げることだけではない。ネット上の部屋へ入る「鍵」を相手に渡すこと。見るだけ、コメント、編集、画面共有、公開URLを押して体感する。</p>
+        </div>
+        <div id="shareContainer" class="share-grid"></div>
+      </section>
+
+      <section id="viewGear" class="view" aria-labelledby="gearTitle">
         <div class="section-heading">
           <div>
             <p class="eyebrow">Gear cards</p>
@@ -118,7 +152,9 @@
     </main>
 
     <nav class="tabbar" aria-label="画面切り替え">
-      <button class="tab active" data-view="viewGear" type="button">🧰<span>装備</span></button>
+      <button class="tab active" data-view="viewTour" type="button">👁️<span>見学</span></button>
+      <button class="tab" data-view="viewShare" type="button">🔑<span>共有</span></button>
+      <button class="tab" data-view="viewGear" type="button">🧰<span>装備</span></button>
       <button class="tab" data-view="viewToday" type="button">📍<span>今日</span></button>
       <button class="tab" data-view="viewDelivery" type="button">📦<span>納品</span></button>
       <button class="tab" data-view="viewPrompt" type="button">🤖<span>AI</span></button>
