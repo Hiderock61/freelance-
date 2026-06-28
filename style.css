@@ -558,3 +558,11 @@ main { margin-top: 18px; }
 .director-tip { color: var(--accent); font-weight: 800; line-height: 1.55; }
 .director-actions { margin-top: 12px; }
 @media (min-width: 760px) { .director-grid { grid-template-columns: repeat(2, 1fr); } .director-card.warning { grid-column: 1 / -1; } }
+
+
+/* v0.4.2: ロードマップ内の現在地ボタン */
+.roadmap-button.is-current,
+.roadmap-button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}

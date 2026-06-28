@@ -160,7 +160,9 @@ const roadmapSteps = [
     num: "0",
     title: "地下1階：入口",
     body: "AIと仕事する前の準備。iPhone操作、道具名、共有＝鍵の概念を知る。",
-    view: "viewTour"
+    view: "viewTour",
+    actionType: "current",
+    actionLabel: "ここが入口"
   },
   {
     id: "step1",
@@ -168,7 +170,10 @@ const roadmapSteps = [
     num: "1",
     title: "見学",
     body: "ホワイトカラーAI仕事の1日の流れを知る。",
-    view: "viewTour"
+    view: "viewTour",
+    actionType: "scroll",
+    scrollTarget: "tourPanel",
+    actionLabel: "見学スライドへ進む"
   },
   {
     id: "step2",
@@ -424,17 +429,28 @@ function renderRoadmap() {
       <p>このアプリは、道具名の暗記ではなく、見学、共有、装備、今日の一手、納品、監督の順で「仕事の型」を装備する訓練場です。</p>
     </section>
     <div class="roadmap-grid">
-      ${roadmapSteps.map(step => `
-        <article class="roadmap-card">
-          <div class="roadmap-title"><span class="roadmap-number">${step.num}</span><span>${step.icon} ${step.title}</span></div>
-          <p class="roadmap-body">${step.body}</p>
-          <button class="roadmap-button" type="button" data-roadmap-goto="${step.view}">対応タブを見る</button>
-        </article>
-      `).join("")}
+      ${roadmapSteps.map(step => {
+        const label = step.actionLabel || "対応タブを見る";
+        const actionButton = step.actionType === "current"
+          ? `<button class="roadmap-button is-current" type="button" disabled>${label}</button>`
+          : step.actionType === "scroll"
+            ? `<button class="roadmap-button" type="button" data-roadmap-scroll="${step.scrollTarget || "tourPanel"}">${label}</button>`
+            : `<button class="roadmap-button" type="button" data-roadmap-goto="${step.view}">${label}</button>`;
+        return `
+          <article class="roadmap-card">
+            <div class="roadmap-title"><span class="roadmap-number">${step.num}</span><span>${step.icon} ${step.title}</span></div>
+            <p class="roadmap-body">${step.body}</p>
+            ${actionButton}
+          </article>
+        `;
+      }).join("")}
     </div>
   `;
   container.querySelectorAll("[data-roadmap-goto]").forEach(button => {
     button.addEventListener("click", () => goToRoadmapStep(button.dataset.roadmapGoto));
+  });
+  container.querySelectorAll("[data-roadmap-scroll]").forEach(button => {
+    button.addEventListener("click", () => goToRoadmapScroll(button.dataset.roadmapScroll));
   });
 }
 
@@ -553,6 +569,16 @@ function renderDirector() {
   container.querySelectorAll("[data-director-copy]").forEach(button => {
     button.addEventListener("click", () => copyText(button.dataset.directorCopy));
   });
+}
+
+function goToRoadmapScroll(targetId) {
+  const target = document.getElementById(targetId) || document.querySelector(`.${targetId}`);
+  if (!target) {
+    showToast("見学スライドへ進みます");
+    return;
+  }
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+  showToast("見学スライドへ移動");
 }
 
 function goToRoadmapStep(viewId) {
