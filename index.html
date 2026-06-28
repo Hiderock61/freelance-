@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v0.4.2</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>フリーランス装備庫 v0.5</title>
+  <link rel="stylesheet" href="style.css?v=050" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v0.4.2</span>
+        <span class="badge">v0.5</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>覚える前に、まず見学する。ロードマップで現在地を見て、共有を体感し、AI出力を監督して、iPhoneだけで仕事の型を装備する学習アプリ。</p>
+      <p>覚える前に、まず見学する。装備カードから操作紙芝居を開き、SlackやVS Codeなどの「どこを押して何を渡すか」をiPhoneだけで体感する学習アプリ。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -70,6 +70,37 @@
         </div>
         <div id="filterRow" class="filter-row" aria-label="カテゴリ絞り込み"></div>
         <div id="gearGrid" class="gear-grid"></div>
+      </section>
+
+
+
+      <section id="viewStory" class="view" aria-labelledby="storyAppName">
+        <div class="section-heading story-section-heading">
+          <div>
+            <p class="eyebrow">Operation story</p>
+            <h2 id="storyAppName">操作紙芝居</h2>
+          </div>
+          <span id="storyCounter" class="badge soft">1/1</span>
+        </div>
+        <div class="story-frame">
+          <div class="story-header">
+            <div class="story-app-label" id="storyAppLabel"></div>
+            <h3 class="story-step-title" id="storyStepTitle"></h3>
+            <p class="story-step-body" id="storyStepBody"></p>
+          </div>
+
+          <div class="story-mock" id="storyMock" aria-live="polite"></div>
+
+          <div class="story-footer">
+            <div class="story-learn" id="storyLearn"></div>
+            <div class="story-finish" id="storyFinish"></div>
+            <div class="story-actions">
+              <button id="storyPrev" class="ghost-button" type="button">前へ</button>
+              <button id="storyNext" class="primary-button" type="button">次へ</button>
+              <button id="storyBack" class="mini-button" type="button">装備に戻る</button>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="viewToday" class="view" aria-labelledby="todayTitle">
@@ -144,6 +175,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=050"></script>
 </body>
 </html>

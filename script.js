@@ -153,6 +153,107 @@ const gears = [
 ];
 
 
+// ▼ v0.5 操作紙芝居データ
+const operationStories = {
+  slack: {
+    appName: "Slack",
+    label: "仕事場の建物",
+    purpose: "仕事場の建物に入り、話題ごとの部屋で会話し、自分宛ての呼びかけに返事し、URLやスクショを渡すための道具。",
+    firstGoal: "自分宛ての呼びかけを見て、短く返事し、URLやスクショを貼れるようになる。",
+    steps: [
+      { title: "仕事場に入る", body: "Slackを開くと、左に部屋一覧、右に掲示板が見える。まずは建物の構造を知る。", mockType: "slack", focus: "sidebar", mockItems: ["仕事場の建物（ワークスペース）", "部屋リスト", "掲示板エリア"] },
+      { title: "話題ごとの部屋を見る", body: "仕事の話題ごとに部屋が分かれている。部屋（チャンネル）を選ぶだけで、見る会話が変わる。", mockType: "slack", focus: "channels", mockItems: ["部屋（チャンネル）", "#連絡", "#GitHub", "#納品"] },
+      { title: "自分宛ての呼びかけを見る", body: "自分の名前が呼ばれると、名前呼び出し（メンション）がつく。光っている投稿が『あなた宛て』。", mockType: "slack", focus: "mention", mockItems: ["@あなた", "名前呼び出し（メンション）"] },
+      { title: "確認しましたと返す", body: "名前呼び出しを見たら、『確認しました！』と短く返すだけで仕事が進む。長文でなくていい。", mockType: "slack", focus: "reply", mockItems: ["入力欄", "短い返事"] },
+      { title: "URLやスクショを渡す", body: "GitHub PagesのURLやスクショを貼ると、相手がすぐ確認できる。", mockType: "slack", focus: "attachment", mockItems: ["URLカード", "スクショカード"] }
+    ],
+    finish: "自分宛ての呼びかけに返事し、URLやスクショを貼れたら1回使ったことになる。"
+  },
+  miro: {
+    appName: "Miro",
+    label: "作戦ボード",
+    purpose: "白い作戦ボードに付箋を置き、流れを図で説明し、共有リンクで渡すための道具。",
+    firstGoal: "付箋を置いて矢印でつなぎ、共有リンクを作れるようになる。",
+    steps: [
+      { title: "白い作戦ボードを開く", body: "まっ白な作戦机（ボード）が広がる。ここに考えを置いていく。", mockType: "miro", focus: "board", mockItems: ["白い作戦机（ボード）", "ツールバー"] },
+      { title: "メモを置く", body: "メモ（付箋）を置いて、作業の名前を書く。まず1枚だけでいい。", mockType: "miro", focus: "sticky", mockItems: ["メモ（付箋）", "付箋テキスト"] },
+      { title: "矢印で流れをつなぐ", body: "『次にやること』を矢印でつなぐと、頭の中の流れが見える。", mockType: "miro", focus: "arrow", mockItems: ["付箋A", "矢印", "付箋B"] },
+      { title: "コメントを書く", body: "気づいたことを付箋の横に書く。まだ決定ではなく、仮置きでいい。", mockType: "miro", focus: "comment", mockItems: ["吹き出し", "コメントテキスト"] },
+      { title: "共有リンクを作る", body: "作戦ボードの鍵を作って、相手に渡す。", mockType: "miro", focus: "share", mockItems: ["共有ボタン", "URL"] }
+    ],
+    finish: "付箋を置いて矢印でつなぎ、共有リンクを作れたら1回使ったことになる。"
+  },
+  vscode: {
+    appName: "VS Code",
+    label: "作業机",
+    purpose: "フォルダを開き、HTML/CSS/JSを編集し、保存してGitHubに渡すための道具。",
+    firstGoal: "index.html を開いて1行直し、保存できるようになる。",
+    steps: [
+      { title: "フォルダを開く", body: "左に index.html / style.css / script.js が並ぶ。作業机の引き出しを開いた状態。", mockType: "vscode", focus: "files", mockItems: ["作業机の引き出し（フォルダ）", "ファイル一覧"] },
+      { title: "index.html を開く", body: "右にコードが表示される。紙を広げた状態。", mockType: "vscode", focus: "editor", mockItems: ["コード枠", "行番号"] },
+      { title: "タイトルを1行だけ直す", body: "h1の中の文字を変えるだけでOK。最初から全部読まない。", mockType: "vscode", focus: "edit-line", mockItems: ["<h1>タイトル</h1>"] },
+      { title: "保存する", body: "保存すると変更が確定する。", mockType: "vscode", focus: "save", mockItems: ["保存しました"] },
+      { title: "GitHubへ反映する前に監督チェック", body: "上書きか差分か、壊れないか確認する。", mockType: "vscode", focus: "director", mockItems: ["監督チェックボタン"] }
+    ],
+    finish: "index.html を開いて1行直し、保存できたら1回使ったことになる。"
+  },
+  slides: {
+    appName: "Google Slides",
+    label: "説明紙芝居",
+    purpose: "タイトル・スクショ・説明文を並べて、共有リンクで渡すための道具。",
+    firstGoal: "3枚の紙芝居を作って共有リンクをコピーできるようになる。",
+    steps: [
+      { title: "新しいスライドを作る", body: "白い紙が1枚出てくる。これが紙芝居の1枚（スライド）。", mockType: "slides", focus: "new-slide", mockItems: ["紙芝居の1枚（スライド）", "タイトル枠"] },
+      { title: "1枚目にタイトルを書く", body: "『今日作ったもの』など短い言葉を書く。", mockType: "slides", focus: "title", mockItems: ["大きな文字", "タイトル"] },
+      { title: "2枚目にスクショを置く", body: "見せたい画面を貼る。文章だけより伝わりやすい。", mockType: "slides", focus: "image", mockItems: ["スクショ枠", "画像枠"] },
+      { title: "3枚目に使い方を書く", body: "『こう使います』を短く書く。", mockType: "slides", focus: "bullet", mockItems: ["箇条書き"] },
+      { title: "共有リンクをコピーする", body: "紙芝居の鍵を作って渡す。", mockType: "slides", focus: "share", mockItems: ["共有ボタン", "URL"] }
+    ],
+    finish: "3枚の紙芝居を作って共有リンクをコピーできたら1回使ったことになる。"
+  },
+  figma: {
+    appName: "Figma",
+    label: "画面模型",
+    purpose: "iPhoneサイズの画面模型を作り、コメントを書き、共有リンクで渡すための道具。",
+    firstGoal: "iPhone枠を作り、ボタンを置き、コメントを書き、共有リンクを作れるようになる。",
+    steps: [
+      { title: "iPhoneサイズの四角を置く", body: "画面の枠（フレーム）を作る。ここがアプリ画面の模型になる。", mockType: "figma", focus: "frame", mockItems: ["画面の枠（フレーム）"] },
+      { title: "タイトルを書く", body: "上に大きな文字を置く。", mockType: "figma", focus: "title", mockItems: ["太字テキスト"] },
+      { title: "ボタンを置く", body: "四角い部品を置いて『押す場所』を作る。", mockType: "figma", focus: "button", mockItems: ["押す場所（ボタン）"] },
+      { title: "コメントを書く", body: "気づいたことを吹き出しで書く。", mockType: "figma", focus: "comment", mockItems: ["吹き出し（コメント）"] },
+      { title: "画面を2枚並べる", body: "『押したらこうなる』を並べて見せる。", mockType: "figma", focus: "prototype", mockItems: ["フレームA", "フレームB", "画面のつながり（プロトタイプ）"] },
+      { title: "共有リンクを作る", body: "模型の鍵を作って渡す。", mockType: "figma", focus: "share", mockItems: ["共有ボタン", "URL"] }
+    ],
+    finish: "iPhone枠を作り、ボタンを置き、コメントを書き、共有リンクを作れたら1回使ったことになる。"
+  },
+  canva: {
+    appName: "Canva",
+    label: "仕上げの一枚",
+    purpose: "テンプレを選び、タイトルとスクショを置き、説明文を入れて、画像として渡すための道具。",
+    firstGoal: "テンプレを選び、タイトルとスクショと説明文を置き、画像として保存できるようになる。",
+    steps: [
+      { title: "テンプレートを選ぶ", body: "すでに整ったひな形（テンプレ）を選ぶだけでOK。", mockType: "canva", focus: "template", mockItems: ["ひな形（テンプレ）"] },
+      { title: "タイトルを書く", body: "上に短いタイトルを置く。", mockType: "canva", focus: "title", mockItems: ["大きな文字"] },
+      { title: "スクショを置く", body: "見せたい画面を貼る。", mockType: "canva", focus: "image", mockItems: ["スクショ枠", "画像枠"] },
+      { title: "一言説明を入れる", body: "『こういうものです』を短く書く。", mockType: "canva", focus: "caption", mockItems: ["説明テキスト"] },
+      { title: "画像として保存する", body: "完成した1枚を画像として渡す。", mockType: "canva", focus: "download", mockItems: ["ダウンロードボタン"] }
+    ],
+    finish: "テンプレを選び、タイトルとスクショと説明文を置き、画像として保存できたら1回使ったことになる。"
+  }
+};
+
+const storyKeyMap = {
+  slack: "slack",
+  miro: "miro",
+  vscode: "vscode",
+  "vs-code": "vscode",
+  slides: "slides",
+  "google-slides": "slides",
+  figma: "figma",
+  canva: "canva"
+};
+
+
 const roadmapSteps = [
   {
     id: "step0",
@@ -162,7 +263,7 @@ const roadmapSteps = [
     body: "AIと仕事する前の準備。iPhone操作、道具名、共有＝鍵の概念を知る。",
     view: "viewTour",
     actionType: "current",
-    actionLabel: "ここが入口"
+    actionLabel: "現在地：入口"
   },
   {
     id: "step1",
@@ -337,6 +438,8 @@ const shareModes = [
 ];
 
 let currentTourIndex = 0;
+let currentStoryKey = null;
+let currentStoryIndex = 0;
 
 
 const deliveryItems = [
@@ -571,6 +674,190 @@ function renderDirector() {
   });
 }
 
+
+function openStory(key) {
+  if (!operationStories[key]) {
+    showToast("この装備の紙芝居はまだ準備中");
+    return;
+  }
+  currentStoryKey = key;
+  currentStoryIndex = 0;
+  switchView("viewStory");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderStory() {
+  if (!currentStoryKey || !operationStories[currentStoryKey]) return;
+  const story = operationStories[currentStoryKey];
+  const step = story.steps[currentStoryIndex];
+  if (!step) return;
+
+  const appNameEl = document.getElementById("storyAppName");
+  const appLabelEl = document.getElementById("storyAppLabel");
+  const stepTitleEl = document.getElementById("storyStepTitle");
+  const stepBodyEl = document.getElementById("storyStepBody");
+  const mockEl = document.getElementById("storyMock");
+  const learnEl = document.getElementById("storyLearn");
+  const finishEl = document.getElementById("storyFinish");
+  const counterEl = document.getElementById("storyCounter");
+  const prevEl = document.getElementById("storyPrev");
+  const nextEl = document.getElementById("storyNext");
+
+  if (!appNameEl || !mockEl) return;
+
+  appNameEl.textContent = `${story.appName}`;
+  appLabelEl.textContent = `${story.label}｜${story.purpose}`;
+  stepTitleEl.textContent = step.title;
+  stepBodyEl.textContent = step.body;
+  mockEl.innerHTML = renderMock(step);
+  learnEl.innerHTML = `<strong>今ここで覚えること：</strong>${story.firstGoal}<div class="mock-focus-chips">${step.mockItems.map(item => `<span>${item}</span>`).join("")}</div>`;
+  finishEl.innerHTML = `<strong>到達点：</strong>${story.finish}`;
+  counterEl.textContent = `${currentStoryIndex + 1}/${story.steps.length}`;
+  prevEl.disabled = currentStoryIndex === 0;
+  nextEl.textContent = currentStoryIndex === story.steps.length - 1 ? "最初へ" : "次へ";
+}
+
+function renderMock(step) {
+  const focus = step.focus;
+  const chips = `<div class="mock-focus-chips">${step.mockItems.map(item => `<span>${item}</span>`).join("")}</div>`;
+
+  if (step.mockType === "slack") {
+    return `
+      <div class="mock-slack">
+        <div class="mock-slack-sidebar">
+          <div class="mock-slack-workspace ${focus === "sidebar" ? "is-focus" : ""}">🏢 AIアプリ制作所</div>
+          <div class="mock-slack-room ${focus === "channels" ? "is-focus" : ""}"># 連絡（部屋）</div>
+          <div class="mock-slack-room ${focus === "channels" ? "is-focus" : ""}"># GitHub（部屋）</div>
+          <div class="mock-slack-room ${focus === "channels" || focus === "mention" ? "is-focus" : ""}"># 納品（あなた宛て）</div>
+        </div>
+        <div class="mock-slack-main">
+          <div class="mock-slack-post ${focus === "mention" ? "is-focus" : ""}">👩 @あなた README確認お願いします。</div>
+          <div class="mock-slack-post ${focus === "reply" ? "is-focus" : ""}">😲 確認しました！スクショ3枚も撮ります。</div>
+          <div class="mock-slack-post ${focus === "attachment" ? "is-focus" : ""}">🌐 公開URLを貼る<div class="mock-slack-url">https://example.github.io/app/</div></div>
+          <div class="mock-input">ここに短く返事を書く</div>
+        </div>
+      </div>
+      ${chips}
+      <p class="mock-caption">Slackは、仕事場の建物の中で「どの部屋に何を書くか」を見る道具。</p>
+    `;
+  }
+
+  if (step.mockType === "miro") {
+    return `
+      <div class="mock-miro-board">
+        <div class="mock-miro-sticky ${focus === "sticky" || focus === "arrow" ? "is-focus" : ""}">困りごと<br>Slackがわからない</div>
+        <div class="mock-miro-arrow ${focus === "arrow" ? "is-focus" : ""}">→</div>
+        <div class="mock-miro-sticky ${focus === "arrow" ? "is-focus" : ""}">解決<br>操作紙芝居</div>
+        <div class="mock-miro-comment ${focus === "comment" ? "is-focus" : ""}">💬 まず模型で見る</div>
+        <div class="mock-share-pill ${focus === "share" ? "is-focus" : ""}">🔗 共有リンク</div>
+      </div>
+      ${chips}
+      <p class="mock-caption">Miroは、頭の中の順番を白い作戦机に置く道具。</p>
+    `;
+  }
+
+  if (step.mockType === "vscode") {
+    return `
+      <div class="mock-vscode">
+        <div class="mock-vscode-files">
+          <div class="mock-file ${focus === "files" || focus === "editor" || focus === "edit-line" ? "is-focus" : ""}">index.html</div>
+          <div class="mock-file">style.css</div>
+          <div class="mock-file">script.js</div>
+          <div class="mock-file">README.md</div>
+        </div>
+        <div class="mock-vscode-editor">
+          <div class="mock-code-line">&lt;body&gt;</div>
+          <div class="mock-code-line ${focus === "edit-line" ? "is-focus" : ""}">&lt;h1&gt;フリーランス装備庫&lt;/h1&gt;</div>
+          <div class="mock-code-line">&lt;/body&gt;</div>
+          <div class="mock-save ${focus === "save" ? "is-focus" : ""}">✓ 保存しました</div>
+          <div class="mock-save ${focus === "director" ? "is-focus" : ""}">🕵️ 貼る前に監督チェック</div>
+        </div>
+      </div>
+      ${chips}
+      <p class="mock-caption">VS Codeは、ファイルを開いて1行直すための作業机。</p>
+    `;
+  }
+
+  if (step.mockType === "slides") {
+    return `
+      <div class="mock-slides-layout">
+        <div class="mock-slide-thumbs">
+          <div class="mock-slide-thumb ${focus === "title" || focus === "new-slide" ? "is-focus" : ""}"></div>
+          <div class="mock-slide-thumb ${focus === "image" ? "is-focus" : ""}"></div>
+          <div class="mock-slide-thumb ${focus === "bullet" ? "is-focus" : ""}"></div>
+        </div>
+        <div class="mock-slide">
+          <div class="mock-slide-title ${focus === "title" ? "is-focus" : ""}">今日作ったもの</div>
+          <div class="mock-slide-image ${focus === "image" ? "is-focus" : ""}">スクショ枠</div>
+          <div class="mock-slide-bullets ${focus === "bullet" ? "is-focus" : ""}">・何のため？<br>・どう使う？<br>・URLはどこ？</div>
+          <div class="mock-share-pill ${focus === "share" ? "is-focus" : ""}">🔗 共有リンクをコピー</div>
+        </div>
+      </div>
+      ${chips}
+      <p class="mock-caption">Google Slidesは、相手に順番通り見せるための説明紙芝居。</p>
+    `;
+  }
+
+  if (step.mockType === "figma") {
+    return `
+      <div class="mock-figma-canvas">
+        <div class="mock-frame ${focus === "frame" || focus === "title" || focus === "button" || focus === "comment" ? "is-focus" : ""}">
+          <div class="mock-frame-title ${focus === "title" ? "is-focus" : ""}">アプリ名</div>
+          <div class="mock-frame-button ${focus === "button" ? "is-focus" : ""}">押す場所</div>
+          <div class="mock-frame-comment ${focus === "comment" ? "is-focus" : ""}">💬 ここを説明</div>
+        </div>
+        <div class="mock-proto-line ${focus === "prototype" ? "is-focus" : ""}">→</div>
+        <div class="mock-frame ${focus === "prototype" ? "is-focus" : ""}">
+          <div class="mock-frame-title">次の画面</div>
+          <div class="mock-frame-button">結果を見る</div>
+        </div>
+        <div class="mock-share-pill ${focus === "share" ? "is-focus" : ""}">🔗 共有リンク</div>
+      </div>
+      ${chips}
+      <p class="mock-caption">Figmaは、本物を作る前に画面の模型を人に見せる道具。</p>
+    `;
+  }
+
+  if (step.mockType === "canva") {
+    return `
+      <div class="mock-canva">
+        <div class="mock-canva-template ${focus === "template" ? "is-focus" : ""}">ひな形（テンプレ）</div>
+        <div class="mock-canva-title ${focus === "title" ? "is-focus" : ""}">アプリ紹介カード</div>
+        <div class="mock-canva-image ${focus === "image" ? "is-focus" : ""}">スクショ枠</div>
+        <div class="mock-canva-caption ${focus === "caption" ? "is-focus" : ""}">iPhoneだけで仕事の型を覚えるアプリ</div>
+        <div class="mock-canva-download ${focus === "download" ? "is-focus" : ""}">⬇ 画像として保存</div>
+      </div>
+      ${chips}
+      <p class="mock-caption">Canvaは、作品を一枚の見せるカードに包装する道具。</p>
+    `;
+  }
+
+  return `<div class="panel">このステップの模型はまだ準備中です。</div>`;
+}
+
+function nextStoryStep() {
+  if (!currentStoryKey) return;
+  const story = operationStories[currentStoryKey];
+  if (currentStoryIndex >= story.steps.length - 1) {
+    currentStoryIndex = 0;
+  } else {
+    currentStoryIndex += 1;
+  }
+  renderStory();
+}
+
+function prevStoryStep() {
+  if (!currentStoryKey) return;
+  currentStoryIndex = Math.max(0, currentStoryIndex - 1);
+  renderStory();
+}
+
+function closeStory() {
+  currentStoryKey = null;
+  currentStoryIndex = 0;
+  switchView("viewGear");
+}
+
 function goToRoadmapScroll(targetId) {
   const target = document.getElementById(targetId) || document.querySelector(`.${targetId}`);
   if (!target) {
@@ -596,6 +883,7 @@ function goToRoadmapStep(viewId) {
 }
 
 function switchView(viewId) {
+  window.currentActiveViewId = viewId;
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === viewId));
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === viewId));
 
@@ -605,6 +893,7 @@ function switchView(viewId) {
   if (viewId === "viewToday") renderConditions();
   if (viewId === "viewDelivery") renderDelivery();
   if (viewId === "viewPrompt") renderDirector();
+  if (viewId === "viewStory") renderStory();
 }
 
 function goToTourRelatedGear() {
@@ -641,6 +930,10 @@ function renderGear() {
   const list = currentFilter === "全部" ? gears : gears.filter(g => g.category === currentFilter);
   list.forEach(gear => {
     const s = gearStatus(gear.id);
+    const storyKey = storyKeyMap[gear.id];
+    const storyButtonHTML = storyKey && operationStories[storyKey]
+      ? `<button class="gear-story-button" type="button" data-story-key="${storyKey}">🎞️ 操作紙芝居を見る</button>`
+      : "";
     const card = document.createElement("article");
     card.className = "gear-card";
     card.innerHTML = `
@@ -658,12 +951,17 @@ function renderGear() {
       <div class="card-actions">
         <button type="button" data-open="${gear.id}">説明を見る</button>
         <button type="button" data-toggle="${gear.id}" data-key="understood" class="${s.understood ? "done" : ""}">${s.understood ? "理解済み" : "わかった"}</button>
+        ${storyButtonHTML}
       </div>
     `;
     card.querySelector("[data-open]").addEventListener("click", () => openGearDialog(gear.id));
     card.querySelector("[data-toggle]").addEventListener("click", event => {
       setGearStatus(event.currentTarget.dataset.toggle, event.currentTarget.dataset.key);
     });
+    const storyButton = card.querySelector("[data-story-key]");
+    if (storyButton) {
+      storyButton.addEventListener("click", event => openStory(event.currentTarget.dataset.storyKey));
+    }
     grid.appendChild(card);
   });
 }
@@ -815,7 +1113,16 @@ function showToast(message) {
 
 function bindTabs() {
   document.querySelectorAll(".tab").forEach(tab => {
-    tab.addEventListener("click", () => switchView(tab.dataset.view));
+    tab.addEventListener("click", () => {
+      const viewId = tab.dataset.view;
+      const alreadyActive = tab.classList.contains("active");
+      switchView(viewId);
+      if (alreadyActive) {
+        const view = document.getElementById(viewId);
+        if (view) view.scrollIntoView({ behavior: "smooth", block: "start" });
+        showToast("現在のタブです");
+      }
+    });
   });
 }
 
@@ -829,6 +1136,12 @@ function bindButtons() {
     renderTour();
   });
   document.getElementById("tourGearBtn").addEventListener("click", goToTourRelatedGear);
+  const storyPrev = document.getElementById("storyPrev");
+  const storyNext = document.getElementById("storyNext");
+  const storyBack = document.getElementById("storyBack");
+  if (storyPrev) storyPrev.addEventListener("click", prevStoryStep);
+  if (storyNext) storyNext.addEventListener("click", nextStoryStep);
+  if (storyBack) storyBack.addEventListener("click", closeStory);
 
   document.getElementById("resetBtn").addEventListener("click", () => {
     state = { gear: {}, delivery: {}, missionsDone: 0 };
