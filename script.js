@@ -434,7 +434,7 @@ function renderRoadmap() {
     </div>
   `;
   container.querySelectorAll("[data-roadmap-goto]").forEach(button => {
-    button.addEventListener("click", () => switchView(button.dataset.roadmapGoto));
+    button.addEventListener("click", () => goToRoadmapStep(button.dataset.roadmapGoto));
   });
 }
 
@@ -489,10 +489,96 @@ function renderShare() {
   });
 }
 
+
+
+const directorQuiz = {
+  title: "AIのワナを見破れ！監督クイズ",
+  question: "AIに『ログアウトボタンを追加して』と頼んだら、追加パーツだけが返ってきた。監督としてどう扱う？",
+  before: "<p>ようこそ、ヒデちゃん！</p>\n<button>プロフィールを見る</button>",
+  aiOutput: "<button>ログアウトする</button>",
+  choices: [
+    { id: "A", text: "全部コピーして上書きする", result: "❌ 失敗：元の表示が消えて、ログアウトだけの画面になる。AIが差分だけ出した時に全上書きすると母屋が消える。", tone: "wrong" },
+    { id: "B", text: "今のコードの一番下にそのまま貼り足す", result: "△ 惜しい：残す判断は良い。ただし入れる場所を確認していない。変な位置に出ることがある。", tone: "close" },
+    { id: "C", text: "元のコードを残しつつ、正しい場所に入れ込む", result: "⭕ 成功：これが差分監督。元の機能を残し、追加パーツを正しい場所へハメ込む。", tone: "correct" }
+  ]
+};
+
+const directorCards = [
+  { id: "full-or-diff", icon: "🧩", title: "完全版？差分？", body: "完全版は丸ごと置き換え。差分は一部だけ貼り足す。まずAIがどちらを出しているか見る。", tip: "新築か、リフォーム部品か。ここを間違えると既存機能が消える。", prompt: "これは完全版ですか？差分パッチですか？既存機能を壊さない形式になっていますか？" },
+  { id: "overwrite-or-append", icon: "🪛", title: "上書き？貼り足し？", body: "上書きは既存ファイルを丸ごと置換すること。貼り足しは既存を残して追加すること。安全度が違う。", tip: "『そのまま全部置き換えて』と明記されていないなら、一度止まる。", prompt: "このコードは上書きが必要ですか？貼り足しで安全に追加できますか？既存部分を消す必要はありますか？" },
+  { id: "which-file", icon: "📁", title: "どのファイル？", body: "index.htmlは骨組み、style.cssは見た目、script.jsは動き、README.mdは説明。コードの住所を確認する。", tip: "HTMLの部品をCSSへ入れても動かない。JSをREADMEへ入れてもアプリは動かない。", prompt: "このコードは index.html / style.css / script.js / README.md のどれに入れるべきですか？追加する場所も具体的に示してください。" },
+  { id: "old-or-new", icon: "📅", title: "古い？新しい？", body: "v0.1、v0.2-tour、v0.2-share、v0.4など、どの版を触っているか確認する。", tip: "さっきのZIPとGitHubに上がっている最新版が違うことがある。", prompt: "この提案は今の最新版に対応していますか？古い版、古いファイル名、古いIDを前提にしていませんか？" },
+  { id: "github-or-test", icon: "🌐", title: "GitHub用？確認用？", body: "GitHub Pages本番用は index.html / style.css / script.js。standalone.html や txt は確認用の場合がある。", tip: "script-js-download.txt は中身確認用。GitHub本番では script.js という名前が必要。", prompt: "これは GitHub Pages 用の本番コードですか？確認用の一時ファイルですか？本番に必要なファイル名を教えてください。" },
+  { id: "safe-or-break", icon: "🛡️", title: "既存を壊さない？", body: "gears、tourSlides、shareModes、renderGearなど既存データや関数を上書きしていないか見る。", tip: "AIが完全版風に出しても、中で既存データが省略されている場合がある。", prompt: "既存のデータや関数を上書きしていませんか？追加だけで済みますか？壊れそうな箇所を先に指摘してください。" },
+  { id: "ai-context", icon: "🧭", title: "文脈のバトン", body: "Geminiの概念整理、Copilotの実装案、ChatGPTの統合判断が同じ目的につながっているか確認する。", tip: "AI同士の出力がズレた時、監督が『今の母屋はこれ』と戻す。", prompt: "この提案は、Geminiの概念整理、Copilotの実装案、ChatGPTの統合判断と矛盾していませんか？現在の前提を整理してください。" }
+];
+
+function renderDirector() {
+  const container = document.getElementById("directorContainer") || document.getElementById("viewPrompt");
+  if (!container) return;
+  const esc = value => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  container.innerHTML = `
+    <div class="section-heading">
+      <div><p class="eyebrow">Director console</p><h2 id="directorTitle">🕵️ 監督モード</h2></div>
+      <span class="badge soft">差分監督</span>
+    </div>
+    <div class="director-intro panel"><p class="panel-lead">AIは制作班。あなたは、出力をどこに入れるか、上書きしてよいか、既存を壊さないかを見る監督。コードを全部読めなくても、貼る前に一度ここを通る。</p></div>
+    <article class="director-card warning">
+      <div class="director-card-head"><span class="director-icon">🎬</span><div><p class="eyebrow">Quiz</p><h3 class="director-title">${directorQuiz.title}</h3></div></div>
+      <p class="director-body">${directorQuiz.question}</p>
+      <p class="eyebrow">元のコード</p><code class="director-code">${esc(directorQuiz.before)}</code>
+      <p class="eyebrow">AIからの出力</p><code class="director-code">${esc(directorQuiz.aiOutput)}</code>
+      <div class="director-choices">${directorQuiz.choices.map(choice => `<button class="director-choice" type="button" data-director-quiz="${choice.id}">${choice.id}. ${choice.text}</button>`).join("")}</div>
+      <div id="directorQuizResult" class="director-result"></div>
+    </article>
+    <div class="director-grid">
+      ${directorCards.map(card => `
+        <article class="director-card">
+          <div class="director-card-head"><span class="director-icon">${card.icon}</span><div><p class="eyebrow">Director card</p><h3 class="director-title">${card.title}</h3></div></div>
+          <p class="director-body">${card.body}</p><p class="director-tip">${card.tip}</p>
+          <div class="director-actions"><button class="director-copy-button" type="button" data-director-copy="${esc(card.prompt)}">AIに確認する文をコピー</button></div>
+        </article>`).join("")}
+    </div>`;
+  container.querySelectorAll("[data-director-quiz]").forEach(button => {
+    button.addEventListener("click", () => {
+      const choice = directorQuiz.choices.find(item => item.id === button.dataset.directorQuiz);
+      if (!choice) return;
+      container.querySelectorAll("[data-director-quiz]").forEach(btn => btn.classList.remove("correct", "wrong", "close"));
+      button.classList.add(choice.tone);
+      const result = document.getElementById("directorQuizResult");
+      result.textContent = choice.result;
+      result.className = "director-result show";
+    });
+  });
+  container.querySelectorAll("[data-director-copy]").forEach(button => {
+    button.addEventListener("click", () => copyText(button.dataset.directorCopy));
+  });
+}
+
+function goToRoadmapStep(viewId) {
+  const view = document.getElementById(viewId);
+  if (!view) {
+    showToast("まだ未実装のタブです");
+    return;
+  }
+  switchView(viewId);
+  window.setTimeout(() => {
+    view.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 0);
+  const label = document.querySelector(`.tab[data-view="${viewId}"] span`)?.textContent || "対応";
+  showToast(`${label}タブへ移動`);
+}
+
 function switchView(viewId) {
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === viewId));
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === viewId));
+
+  if (viewId === "viewTour") renderTour();
   if (viewId === "viewShare") renderShare();
+  if (viewId === "viewGear") { renderFilters(); renderGear(); }
+  if (viewId === "viewToday") renderConditions();
+  if (viewId === "viewDelivery") renderDelivery();
+  if (viewId === "viewPrompt") renderDirector();
 }
 
 function goToTourRelatedGear() {
@@ -746,6 +832,7 @@ function init() {
   renderGear();
   renderConditions();
   renderDelivery();
+  renderDirector();
   bindTabs();
   bindButtons();
 }
