@@ -162,7 +162,7 @@ const roadmapSteps = [
     body: "AIと仕事する前の準備。iPhone操作、道具名、共有＝鍵の概念を知る。",
     view: "viewTour",
     actionType: "current",
-    actionLabel: "ここが入口"
+    actionLabel: "現在地：入口"
   },
   {
     id: "step1",
@@ -596,6 +596,7 @@ function goToRoadmapStep(viewId) {
 }
 
 function switchView(viewId) {
+  window.currentActiveViewId = viewId;
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === viewId));
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === viewId));
 
@@ -815,7 +816,16 @@ function showToast(message) {
 
 function bindTabs() {
   document.querySelectorAll(".tab").forEach(tab => {
-    tab.addEventListener("click", () => switchView(tab.dataset.view));
+    tab.addEventListener("click", () => {
+      const viewId = tab.dataset.view;
+      const alreadyActive = tab.classList.contains("active");
+      switchView(viewId);
+      if (alreadyActive) {
+        const view = document.getElementById(viewId);
+        if (view) view.scrollIntoView({ behavior: "smooth", block: "start" });
+        showToast("現在のタブです");
+      }
+    });
   });
 }
 
