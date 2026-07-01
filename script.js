@@ -543,6 +543,37 @@ const deliveryItems = [
   { id: "handoff", title: "納品メモ", text: "URL、使い方、確認してほしい点、次に直す点。" }
 ];
 
+// v0.8 納品パック見本データ
+const deliveryPack = {
+  url: "https://hiderock61.github.io/",
+  oneWord: "iPhoneだけで、AI時代の仕事道具・今日の進め方・納品の型を学べるフリーランス訓練アプリ。",
+  screenshots: [
+    "今日タブ：今日の装備ルート",
+    "装備タブ：温度札つき装備カード",
+    "納品タブ：v0.8納品パック"
+  ],
+  features: [
+    "Slack、Figma、VS Codeなどの仕事道具を紙芝居で見学できる",
+    "温度札で、今やる装備・眺めるだけの装備・スルーしてよい装備を分けられる",
+    "今日の状態に合わせて、省エネ／見る／さわる／本線の3ステップを選べる"
+  ],
+  updates: [
+    "v0.8で納品タブに納品パックを追加",
+    "スクショ3枚候補と提出文テンプレを表示",
+    "公開URLだけでなく、相手が確認しやすい形で渡せるようにした"
+  ],
+  focusPoints: [
+    "今日タブの今日の装備ルート",
+    "装備タブの温度札",
+    "納品タブの提出文コピー"
+  ],
+  nextQuestions: [
+    "初見の人にアプリの目的が伝わるか",
+    "スクショ3枚の選び方がわかりやすいか",
+    "納品文が仕事相手に渡せる文章になっているか"
+  ]
+};
+
 const conditions = [
   { id: "iphone", label: "📱 iPhoneだけ", title: "iPhoneだけならリンク装備", text: "1つだけ公式リンクを開き、ブックマークかホーム画面に置く。今日は深く覚えない。" },
   { id: "pc", label: "💻 ChromePCあり", title: "PCありならファイル装備", text: "GitHubかVS Codeを開き、index.htmlのタイトルだけ変更する。変更できたら勝ち。" },
@@ -1222,25 +1253,81 @@ function bindDailyRouteButtons() {
   });
 }
 
+
+function renderDeliveryPack() {
+  const pack = deliveryPack;
+  const url = document.getElementById("delivery-url");
+  const oneWord = document.getElementById("delivery-oneword");
+  if (url) url.textContent = pack.url;
+  if (oneWord) oneWord.textContent = pack.oneWord;
+
+  renderDeliveryList("delivery-screenshots", pack.screenshots);
+  renderDeliveryList("delivery-features", pack.features);
+  renderDeliveryList("delivery-updates", pack.updates);
+  renderDeliveryList("delivery-focus", pack.focusPoints);
+  renderDeliveryList("delivery-next", pack.nextQuestions);
+}
+
+function renderDeliveryList(id, items) {
+  const ul = document.getElementById(id);
+  if (!ul) return;
+  ul.innerHTML = "";
+  items.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    ul.appendChild(li);
+  });
+}
+
+function buildDeliveryText() {
+  const pack = deliveryPack;
+  return `【提出物】
+フリーランス装備庫 v0.8
+
+【公開URL】
+${pack.url}
+
+【一言説明】
+${pack.oneWord}
+
+【スクショ候補】
+- ${pack.screenshots.join("\n- ")}
+
+【できること】
+- ${pack.features.join("\n- ")}
+
+【今回の更新点】
+- ${pack.updates.join("\n- ")}
+
+【見てほしい場所】
+- ${pack.focusPoints.join("\n- ")}
+
+【次に相談したいこと】
+- ${pack.nextQuestions.join("\n- ")}`.trim();
+}
+
 function renderDelivery() {
   const box = document.getElementById("deliveryChecklist");
-  box.innerHTML = "";
-  deliveryItems.forEach(item => {
-    const done = Boolean(state.delivery?.[item.id]);
-    const row = document.createElement("article");
-    row.className = `check-item ${done ? "done" : ""}`;
-    row.innerHTML = `
-      <div class="check-dot">✓</div>
-      <div><h3>${item.title}</h3><p>${item.text}</p></div>
-    `;
-    row.addEventListener("click", () => {
-      state.delivery = state.delivery || {};
-      state.delivery[item.id] = !state.delivery[item.id];
-      saveState();
-      renderDelivery();
+  if (box) {
+    box.innerHTML = "";
+    deliveryItems.forEach(item => {
+      const done = Boolean(state.delivery?.[item.id]);
+      const row = document.createElement("article");
+      row.className = `check-item ${done ? "done" : ""}`;
+      row.innerHTML = `
+        <div class="check-dot">✓</div>
+        <div><h3>${item.title}</h3><p>${item.text}</p></div>
+      `;
+      row.addEventListener("click", () => {
+        state.delivery = state.delivery || {};
+        state.delivery[item.id] = !state.delivery[item.id];
+        saveState();
+        renderDelivery();
+      });
+      box.appendChild(row);
     });
-    box.appendChild(row);
-  });
+  }
+  renderDeliveryPack();
 }
 
 function currentMissionText() {
@@ -1249,9 +1336,17 @@ function currentMissionText() {
   return `今日の地上条件は「${condition.label}」。次の一手は「${condition.title}」。内容：${condition.text} この条件で、今から5分でできる手順を1、2、3で出してください。`;
 }
 
-function copyDeliveryText() {
-  const text = `納品パック\n1. 公開URL\n2. スクショ3枚：入口、操作中、結果\n3. README 3行：これは何か、誰の何を軽くするか、どう使うか\n4. Miro風1枚作戦ボード：誰が困る、何に困る、押すボタン、AIに渡すもの、返るもの、完了形\n5. 3枚スライド：問題、解決、渡すもの\n6. 納品メモ：確認してほしい点、次に直す点`;
-  copyText(text);
+async function copyDeliveryText() {
+  const text = buildDeliveryText();
+  const statusEl = document.getElementById("deliveryCopyStatus");
+  try {
+    await navigator.clipboard.writeText(text);
+    if (statusEl) statusEl.textContent = "コピーしました";
+    showToast("提出文をコピーした");
+  } catch {
+    copyText(text);
+    if (statusEl) statusEl.textContent = "コピーしました";
+  }
 }
 
 function copyAllGearText() {
@@ -1331,6 +1426,8 @@ function bindButtons() {
     showToast("今日やった。勝ち");
   });
   document.getElementById("copyDeliveryBtn").addEventListener("click", copyDeliveryText);
+  const copyDeliveryPackBtn = document.getElementById("copyDeliveryPackBtn");
+  if (copyDeliveryPackBtn) copyDeliveryPackBtn.addEventListener("click", copyDeliveryText);
   document.querySelectorAll(".copy-prompt").forEach(button => {
     button.addEventListener("click", () => copyText(promptTemplates[button.dataset.prompt]));
   });

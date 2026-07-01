@@ -1484,3 +1484,90 @@ main { margin-top: 18px; }
     padding: 8px 3px;
   }
 }
+
+
+/* ▼ v0.8 納品パック */
+#viewDelivery {
+  padding-bottom: 150px;
+}
+
+.delivery-pack-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 14px;
+  border-radius: 18px;
+  margin: 18px 0 24px;
+  color: #e5e7eb;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.delivery-pack-card h3 {
+  margin: 2px 0 8px;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.delivery-pack-lead {
+  margin: 0 0 14px;
+  color: #cbd5e1;
+  line-height: 1.75;
+  font-weight: 700;
+}
+
+.delivery-section {
+  margin-bottom: 14px;
+  padding: 10px 10px 11px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.delivery-title {
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #6ee7b7;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.delivery-body {
+  font-size: 14px;
+  color: #d1d5db;
+  line-height: 1.75;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.delivery-list {
+  margin: 0;
+  padding-left: 1.15em;
+}
+
+.delivery-list li {
+  font-size: 14px;
+  margin-bottom: 6px;
+  line-height: 1.65;
+  color: #d1d5db;
+  font-weight: 700;
+}
+
+.delivery-copy-btn {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(110, 231, 183, 0.22), rgba(250, 204, 21, 0.18));
+  border: 1px solid rgba(110, 231, 183, 0.32);
+  color: #f8fafc;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.delivery-copy-status {
+  min-height: 20px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #34d399;
+  font-weight: 900;
+  text-align: center;
+}
