@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v0.6</title>
-  <link rel="stylesheet" href="style.css?v=060" />
+  <title>フリーランス装備庫 v0.7</title>
+  <link rel="stylesheet" href="style.css?v=070" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v0.6</span>
+        <span class="badge">v0.7</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>全部やらなくてOK。装備カードに「今はスルー／眺めるだけ／1回さわる／制作本線」の温度札をつけ、SlackやVS Codeなどの距離感をiPhoneだけで見分ける学習アプリ。</p>
+      <p>全部やらなくてOK。装備カードの温度札に加えて、今日の状態から「省エネ／見る／さわる／本線」の3ステップを選べるiPhone向け学習アプリ。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -111,6 +111,22 @@
           </div>
         </div>
         <div class="panel">
+        <!-- v0.7 今日の装備ルート -->
+        <div class="panel daily-route-panel">
+          <p class="eyebrow">v0.7 Daily route</p>
+          <h3>🧭 今日の装備ルート</h3>
+          <p class="panel-lead">今の状態に近いものを1つ選ぶだけ。全部やらなくてOK。今日はこれだけ、の3ステップを出す。</p>
+          <div id="dailyRoutes" class="daily-routes-grid" aria-label="今日の装備ルート選択">
+            <button class="daily-route-btn route-hold" data-route="hold" type="button"><span>🧊</span><strong>省エネ</strong><small>閉じてもOK</small></button>
+            <button class="daily-route-btn route-watch" data-route="watch" type="button"><span>👀</span><strong>見る</strong><small>形だけ見る</small></button>
+            <button class="daily-route-btn route-try" data-route="try" type="button"><span>👆</span><strong>さわる</strong><small>1回だけ試す</small></button>
+            <button class="daily-route-btn route-core" data-route="core" type="button"><span>🧰</span><strong>本線</strong><small>公開を確認</small></button>
+          </div>
+          <div id="dailyRouteSteps" class="daily-route-steps" aria-live="polite">
+            <div class="daily-route-empty">今の状態に近いボタンを1つ押すと、今日の3ステップが出ます。</div>
+          </div>
+        </div>
+
           <p class="panel-lead">今の地上条件を押すと、5分から15分の練習に変換する。</p>
           <div id="conditionButtons" class="condition-grid"></div>
           <div class="result-card">
@@ -175,6 +191,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=060"></script>
+  <script src="script.js?v=070"></script>
 </body>
 </html>

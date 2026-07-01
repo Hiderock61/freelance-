@@ -301,6 +301,51 @@ const storyKeyMap = {
 };
 
 
+// ▼ v0.7 今日の装備ルート
+const dailyRoutes = {
+  hold: {
+    id: "hold",
+    title: "🧊 今日は省エネ",
+    description: "今日は無理に触らない。やらない装備を確認するだけでOK。",
+    steps: [
+      { label: "保留", text: "Miroは今はスルーでOKと確認する。", storyKey: null },
+      { label: "見る", text: "装備カードを1枚だけ眺める。", storyKey: null },
+      { label: "完了", text: "今日はここで閉じてOK。", storyKey: null }
+    ]
+  },
+  watch: {
+    id: "watch",
+    title: "👀 眺めるだけルート",
+    description: "覚えずに、画面の形だけ見るルート。",
+    steps: [
+      { label: "紙芝居", text: "Slackの仕事場構造を見る。", storyKey: "slack" },
+      { label: "紙芝居", text: "VS Codeの左ファイル・右中身だけ見る。", storyKey: "vscode" },
+      { label: "完了", text: "覚えようとせず、今日は目撃だけで終了。", storyKey: null }
+    ]
+  },
+  try: {
+    id: "try",
+    title: "👆 1回さわるルート",
+    description: "1回だけ押す・書く・貼る練習。",
+    steps: [
+      { label: "紙芝居", text: "Google Slidesの3枚構造を見る。", storyKey: "slides" },
+      { label: "紙芝居", text: "Canvaのテンプレ構造を見る。", storyKey: "canva" },
+      { label: "完了", text: "実物はまだ開かなくてもOK。1回触る候補が見えたら終了。", storyKey: null }
+    ]
+  },
+  core: {
+    id: "core",
+    title: "🧰 制作本線ルート",
+    description: "今の制作や公開に直結する確認ルート。",
+    steps: [
+      { label: "確認", text: "GitHub Pagesの公開URLを開いて確認する。", storyKey: null },
+      { label: "確認", text: "READMEや最新バージョン名を確認する。", storyKey: null },
+      { label: "完了", text: "動いていれば本線チェック完了。", storyKey: null }
+    ]
+  }
+};
+
+
 const roadmapSteps = [
   {
     id: "step0",
@@ -1116,6 +1161,67 @@ function renderConditions() {
   });
 }
 
+
+
+function renderDailyRouteSteps(routeKey) {
+  const route = dailyRoutes[routeKey];
+  const container = document.getElementById("dailyRouteSteps");
+  if (!route || !container) return;
+
+  document.querySelectorAll(".daily-route-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.route === routeKey);
+  });
+
+  container.innerHTML = "";
+
+  const summary = document.createElement("div");
+  summary.className = "daily-route-summary";
+  summary.innerHTML = `<h4>${route.title}</h4><p>${route.description}</p>`;
+  container.appendChild(summary);
+
+  route.steps.forEach((step, index) => {
+    const card = document.createElement("article");
+    card.className = "daily-step-card";
+
+    const head = document.createElement("div");
+    head.className = "daily-step-head";
+
+    const num = document.createElement("span");
+    num.className = "daily-step-num";
+    num.textContent = String(index + 1);
+    head.appendChild(num);
+
+    const label = document.createElement("span");
+    label.className = `daily-step-label label-${route.id}`;
+    label.textContent = step.label;
+    head.appendChild(label);
+
+    card.appendChild(head);
+
+    const title = document.createElement("p");
+    title.className = "daily-step-title";
+    title.textContent = step.text;
+    card.appendChild(title);
+
+    if (step.storyKey && operationStories[step.storyKey]) {
+      const storyButton = document.createElement("button");
+      storyButton.type = "button";
+      storyButton.className = "daily-step-story-btn";
+      storyButton.textContent = "紙芝居を見る";
+      storyButton.addEventListener("click", () => openStory(step.storyKey));
+      card.appendChild(storyButton);
+    }
+
+    container.appendChild(card);
+  });
+}
+
+function bindDailyRouteButtons() {
+  document.querySelectorAll(".daily-route-btn").forEach(button => {
+    button.addEventListener("click", () => renderDailyRouteSteps(button.dataset.route));
+  });
+}
+
 function renderDelivery() {
   const box = document.getElementById("deliveryChecklist");
   box.innerHTML = "";
@@ -1228,6 +1334,7 @@ function bindButtons() {
   document.querySelectorAll(".copy-prompt").forEach(button => {
     button.addEventListener("click", () => copyText(promptTemplates[button.dataset.prompt]));
   });
+  bindDailyRouteButtons();
 }
 
 function init() {
