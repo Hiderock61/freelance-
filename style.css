@@ -924,3 +924,178 @@ main { margin-top: 18px; }
   color: var(--accent2);
   font-weight: 800;
 }
+
+/* ▼ v0.5.1 紙芝居ビューの縦圧縮パッチ */
+
+/* 固定タブバーと重ならないように下部余白を確保 */
+#viewStory {
+  padding-bottom: 130px;
+}
+
+/* story-frame の余白を詰めつつ、下だけ厚めに確保 */
+.story-frame {
+  padding: 8px 8px 130px;
+}
+
+.story-header {
+  margin-bottom: 6px;
+}
+
+.story-app-name {
+  font-size: 16px;
+}
+
+.story-step-title {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+/* 紙芝居模型の余白を詰める */
+.story-mock {
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+/* 下部説明の圧縮 */
+.story-footer {
+  font-size: 13px;
+}
+
+.story-learn {
+  margin-bottom: 4px;
+}
+
+.story-finish {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+/* ボタンを少し小さくしつつ、押しやすさは残す */
+.story-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.story-btn {
+  padding: 8px 10px;
+  font-size: 13px;
+  min-height: 40px;
+}
+
+/* ▼ Figma の mock-frame を縮める */
+.mock-frame {
+  width: 160px;
+  height: 280px;
+  padding: 8px;
+  border-radius: 16px;
+  margin: 0 auto;
+}
+
+.mock-frame-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.mock-frame-button {
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.mock-frame-comment {
+  padding: 6px;
+  font-size: 12px;
+}
+
+/* ▼ Figma の 2画面比較ステップ用。該当HTMLがある時だけ効く */
+.mock-figma-two {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.mock-figma-two .mock-frame {
+  width: 120px;
+  height: 220px;
+  padding: 6px;
+}
+
+.mock-figma-arrow {
+  font-size: 20px;
+  color: #e5e7eb;
+  align-self: center;
+}
+
+/* ▼ モバイル幅でさらに圧縮 */
+@media (max-width: 480px) {
+  .story-app-name {
+    font-size: 15px;
+  }
+
+  .story-step-title {
+    font-size: 13px;
+  }
+
+  .story-learn,
+  .story-finish {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .story-btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .story-mock {
+    padding: 10px;
+  }
+}
+
+
+/* ▼ v0.6 装備の温度札 */
+.gear-temp-badge,
+.story-temp-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 12px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+  line-height: 1.35;
+  border: 1px solid rgba(255,255,255,0.12);
+  font-weight: 700;
+}
+
+.temp-hold  { background: rgba(125, 211, 252, 0.14); color: #7dd3fc; }
+.temp-watch { background: rgba(209, 213, 219, 0.14); color: #d1d5db; }
+.temp-try   { background: rgba(250, 204, 21, 0.16); color: #facc15; }
+.temp-core  { background: rgba(52, 211, 153, 0.16); color: #34d399; }
+
+.gear-advice {
+  font-size: 13px;
+  color: #d1d5db;
+  margin: 7px 0 2px;
+  line-height: 1.55;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.story-temp-badge {
+  margin: 0 0 7px;
+}
+
+@media (max-width: 480px) {
+  .gear-temp-badge,
+  .story-temp-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+  .gear-advice {
+    font-size: 12px;
+    padding: 7px 9px;
+  }
+}

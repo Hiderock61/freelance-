@@ -153,6 +153,53 @@ const gears = [
 ];
 
 
+// ▼ v0.6 温度札ラベル
+const temperatureLabels = {
+  hold:  { icon: "🧊", label: "今はスルー" },
+  watch: { icon: "👀", label: "眺めるだけ" },
+  try:   { icon: "👆", label: "1回さわる" },
+  core:  { icon: "🧰", label: "制作本線" }
+};
+
+const gearTemperatureMap = {
+  slack: "watch",
+  miro: "hold",
+  github: "core",
+  vscode: "watch",
+  slides: "try",
+  canva: "try",
+  figma: "watch",
+  drive: "try",
+  "ai-team": "core"
+};
+
+const gearAdviceTextMap = {
+  slack: "今は眺めるだけでOK。仕事場・部屋・名前呼び出しの構造だけ見る。",
+  miro: "今はスルーでOK。作戦ボードという概念だけ棚に置く。",
+  github: "ファイル管理、commit、公開URLづくりで使う制作本線。",
+  vscode: "今は眺めるだけでOK。左にファイル、右に中身が出る構造だけ見る。",
+  slides: "1回さわる価値あり。3枚の説明紙芝居を作る練習に向く。",
+  canva: "1回さわる価値あり。テンプレでサムネや説明カードを作る感触を見る。",
+  figma: "今は眺めるだけでOK。アプリ画面の設計図を見る道具として知る。",
+  drive: "1回さわる価値あり。ファイルを置いて共有する感触を見る。",
+  "ai-team": "制作本線。明智君、Gemini、Copilot、Claudeの役割分担を扱う。"
+};
+
+function getGearTemperatureKey(gear) {
+  if (!gear) return "watch";
+  return gear.temperature || gearTemperatureMap[gear.id] || "watch";
+}
+
+function getGearAdviceText(gear) {
+  if (!gear) return "画面の形だけ見ればOK。暗記しなくていい。";
+  return gear.adviceText || gearAdviceTextMap[gear.id] || "画面の形だけ見ればOK。暗記しなくていい。";
+}
+
+function getGearByStoryKey(storyKey) {
+  return gears.find((gear) => storyKeyMap[gear.id] === storyKey || gear.id === storyKey);
+}
+
+
 // ▼ v0.5 操作紙芝居データ
 const operationStories = {
   slack: {
@@ -705,6 +752,21 @@ function renderStory() {
 
   if (!appNameEl || !mockEl) return;
 
+  const gearForStory = getGearByStoryKey(currentStoryKey);
+  const storyTempKey = getGearTemperatureKey(gearForStory);
+  const storyTemp = temperatureLabels[storyTempKey] || temperatureLabels.watch;
+  const storyTempParent = appNameEl.parentNode;
+  let storyTempBadge = document.getElementById("storyTempBadge");
+  if (!storyTempBadge && storyTempParent) {
+    storyTempBadge = document.createElement("div");
+    storyTempBadge.id = "storyTempBadge";
+    storyTempParent.insertBefore(storyTempBadge, appNameEl);
+  }
+  if (storyTempBadge) {
+    storyTempBadge.className = `story-temp-badge temp-${storyTempKey}`;
+    storyTempBadge.textContent = `${storyTemp.icon} ${storyTemp.label}`;
+  }
+
   appNameEl.textContent = `${story.appName}`;
   appLabelEl.textContent = `${story.label}｜${story.purpose}`;
   stepTitleEl.textContent = step.title;
@@ -934,6 +996,9 @@ function renderGear() {
     const storyButtonHTML = storyKey && operationStories[storyKey]
       ? `<button class="gear-story-button" type="button" data-story-key="${storyKey}">🎞️ 操作紙芝居を見る</button>`
       : "";
+    const tempKey = getGearTemperatureKey(gear);
+    const temp = temperatureLabels[tempKey] || temperatureLabels.watch;
+    const adviceText = getGearAdviceText(gear);
     const card = document.createElement("article");
     card.className = "gear-card";
     card.innerHTML = `
@@ -941,8 +1006,10 @@ function renderGear() {
         <span class="gear-icon">${gear.icon}</span>
         <span class="pill">${gear.category}</span>
       </div>
+      <div class="gear-temp-badge temp-${tempKey}">${temp.icon} ${temp.label}</div>
       <h3>${gear.name}</h3>
       <p>${gear.label}。${gear.summary}</p>
+      <div class="gear-advice">${adviceText}</div>
       <div class="gear-meta">
         <span class="pill ${s.installed ? "done" : ""}">入れた</span>
         <span class="pill ${s.understood ? "done" : ""}">何に使うかわかった</span>
