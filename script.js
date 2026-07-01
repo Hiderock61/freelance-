@@ -301,7 +301,7 @@ const storyKeyMap = {
 };
 
 
-// ▼ v0.7 今日の装備ルート
+// ▼ v0.7.1 今日の装備ルート
 const dailyRoutes = {
   hold: {
     id: "hold",
