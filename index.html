@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v0.9</title>
-  <link rel="stylesheet" href="style.css?v=091" />
+  <title>フリーランス装備庫 v1.0</title>
+  <link rel="stylesheet" href="style.css?v=100" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v0.9</span>
+        <span class="badge">v1.0</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>全部やらなくてOK。装備カードの温度札、今日の装備ルート、納品パックで「見学→装備→今日→提出」まで練習できるiPhone向け学習アプリ。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -28,6 +28,32 @@
 
       <section id="viewTour" class="view active" aria-labelledby="tourTitle">
         <div id="roadmapContainer" class="roadmap-container" aria-label="フリーランスAI仕事ロードマップ"></div>
+
+        <!-- v1.0 初見向け案内 -->
+        <div class="intro-card intro-start-card">
+          <p class="eyebrow">v1.0 guide</p>
+          <h2>はじめての人はここから</h2>
+          <ol class="intro-steps-list">
+            <li><strong>見学</strong>：仕事の流れをのぞき見する</li>
+            <li><strong>装備</strong>：道具の温度札を見る</li>
+            <li><strong>今日</strong>：今日の3ステップを選ぶ</li>
+            <li><strong>納品</strong>：相手に渡す提出文を作る</li>
+          </ol>
+        </div>
+
+        <div class="intro-card intro-tabs-card">
+          <p class="eyebrow">6 tabs</p>
+          <h2>6つのタブの役割</h2>
+          <ul class="intro-tabs-list">
+            <li><span>👁</span><strong>見学</strong>：仕事の1日の流れを見る</li>
+            <li><span>🔑</span><strong>共有</strong>：URL・権限・コメントの感覚を知る</li>
+            <li><span>🧰</span><strong>装備</strong>：道具ごとの距離感を見る</li>
+            <li><span>📍</span><strong>今日</strong>：今日の3ステップを選ぶ</li>
+            <li><span>📦</span><strong>納品</strong>：提出文を作る</li>
+            <li><span>🕵️</span><strong>監督</strong>：AI出力をそのまま貼らないために確認する</li>
+          </ul>
+        </div>
+
         <div class="section-heading">
           <div>
             <p class="eyebrow">Work tour</p>
@@ -186,23 +212,23 @@
 
             <div class="delivery-input-section">
               <div class="delivery-input-title">今回の更新点（3つ）</div>
-              <input id="input-update1" type="text" value="v0.9で納品パック入力版を追加" />
-              <input id="input-update2" type="text" value="入力内容から完成文プレビューを作れるようにした" />
-              <input id="input-update3" type="text" value="提出文をコピーできるようにした" />
+              <input id="input-update1" type="text" value="v1.0で初見向けトップ案内を追加" />
+              <input id="input-update2" type="text" value="はじめての人向け4ステップを追加" />
+              <input id="input-update3" type="text" value="6つのタブの役割を整理した" />
             </div>
 
             <div class="delivery-input-section">
               <div class="delivery-input-title">見てほしい場所（3つ）</div>
-              <input id="input-focus1" type="text" value="納品タブの入力フォーム" />
-              <input id="input-focus2" type="text" value="完成文を見るプレビュー" />
-              <input id="input-focus3" type="text" value="提出文コピーの動作" />
+              <input id="input-focus1" type="text" value="トップのはじめての人向け案内" />
+              <input id="input-focus2" type="text" value="6つのタブの役割カード" />
+              <input id="input-focus3" type="text" value="納品タブのお渡しパック入力版" />
             </div>
 
             <div class="delivery-input-section">
               <div class="delivery-input-title">次に相談したいこと（3つ）</div>
-              <input id="input-next1" type="text" value="初見の人に提出文の意味が伝わるか" />
-              <input id="input-next2" type="text" value="入力欄の数が多すぎないか" />
-              <input id="input-next3" type="text" value="納品文が相手に確認しやすい文章になっているか" />
+              <input id="input-next1" type="text" value="初見の人にアプリの目的が伝わるか" />
+              <input id="input-next2" type="text" value="最初にどのタブを見ればいいか伝わるか" />
+              <input id="input-next3" type="text" value="提出文が相手に確認しやすい文章になっているか" />
             </div>
           </div>
 
@@ -296,6 +322,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=091"></script>
+  <script src="script.js?v=100"></script>
 </body>
 </html>
