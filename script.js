@@ -574,6 +574,33 @@ const deliveryPack = {
   ]
 };
 
+
+// v0.9 納品パック入力版ドラフト
+const deliveryDraft = {
+  url: "https://hiderock61.github.io/",
+  oneWord: "iPhoneだけで、AI時代の仕事道具・今日の進め方・納品の型を学べるフリーランス訓練アプリ。",
+  features: [
+    "Slack、Figma、VS Codeなどの仕事道具を紙芝居で見学できる",
+    "温度札で、今やる装備・眺めるだけの装備・スルーしてよい装備を分けられる",
+    "今日の状態に合わせて、省エネ／見る／さわる／本線の3ステップを選べる"
+  ],
+  updates: [
+    "v0.9で納品パック入力版を追加",
+    "入力内容から完成文プレビューを作れるようにした",
+    "提出文をコピーできるようにした"
+  ],
+  focusPoints: [
+    "納品タブの入力フォーム",
+    "完成文を見るプレビュー",
+    "提出文コピーの動作"
+  ],
+  nextQuestions: [
+    "初見の人に提出文の意味が伝わるか",
+    "入力欄の数が多すぎないか",
+    "納品文が相手に確認しやすい文章になっているか"
+  ]
+};
+
 const conditions = [
   { id: "iphone", label: "📱 iPhoneだけ", title: "iPhoneだけならリンク装備", text: "1つだけ公式リンクを開き、ブックマークかホーム画面に置く。今日は深く覚えない。" },
   { id: "pc", label: "💻 ChromePCあり", title: "PCありならファイル装備", text: "GitHubかVS Codeを開き、index.htmlのタイトルだけ変更する。変更できたら勝ち。" },
@@ -1254,6 +1281,109 @@ function bindDailyRouteButtons() {
 }
 
 
+
+function updateDeliveryPreview() {
+  const urlEl = document.getElementById("input-url");
+  const oneWordEl = document.getElementById("input-oneword");
+  const previewEl = document.getElementById("deliveryPreviewText");
+
+  if (!urlEl || !oneWordEl || !previewEl) return;
+
+  const getValue = (id) => {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+  };
+
+  deliveryDraft.url = urlEl.value;
+  deliveryDraft.oneWord = oneWordEl.value;
+  deliveryDraft.features = [getValue("input-feature1"), getValue("input-feature2"), getValue("input-feature3")];
+  deliveryDraft.updates = [getValue("input-update1"), getValue("input-update2"), getValue("input-update3")];
+  deliveryDraft.focusPoints = [getValue("input-focus1"), getValue("input-focus2"), getValue("input-focus3")];
+  deliveryDraft.nextQuestions = [getValue("input-next1"), getValue("input-next2"), getValue("input-next3")];
+
+  previewEl.textContent = buildDeliveryDraftText(deliveryDraft);
+}
+
+function buildDeliveryDraftText(draft) {
+  const cleanList = (items) => items.filter(x => x && x.trim()).map(x => x.trim());
+  const features = cleanList(draft.features);
+  const updates = cleanList(draft.updates);
+  const focusPoints = cleanList(draft.focusPoints);
+  const nextQuestions = cleanList(draft.nextQuestions);
+
+  const parts = [];
+  parts.push(`【提出物】
+フリーランス装備庫 v0.9`);
+  parts.push(`【公開URL】
+${draft.url && draft.url.trim() ? draft.url.trim() : "未入力"}`);
+  parts.push(`【一言説明】
+${draft.oneWord && draft.oneWord.trim() ? draft.oneWord.trim() : "未入力"}`);
+
+  parts.push(`【できること】
+${features.length ? "- " + features.join("\n- ") : "未入力"}`);
+  parts.push(`【今回の更新点】
+${updates.length ? "- " + updates.join("\n- ") : "未入力"}`);
+  parts.push(`【見てほしい場所】
+${focusPoints.length ? "- " + focusPoints.join("\n- ") : "未入力"}`);
+  parts.push(`【次に相談したいこと】
+${nextQuestions.length ? "- " + nextQuestions.join("\n- ") : "未入力"}`);
+
+  return parts.join("\n\n").trim();
+}
+
+function showInputView() {
+  const inputView = document.getElementById("deliveryInputView");
+  const previewView = document.getElementById("deliveryPreviewView");
+  const inputBtn = document.getElementById("deliveryInputBtn");
+  const previewBtn = document.getElementById("deliveryPreviewBtn");
+
+  if (!inputView || !previewView || !inputBtn || !previewBtn) return;
+
+  inputView.style.display = "block";
+  previewView.style.display = "none";
+  inputBtn.classList.add("active");
+  previewBtn.classList.remove("active");
+}
+
+function showPreviewView() {
+  const inputView = document.getElementById("deliveryInputView");
+  const previewView = document.getElementById("deliveryPreviewView");
+  const inputBtn = document.getElementById("deliveryInputBtn");
+  const previewBtn = document.getElementById("deliveryPreviewBtn");
+
+  if (!inputView || !previewView || !inputBtn || !previewBtn) return;
+
+  updateDeliveryPreview();
+  inputView.style.display = "none";
+  previewView.style.display = "block";
+  inputBtn.classList.remove("active");
+  previewBtn.classList.add("active");
+}
+
+async function copyDeliveryDraftText() {
+  updateDeliveryPreview();
+  const text = buildDeliveryDraftText(deliveryDraft);
+  const statusEl = document.getElementById("deliveryDraftCopyStatus");
+  try {
+    await navigator.clipboard.writeText(text);
+    if (statusEl) statusEl.textContent = "コピーしました";
+    showToast("提出文をコピーした");
+  } catch {
+    copyText(text);
+    if (statusEl) statusEl.textContent = "コピーしました";
+  }
+}
+
+function bindDeliveryDraftButtons() {
+  const inputBtn = document.getElementById("deliveryInputBtn");
+  const previewBtn = document.getElementById("deliveryPreviewBtn");
+  const copyBtn = document.getElementById("copyDeliveryDraftText");
+
+  if (inputBtn) inputBtn.addEventListener("click", showInputView);
+  if (previewBtn) previewBtn.addEventListener("click", showPreviewView);
+  if (copyBtn) copyBtn.addEventListener("click", copyDeliveryDraftText);
+}
+
 function renderDeliveryPack() {
   const pack = deliveryPack;
   const url = document.getElementById("delivery-url");
@@ -1428,6 +1558,7 @@ function bindButtons() {
   document.getElementById("copyDeliveryBtn").addEventListener("click", copyDeliveryText);
   const copyDeliveryPackBtn = document.getElementById("copyDeliveryPackBtn");
   if (copyDeliveryPackBtn) copyDeliveryPackBtn.addEventListener("click", copyDeliveryText);
+  bindDeliveryDraftButtons();
   document.querySelectorAll(".copy-prompt").forEach(button => {
     button.addEventListener("click", () => copyText(promptTemplates[button.dataset.prompt]));
   });
