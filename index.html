@@ -2,76 +2,202 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI副業・フリーランス地雷地図 v0.1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>フリーランス装備庫 v0.4.3</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="app-shell">
+  <div class="app-shell">
     <header class="hero">
-      <p class="eyebrow">v0.1 / ルール判定版</p>
-      <h1>AI副業・フリーランス<br>地雷地図</h1>
-      <p class="lead">広告文や案件文を貼って、「仕事なのか」「講座入口なのか」「確認不足なのか」を分解する初心者用の赤札アプリ。</p>
+      <div class="hero-topline">
+        <span class="badge">v0.4.3</span>
+        <span class="badge soft">GitHub Pages ready</span>
+      </div>
+      <h1>フリーランス装備庫</h1>
+      <p>覚える前に、まず見学する。ホワイトカラーAI仕事の流れをiPhoneでのぞき見して、必要な装備を体感する学習アプリ。</p>
+      <div class="progress-box" aria-label="進捗">
+        <div class="progress-meta">
+          <span id="progressText">進捗を読み込み中</span>
+          <button id="resetBtn" class="link-button" type="button">リセット</button>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
     </header>
 
-    <section class="card input-card" aria-labelledby="input-title">
-      <div class="section-head">
-        <h2 id="input-title">1. 広告文・案件文を貼る</h2>
-        <button id="sampleBtn" class="ghost-btn" type="button">サンプル投入</button>
-      </div>
-      <textarea id="adText" placeholder="例：未経験OK！AIで月収50万円。スマホだけで簡単。LINE登録後に詳細説明します。初期サポート費用あり。"></textarea>
-      <div class="quick-flags" aria-label="追加チェック項目">
-        <label><input type="checkbox" value="initialCost"> 初期費用・サポート費用がある</label>
-        <label><input type="checkbox" value="lineFlow"> LINE/DMへ誘導される</label>
-        <label><input type="checkbox" value="unclearWork"> 仕事内容が曖昧</label>
-        <label><input type="checkbox" value="deliverableClear"> 納品物が明確</label>
-        <label><input type="checkbox" value="contractClear"> 契約・報酬条件が明確</label>
-      </div>
-      <button id="checkBtn" class="main-btn" type="button">赤札チェックする</button>
-    </section>
+    <main>
 
-    <section id="resultCard" class="card result-card is-hidden" aria-live="polite">
-      <p class="eyebrow">明智判定 😲</p>
-      <h2 id="resultTitle">判定結果</h2>
-      <div class="meter" aria-hidden="true">
-        <div id="meterFill" class="meter-fill"></div>
-      </div>
-      <p id="resultSummary" class="result-summary"></p>
-
-      <div class="result-grid">
-        <div>
-          <h3>拾った赤札</h3>
-          <ul id="redFlags" class="tag-list"></ul>
+      <section id="viewTour" class="view active" aria-labelledby="tourTitle">
+        <div id="roadmapContainer" class="roadmap-section"></div>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Work tour</p>
+            <h2 id="tourTitle">見学モード</h2>
+          </div>
+          <span id="tourCounter" class="badge soft">1/6</span>
         </div>
-        <div>
-          <h3>良い材料</h3>
-          <ul id="greenFlags" class="tag-list good"></ul>
+        <div id="tourPanel" class="tour-panel">
+          <p class="panel-lead">まずは道具名を覚えない。ホワイトカラーAI仕事の1日を、6枚の紙芝居で見る。</p>
+          <div id="tourSlide" class="tour-slide" aria-live="polite"></div>
+          <div class="tour-actions">
+            <button id="tourPrevBtn" class="ghost-button" type="button">前へ</button>
+            <button id="tourNextBtn" class="primary-button" type="button">次へ</button>
+            <button id="tourGearBtn" class="mini-button" type="button">関連装備を見る</button>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="next-box">
-        <h3>次に確認すること</h3>
-        <ol id="nextQuestions"></ol>
-      </div>
+      <section id="viewShare" class="view" aria-labelledby="shareTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Share simulator</p>
+            <h2 id="shareTitle">🔑 共有</h2>
+          </div>
+          <span class="badge soft">鍵と権限</span>
+        </div>
+        <div class="share-intro panel">
+          <p class="panel-lead">共有は、ファイルを投げることだけではない。ネット上の部屋へ入る「鍵」を相手に渡すこと。見るだけ、コメント、編集、画面共有、URL共有、スクショ共有の7パターン。</p>
+        </div>
+        <div id="shareContainer" class="share-grid"></div>
+      </section>
 
-      <div class="copy-box">
-        <h3>AIに渡す質問文</h3>
-        <textarea id="promptOut" readonly></textarea>
-        <button id="copyBtn" class="ghost-btn" type="button">コピー</button>
-        <p id="copyToast" class="toast" role="status"></p>
-      </div>
-    </section>
+      <section id="viewGear" class="view" aria-labelledby="gearTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Gear cards</p>
+            <h2 id="gearTitle">🧰 装備</h2>
+          </div>
+          <button id="copyAllBtn" class="mini-button" type="button">今日の装備文をコピー</button>
+        </div>
+        <div id="filterRow" class="filter-row" aria-label="カテゴリ絞り込み"></div>
+        <div id="gearGrid" class="gear-grid"></div>
+      </section>
 
-    <section class="card mini-manual">
-      <h2>このアプリの使い方©️</h2>
-      <ol>
-        <li>広告文・案件文を貼る。</li>
-        <li>気になる条件にチェックを入れる。</li>
-        <li>「仕事っぽい / 講座入口っぽい / 要確認」を見る。</li>
-        <li>AI質問文をコピーして、明智君・Gemini・Claudeなどに投げる。</li>
-      </ol>
-    </section>
-  </main>
-  <script src="app.js"></script>
+      <section id="viewToday" class="view" aria-labelledby="todayTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Today mission</p>
+            <h2 id="todayTitle">📍 今日の一手</h2>
+          </div>
+        </div>
+        <div class="panel">
+          <p class="panel-lead">今の地上条件を押すと、5分から15分の練習に変換する。</p>
+          <div id="dailyRouteButtons" class="daily-route-buttons">
+            <button class="daily-route-btn" data-route="hold" type="button">🧊 今日は省エネ</button>
+            <button class="daily-route-btn" data-route="watch" type="button">👀 眺めるだけ</button>
+            <button class="daily-route-btn" data-route="try" type="button">👆 1回さわる</button>
+            <button class="daily-route-btn" data-route="core" type="button">🧰 制作本線</button>
+          </div>
+          <div id="dailyRouteSteps" class="daily-route-steps"></div>
+          <div class="result-card">
+            <p class="eyebrow">出力</p>
+            <h3 id="todayOutputTitle">まだ未選択</h3>
+            <p id="todayOutputText">省エネ、眺めるだけ、1回さわる、制作本線から1つ選ぶ。</p>
+            <div class="button-row">
+              <button id="copyMissionBtn" class="primary-button" type="button">AIに渡す文をコピー</button>
+              <button id="completeMissionBtn" class="ghost-button" type="button">今日やった</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="viewDelivery" class="view" aria-labelledby="deliveryTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Delivery pack</p>
+            <h2 id="deliveryTitle">📦 納品</h2>
+          </div>
+          <button id="copyDeliveryBtn" class="mini-button" type="button">納品文をコピー</button>
+        </div>
+        <div class="panel">
+          <p class="panel-lead">作品を仕事っぽく見せるための最小セット。全部ではなく、まず3つ押せたら勝ち。</p>
+          <div id="deliveryChecklist" class="checklist"></div>
+        </div>
+        <div class="delivery-pack-section">
+          <h3>納品パック見本</h3>
+          <div class="delivery-pack">
+            <div class="delivery-pack-item">
+              <p class="eyebrow">公開URL</p>
+              <p id="delivery-url">https://hiderock61.github.io/freelance-/</p>
+            </div>
+            <div class="delivery-pack-item">
+              <p class="eyebrow">一言説明</p>
+              <p id="delivery-oneword">iPhoneだけで、AI時代の仕事道具・今日の進め方・納品の型を学べるフリーランス訓練アプリ。</p>
+            </div>
+          </div>
+          <button id="copyDeliveryPackBtn" class="primary-button" type="button">納品パック全体をコピー</button>
+        </div>
+        <div class="board-template">
+          <p class="eyebrow">Miro風 1枚作戦ボード</p>
+          <h3>自分のアプリを説明できる形にする6問</h3>
+          <ol>
+            <li>誰が困っている？</li>
+            <li>何に困っている？</li>
+            <li>どのボタンを押す？</li>
+            <li>AIに何を渡す？</li>
+            <li>何が返ってくる？</li>
+            <li>完了形は何？</li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="viewPrompt" class="view" aria-labelledby="promptTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Director console</p>
+            <h2 id="promptTitle">🕵️ 監督</h2>
+          </div>
+          <span class="badge soft">差分監督</span>
+        </div>
+        <div id="directorContainer" class="director-section"></div>
+      </section>
+
+      <section id="viewStory" class="view" aria-labelledby="storyTitle">
+        <div class="section-heading">
+          <div id="storyTempBadge"></div>
+          <div>
+            <p class="eyebrow">Operation story</p>
+            <p id="storyAppLabel">アプリ説明</p>
+            <h2 id="storyTitle"><span id="storyAppName">アプリ名</span></h2>
+          </div>
+          <span id="storyCounter" class="badge soft">1/5</span>
+        </div>
+        <div class="story-panel">
+          <div class="story-head">
+            <h3 id="storyStepTitle">ステップ</h3>
+            <p id="storyStepBody">説明</p>
+          </div>
+          <div id="storyMock" class="story-mock"></div>
+          <div id="storyLearn" class="story-learn"></div>
+          <div id="storyFinish" class="story-finish"></div>
+          <div class="story-actions">
+            <button id="storyPrev" class="ghost-button" type="button">前へ</button>
+            <button id="storyNext" class="primary-button" type="button">次へ</button>
+            <button id="storyBack" class="mini-button" type="button">戻る</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="tabbar" aria-label="画面切り替え">
+      <button class="tab active" data-view="viewTour" type="button">👁️<span>見学</span></button>
+      <button class="tab" data-view="viewShare" type="button">🔑<span>共有</span></button>
+      <button class="tab" data-view="viewGear" type="button">🧰<span>装備</span></button>
+      <button class="tab" data-view="viewToday" type="button">📍<span>今日</span></button>
+      <button class="tab" data-view="viewDelivery" type="button">📦<span>納品</span></button>
+      <button class="tab" data-view="viewPrompt" type="button">🕵️<span>監督</span></button>
+    </nav>
+  </div>
+
+  <dialog id="gearDialog" class="gear-dialog">
+    <form method="dialog">
+      <button class="dialog-close" aria-label="閉じる">×</button>
+    </form>
+    <div id="dialogContent"></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
+
+  <script src="script.js"></script>
 </body>
 </html>
