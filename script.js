@@ -545,7 +545,7 @@ const deliveryItems = [
 
 // v0.8 納品パック見本データ
 const deliveryPack = {
-  url: "https://hiderock61.github.io/",
+  url: "https://hiderock61.github.io/freelance-/",
   oneWord: "iPhoneだけで、AI時代の仕事道具・今日の進め方・納品の型を学べるフリーランス訓練アプリ。",
   screenshots: [
     "今日タブ：今日の装備ルート",
@@ -577,7 +577,7 @@ const deliveryPack = {
 
 // v0.9 納品パック入力版ドラフト
 const deliveryDraft = {
-  url: "https://hiderock61.github.io/",
+  url: "https://hiderock61.github.io/freelance-/",
   oneWord: "iPhoneだけで、AI時代の仕事道具・今日の進め方・納品の型を学べるフリーランス訓練アプリ。",
   features: [
     "Slack、Figma、VS Codeなどの仕事道具を紙芝居で見学できる",
