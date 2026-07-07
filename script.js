@@ -601,6 +601,9 @@ const deliveryDraft = {
   ]
 };
 
+// v2.0 3つのお渡しレターモード
+let deliveryMode = "initial";
+
 const conditions = [
   { id: "iphone", label: "📱 iPhoneだけ", title: "iPhoneだけならリンク装備", text: "1つだけ公式リンクを開き、ブックマークかホーム画面に置く。今日は深く覚えない。" },
   { id: "pc", label: "💻 ChromePCあり", title: "PCありならファイル装備", text: "GitHubかVS Codeを開き、index.htmlのタイトルだけ変更する。変更できたら勝ち。" },
@@ -1301,34 +1304,90 @@ function updateDeliveryPreview() {
   deliveryDraft.focusPoints = [getValue("input-focus1"), getValue("input-focus2"), getValue("input-focus3")];
   deliveryDraft.nextQuestions = [getValue("input-next1"), getValue("input-next2"), getValue("input-next3")];
 
-  previewEl.textContent = buildDeliveryDraftText(deliveryDraft);
+  previewEl.textContent = buildDeliveryDraftText(deliveryDraft, deliveryMode);
 }
 
-function buildDeliveryDraftText(draft) {
-  const cleanList = (items) => items.filter(x => x && x.trim()).map(x => x.trim());
-  const features = cleanList(draft.features);
-  const updates = cleanList(draft.updates);
-  const focusPoints = cleanList(draft.focusPoints);
-  const nextQuestions = cleanList(draft.nextQuestions);
+function safeDeliveryValue(value) {
+  return value && value.trim() ? value.trim() : "（未入力）";
+}
 
-  const parts = [];
-  parts.push(`【提出物】
-フリーランス装備庫 v0.9`);
-  parts.push(`【公開URL】
-${draft.url && draft.url.trim() ? draft.url.trim() : "未入力"}`);
-  parts.push(`【一言説明】
-${draft.oneWord && draft.oneWord.trim() ? draft.oneWord.trim() : "未入力"}`);
+function safeDeliveryList(items) {
+  const cleaned = items.filter(x => x && x.trim()).map(x => x.trim());
+  return cleaned.length ? "- " + cleaned.join("\n- ") : "（未入力）";
+}
 
-  parts.push(`【できること】
-${features.length ? "- " + features.join("\n- ") : "未入力"}`);
-  parts.push(`【今回の更新点】
-${updates.length ? "- " + updates.join("\n- ") : "未入力"}`);
-  parts.push(`【見てほしい場所】
-${focusPoints.length ? "- " + focusPoints.join("\n- ") : "未入力"}`);
-  parts.push(`【次に相談したいこと】
-${nextQuestions.length ? "- " + nextQuestions.join("\n- ") : "未入力"}`);
+function buildDeliveryDraftText(draft, mode = deliveryMode) {
+  if (mode === "fix") return buildFixLetter(draft);
+  if (mode === "share") return buildShareLetter(draft);
+  return buildInitialLetter(draft);
+}
 
-  return parts.join("\n\n").trim();
+function buildInitialLetter(draft) {
+  return `お疲れ様です！制作物が確認できる状態になりましたので、お渡しいたします。
+
+🌐 成果物のURL
+${safeDeliveryValue(draft.url)}
+
+📝 どんな作品？
+${safeDeliveryValue(draft.oneWord)}
+
+✨ 確認できること
+${safeDeliveryList(draft.features)}
+
+👀 特にチェックしてほしい場所
+${safeDeliveryList(draft.focusPoints)}
+
+🙋 次のステップ（ご相談）
+${safeDeliveryList(draft.nextQuestions)}
+
+お手すきの際にご確認をお願いいたします！`.trim();
+}
+
+function buildFixLetter(draft) {
+  return `お疲れ様です！ご指摘いただいた箇所の修正が完了しましたので、再提出いたします。
+
+🛠 今回直したところ（差分）
+${safeDeliveryList(draft.updates)}
+
+👀 修正後のチェック場所
+${safeDeliveryList(draft.focusPoints)}
+
+🌐 最新の確認URL
+${safeDeliveryValue(draft.url)}
+
+🙋 次のステップ（ご相談）
+${safeDeliveryList(draft.nextQuestions)}
+
+イメージ通りに仕上がっているか、ご確認いただけますと幸いです。よろしくお願いいたします！`.trim();
+}
+
+function buildShareLetter(draft) {
+  return `お疲れ様です！現在の進捗を中間共有させていただきます。
+※こちらはまだ制作途中のプレビューです。
+
+🚧 現在の状態
+${safeDeliveryValue(draft.oneWord)}
+
+✨ 現段階でチェックできること
+${safeDeliveryList(draft.features)}
+
+🙋 次に進めたいこと・ご相談
+${safeDeliveryList(draft.nextQuestions)}
+
+🌐 現在の確認リンク
+${safeDeliveryValue(draft.url)}
+
+方向性にズレがないか、現段階で一度見ていただけますと幸いです。よろしくお願いいたします！`.trim();
+}
+
+function setDeliveryMode(mode) {
+  deliveryMode = mode || "initial";
+
+  document.querySelectorAll(".delivery-mode-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.mode === deliveryMode);
+  });
+
+  updateDeliveryPreview();
 }
 
 function showInputView() {
@@ -1362,7 +1421,7 @@ function showPreviewView() {
 
 async function copyDeliveryDraftText() {
   updateDeliveryPreview();
-  const text = buildDeliveryDraftText(deliveryDraft);
+  const text = buildDeliveryDraftText(deliveryDraft, deliveryMode);
   const statusEl = document.getElementById("deliveryDraftCopyStatus");
   try {
     await navigator.clipboard.writeText(text);
@@ -1382,6 +1441,12 @@ function bindDeliveryDraftButtons() {
   if (inputBtn) inputBtn.addEventListener("click", showInputView);
   if (previewBtn) previewBtn.addEventListener("click", showPreviewView);
   if (copyBtn) copyBtn.addEventListener("click", copyDeliveryDraftText);
+
+  document.querySelectorAll(".delivery-mode-btn").forEach(button => {
+    button.addEventListener("click", () => setDeliveryMode(button.dataset.mode));
+  });
+
+  setDeliveryMode(deliveryMode);
 }
 
 function renderDeliveryPack() {

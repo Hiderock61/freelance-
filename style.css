@@ -1730,3 +1730,38 @@ main { margin-top: 18px; }
 .intro-steps-list strong {
   color: var(--text);
 }
+
+
+/* v2.0 お渡しレターモード切り替え */
+.delivery-mode-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.delivery-mode-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(15, 23, 42, 0.46);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 700;
+  white-space: nowrap;
+  min-height: 36px;
+}
+
+.delivery-mode-btn.active {
+  border-color: rgba(110, 231, 183, 0.55);
+  background: rgba(110, 231, 183, 0.16);
+  color: var(--text);
+  box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.08);
+}
+
+.delivery-mode-btn:focus-visible {
+  outline: 2px solid rgba(110, 231, 183, 0.72);
+  outline-offset: 2px;
+}

@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v1.0</title>
-  <link rel="stylesheet" href="style.css?v=100" />
+  <title>フリーランス装備庫 v2.0</title>
+  <link rel="stylesheet" href="style.css?v=200" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v1.0</span>
+        <span class="badge">v2.0</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.0では、納品タブで3つのお渡しレターを選べるようになりました。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -183,9 +183,9 @@
 
         <!-- v0.9 納品パック入力版 -->
         <div id="deliveryDraftContainer" class="delivery-draft-card" aria-labelledby="deliveryDraftTitle">
-          <p class="eyebrow">v0.9 Delivery Draft</p>
-          <h3 id="deliveryDraftTitle">お渡しパック入力版</h3>
-          <p class="delivery-draft-lead">見本文を自分のURLや相談内容に書き換えて、相手が確認しやすい提出文を作る。</p>
+          <p class="eyebrow">v2.0 Delivery Letters</p>
+          <h3 id="deliveryDraftTitle">3つのお渡しレターモード</h3>
+          <p class="delivery-draft-lead">同じ入力内容から、初回提出・修正提出・途中共有の3種類の提出文を作る。</p>
 
           <div class="delivery-switch" role="group" aria-label="納品パック入力切り替え">
             <button id="deliveryInputBtn" class="delivery-switch-btn active" type="button">✏️ 入力する</button>
@@ -212,9 +212,9 @@
 
             <div class="delivery-input-section">
               <div class="delivery-input-title">今回の更新点（3つ）</div>
-              <input id="input-update1" type="text" value="v1.0で初見向けトップ案内を追加" />
-              <input id="input-update2" type="text" value="はじめての人向け4ステップを追加" />
-              <input id="input-update3" type="text" value="6つのタブの役割を整理した" />
+              <input id="input-update1" type="text" value="v2.0で3つのお渡しレターモードを追加" />
+              <input id="input-update2" type="text" value="初回提出・修正提出・途中共有を切り替えられるようにした" />
+              <input id="input-update3" type="text" value="入力欄は増やさず、出力文だけを状況別に切り替える設計にした" />
             </div>
 
             <div class="delivery-input-section">
@@ -233,6 +233,12 @@
           </div>
 
           <div id="deliveryPreviewView" style="display:none;">
+            <!-- v2.0：3つのお渡しレターモード -->
+            <div class="delivery-mode-buttons" role="group" aria-label="お渡しレターの種類">
+              <button class="delivery-mode-btn active" data-mode="initial" type="button">📦 初回提出</button>
+              <button class="delivery-mode-btn" data-mode="fix" type="button">🛠 修正提出</button>
+              <button class="delivery-mode-btn" data-mode="share" type="button">🚧 途中共有</button>
+            </div>
             <pre id="deliveryPreviewText" class="delivery-preview-box"></pre>
             <button id="copyDeliveryDraftText" class="delivery-copy-btn" type="button">提出文をコピーする</button>
             <div id="deliveryDraftCopyStatus" class="delivery-copy-status" role="status" aria-live="polite"></div>
@@ -322,6 +328,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=100"></script>
+  <script src="script.js?v=200"></script>
 </body>
 </html>
