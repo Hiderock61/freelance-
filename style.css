@@ -1765,3 +1765,71 @@ main { margin-top: 18px; }
   outline: 2px solid rgba(110, 231, 183, 0.72);
   outline-offset: 2px;
 }
+
+/* v2.1 案件カード受け取り欄 */
+.project-card-import {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.76);
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.pc-import-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.pc-lead {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pc-input {
+  width: 100%;
+  min-height: 130px;
+  max-height: 320px;
+  resize: vertical;
+  padding: 10px;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.pc-controls {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.pc-preview {
+  margin-top: 10px;
+  padding: 10px;
+  background: #fff;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  word-break: break-word;
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.pc-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+#projectCardToDeliveryBtn:disabled {
+  opacity: 0.5;
+}

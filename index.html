@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.0.1</title>
-  <link rel="stylesheet" href="style.css?v=201" />
+  <title>フリーランス装備庫 v2.1</title>
+  <link rel="stylesheet" href="style.css?v=210" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.0.1</span>
+        <span class="badge">v2.1</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
@@ -136,6 +136,21 @@
             <h2 id="todayTitle">今日の一手</h2>
           </div>
         </div>
+
+        <!-- v2.1 案件カード受け取り欄 -->
+        <div id="project-card-import" class="project-card-import">
+          <p class="eyebrow">v2.1 Project Card</p>
+          <h3 class="pc-import-title">📋 案件カード受け取り欄</h3>
+          <p class="pc-lead">入口アプリで作った案件カードを貼って、今日の作業と納品タブへつなげる場所。</p>
+          <textarea id="projectCardInput" class="pc-input" placeholder="入口アプリでコピーした案件カードをここに貼り付けてください。"></textarea>
+          <div class="pc-controls">
+            <button id="projectCardLoadBtn" class="primary-button" type="button">案件カードを読み込む</button>
+            <button id="projectCardToDeliveryBtn" class="ghost-button" type="button" disabled>納品タブへ反映する</button>
+          </div>
+          <div id="projectCardPreview" class="pc-preview" aria-live="polite">案件カードを貼ると、案件名・作業内容・納品物・チェック基準がここに表示されます。</div>
+          <p class="pc-note">※保存はしません。ページを閉じると消えます。</p>
+        </div>
+
         <!-- v0.7 今日の装備ルート -->
         <div class="panel daily-route-panel">
           <p class="eyebrow">v0.7.1 Daily route</p>
@@ -328,6 +343,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=201"></script>
+  <script src="script.js?v=210"></script>
 </body>
 </html>

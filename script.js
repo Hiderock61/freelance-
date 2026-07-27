@@ -1644,3 +1644,217 @@ function init() {
 }
 
 init();
+
+/* v2.1 案件カード受け取り欄 */
+window.freelanceApp = window.freelanceApp || {};
+window.freelanceApp.currentProjectCard = null;
+
+(function () {
+  const input = document.getElementById("projectCardInput");
+  const loadBtn = document.getElementById("projectCardLoadBtn");
+  const preview = document.getElementById("projectCardPreview");
+  const toDeliveryBtn = document.getElementById("projectCardToDeliveryBtn");
+
+  if (!input || !loadBtn || !preview || !toDeliveryBtn) return;
+
+  const emptyCard = () => ({
+    "案件名": "",
+    "入口タイプ": "",
+    "作業内容": "",
+    "納品物": "",
+    "必要技術": "",
+    "不足技術": "",
+    "次の学習ミッション": "",
+    "相手へ聞く質問": "",
+    "応募または試作提案文": "",
+    "チェック基準": ""
+  });
+
+  function normalizeNewlines(text) {
+    return String(text || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+  }
+
+  function normalizeHeading(key) {
+    const cleaned = String(key || "")
+      .replace(/^[\s　■【\[]+/, "")
+      .replace(/[\s　】\]：:]+$/, "")
+      .trim();
+
+    const map = {
+      "案件カード": null,
+      "案件名": "案件名",
+      "案件名（タイトル）": "案件名",
+      "タイトル": "案件名",
+      "入口タイプ": "入口タイプ",
+      "作業内容": "作業内容",
+      "作業": "作業内容",
+      "納品物": "納品物",
+      "納品": "納品物",
+      "必要技術": "必要技術",
+      "不足技術": "不足技術",
+      "次の学習ミッション": "次の学習ミッション",
+      "学習ミッション": "次の学習ミッション",
+      "相手へ聞く質問": "相手へ聞く質問",
+      "質問": "相手へ聞く質問",
+      "応募または試作提案文": "応募または試作提案文",
+      "応募または試作提案": "応募または試作提案文",
+      "チェック基準": "チェック基準",
+      "チェック項目": "チェック基準",
+      "検品基準": "チェック基準"
+    };
+
+    return Object.prototype.hasOwnProperty.call(map, cleaned) ? map[cleaned] : cleaned;
+  }
+
+  window.freelanceApp.parseProjectCard = function parseProjectCard(text) {
+    const raw = normalizeNewlines(text);
+    const card = emptyCard();
+
+    if (!raw) return null;
+
+    const lines = raw.split("\n");
+    const sections = [];
+    let currentKey = null;
+    let currentLines = [];
+    let foundHeading = false;
+
+    const flush = () => {
+      if (currentKey !== null) {
+        const mapped = normalizeHeading(currentKey);
+        if (mapped) sections.push({ key: mapped, text: currentLines.join("\n").trim() });
+      }
+    };
+
+    lines.forEach(line => {
+      const headingMatch = line.match(/^\s*(?:■\s*)?[【\[]?(.+?)[】\]]?\s*[：:]\s*$/);
+      if (headingMatch) {
+        foundHeading = true;
+        flush();
+        currentKey = headingMatch[1].trim();
+        currentLines = [];
+      } else if (currentKey !== null) {
+        currentLines.push(line);
+      }
+    });
+    flush();
+
+    if (!foundHeading) {
+      card["作業内容"] = raw;
+      return card;
+    }
+
+    sections.forEach(section => {
+      if (Object.prototype.hasOwnProperty.call(card, section.key)) {
+        card[section.key] = section.text;
+      }
+    });
+
+    if (!card["作業内容"] && raw) {
+      card["作業内容"] = raw;
+    }
+
+    return card;
+  };
+
+  function valueOrMissing(value) {
+    return value && String(value).trim() ? String(value).trim() : "（未入力）";
+  }
+
+  window.freelanceApp.renderProjectCardPreview = function renderProjectCardPreview(card) {
+    if (!card) {
+      preview.textContent = "案件カードを貼り付けて「案件カードを読み込む」を押してください。";
+      toDeliveryBtn.disabled = true;
+      return;
+    }
+
+    const main = [
+      `案件名：${valueOrMissing(card["案件名"])}`,
+      `作業内容：\n${valueOrMissing(card["作業内容"])}`,
+      `納品物：\n${valueOrMissing(card["納品物"])}`,
+      `チェック基準：\n${valueOrMissing(card["チェック基準"])}`
+    ];
+
+    const refs = [
+      ["入口タイプ", card["入口タイプ"]],
+      ["必要技術", card["必要技術"]],
+      ["不足技術", card["不足技術"]],
+      ["次の学習ミッション", card["次の学習ミッション"]],
+      ["相手へ聞く質問", card["相手へ聞く質問"]],
+      ["応募または試作提案文", card["応募または試作提案文"]]
+    ]
+      .filter(([, value]) => value && String(value).trim())
+      .map(([label, value]) => `${label}：\n${value}`);
+
+    preview.textContent = refs.length
+      ? main.join("\n\n") + "\n\n---\n\n参考情報\n\n" + refs.join("\n\n")
+      : main.join("\n\n");
+
+    toDeliveryBtn.disabled = false;
+  };
+
+  function setValue(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    el.value = value;
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+    return true;
+  }
+
+  window.freelanceApp.applyProjectCardToDelivery = function applyProjectCardToDelivery(card) {
+    if (!card) return false;
+
+    const projectName = card["案件名"] || "案件";
+    const deliveryItem = card["納品物"] || "納品物";
+    const work = card["作業内容"] || "";
+    const check = card["チェック基準"] || "";
+    const question = card["相手へ聞く質問"] || "";
+
+    const results = [
+      setValue("input-oneword", `${projectName} の作業です。`),
+      setValue("input-feature1", `${deliveryItem} の準備・確認ができます。`),
+      setValue("input-feature2", "入口アプリで整理した案件カードをもとに作業できます。"),
+      setValue("input-feature3", "初回提出・修正提出・途中共有の文章を作れます。"),
+      setValue("input-update1", work),
+      setValue("input-update2", card["次の学習ミッション"] || ""),
+      setValue("input-update3", card["不足技術"] || ""),
+      setValue("input-focus1", check),
+      setValue("input-focus2", deliveryItem),
+      setValue("input-focus3", projectName),
+      setValue("input-next1", question),
+      setValue("input-next2", "提出前に確認する点があれば教えてください。"),
+      setValue("input-next3", "修正が必要な場合は、修正箇所を教えてください。")
+    ];
+
+    if (typeof updateDeliveryPreview === "function") {
+      updateDeliveryPreview();
+    }
+
+    return results.some(Boolean);
+  };
+
+  loadBtn.addEventListener("click", () => {
+    const card = window.freelanceApp.parseProjectCard(input.value);
+    window.freelanceApp.currentProjectCard = card;
+    window.freelanceApp.renderProjectCardPreview(card);
+    if (card) {
+      showToast("案件カードを読み込みました");
+    }
+  });
+
+  toDeliveryBtn.addEventListener("click", () => {
+    const card = window.freelanceApp.currentProjectCard;
+    if (!card) {
+      preview.textContent = "先に案件カードを読み込んでください。";
+      return;
+    }
+
+    const ok = window.freelanceApp.applyProjectCardToDelivery(card);
+    if (ok) {
+      showToast("納品タブへ反映しました");
+      const deliveryTab = document.querySelector('.nav-button[data-target="viewDelivery"]');
+      if (deliveryTab) deliveryTab.click();
+    } else {
+      preview.textContent = "納品タブへ反映できませんでした。手入力で貼り付けてください。";
+    }
+  });
+})();
