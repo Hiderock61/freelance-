@@ -1833,3 +1833,44 @@ main { margin-top: 18px; }
 #projectCardToDeliveryBtn:disabled {
   opacity: 0.5;
 }
+
+/* v2.1.1 案件カード欄の視認性補修 */
+.project-card-import {
+  background: rgba(12, 22, 30, 0.88);
+  color: #f4f7f2;
+  border-color: rgba(116, 255, 181, 0.26);
+}
+
+.project-card-import .pc-import-title,
+.project-card-import .pc-lead,
+.project-card-import .pc-note,
+.project-card-import .eyebrow {
+  color: #f4f7f2;
+}
+
+.project-card-import .pc-lead,
+.project-card-import .pc-note {
+  opacity: 0.86;
+}
+
+.project-card-import .pc-input {
+  background: rgba(255, 255, 255, 0.96);
+  color: #102018;
+  border-color: rgba(116, 255, 181, 0.35);
+}
+
+.project-card-import .pc-input::placeholder {
+  color: #66736c;
+  opacity: 1;
+}
+
+.project-card-import .pc-preview {
+  background: rgba(255, 255, 255, 0.96);
+  color: #102018;
+  border-color: rgba(116, 255, 181, 0.35);
+}
+
+#projectCardToDeliveryBtn:disabled {
+  color: rgba(255, 255, 255, 0.72);
+  border-color: rgba(255, 255, 255, 0.18);
+}
