@@ -1874,3 +1874,111 @@ main { margin-top: 18px; }
   color: rgba(255, 255, 255, 0.72);
   border-color: rgba(255, 255, 255, 0.18);
 }
+
+
+/* v2.2 案件カード作業化 */
+.project-workbench {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(35, 42, 55, .98), rgba(24, 29, 39, .98));
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 14px 34px rgba(0,0,0,.22);
+  color: #fff;
+}
+
+.project-workbench[hidden] {
+  display: none !important;
+}
+
+.workbench-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.workbench-head h3 {
+  margin: 2px 0 0;
+  line-height: 1.35;
+}
+
+.workbench-summary,
+.workbench-section {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.09);
+}
+
+.workbench-summary p,
+.workbench-section h4 {
+  margin: 0 0 9px;
+}
+
+.workbench-box {
+  white-space: pre-wrap;
+  line-height: 1.65;
+  color: rgba(255,255,255,.92);
+}
+
+.workbench-checklist {
+  display: grid;
+  gap: 8px;
+}
+
+.workbench-check-item {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  align-items: start;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 11px;
+  background: rgba(255,255,255,.06);
+}
+
+.workbench-check-item input {
+  width: 21px;
+  height: 21px;
+  margin: 1px 0 0;
+}
+
+.workbench-check-item span {
+  line-height: 1.55;
+}
+
+.workbench-check-item:has(input:checked) span {
+  opacity: .62;
+  text-decoration: line-through;
+}
+
+.workbench-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workbench-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.12);
+  font-size: .9rem;
+}
+
+.workbench-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+@media (min-width: 560px) {
+  .workbench-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}
