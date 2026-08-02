@@ -1645,7 +1645,7 @@ function init() {
 
 init();
 
-/* v2.2 案件カード作業化 */
+/* v2.3 カード状態による案件カード作業化 */
 window.freelanceApp = window.freelanceApp || {};
 window.freelanceApp.currentProjectCard = null;
 
@@ -1661,6 +1661,7 @@ window.freelanceApp.currentProjectCard = null;
   if (!input || !loadBtn || !preview || !workbenchMoveBtn || !workbench) return;
 
   const emptyCard = () => ({
+    "カード状態": "",
     "案件名": "",
     "入口タイプ": "",
     "作業内容": "",
@@ -1670,7 +1671,16 @@ window.freelanceApp.currentProjectCard = null;
     "次の学習ミッション": "",
     "相手へ聞く質問": "",
     "応募または試作提案文": "",
-    "チェック基準": ""
+    "チェック基準": "",
+    "未確定事項": "",
+    "到達判定": "",
+    "掲載場所": "",
+    "募集URL": "",
+    "報酬": "",
+    "納期": "",
+    "今使える装備": "",
+    "学習ミッションの完成条件": "",
+    "次の行動": ""
   });
 
   function normalizeNewlines(text) {
@@ -1685,6 +1695,7 @@ window.freelanceApp.currentProjectCard = null;
 
     const map = {
       "案件カード": null,
+      "カード状態": "カード状態",
       "案件名": "案件名",
       "案件名（タイトル）": "案件名",
       "タイトル": "案件名",
@@ -1704,6 +1715,16 @@ window.freelanceApp.currentProjectCard = null;
       "チェック基準": "チェック基準",
       "チェック項目": "チェック基準",
       "検品基準": "チェック基準"
+      ,"未確定事項": "未確定事項"
+      ,"到達判定": "到達判定"
+      ,"掲載場所": "掲載場所"
+      ,"募集URL": "募集URL"
+      ,"URL": "募集URL"
+      ,"報酬": "報酬"
+      ,"納期": "納期"
+      ,"今使える装備": "今使える装備"
+      ,"学習ミッションの完成条件": "学習ミッションの完成条件"
+      ,"次の行動": "次の行動"
     };
 
     return Object.prototype.hasOwnProperty.call(map, cleaned) ? map[cleaned] : null;
@@ -1754,9 +1775,10 @@ window.freelanceApp.currentProjectCard = null;
           continue;
         }
 
-        if (recognizedCount > 0) {
-          break;
-        }
+        flush();
+        currentKey = null;
+        currentLines = [];
+        continue;
       }
 
       if (currentKey) currentLines.push(line);
@@ -1771,33 +1793,43 @@ window.freelanceApp.currentProjectCard = null;
     return value && String(value).trim() ? String(value).trim() : "（未入力）";
   }
 
-  function cardHasMinimum(card) {
-    return Boolean(card && card["案件名"] && card["作業内容"] && card["納品物"] && card["チェック基準"]);
+  function isUncertainValue(value) {
+    const text = normalizeNewlines(value);
+    if (!text) return true;
+    return /(未確定|未記載|不明|確認中|確認して記入)/.test(text)
+      || /^確認する[。.]?$/.test(text)
+      || /を確認する[。.]?$/.test(text);
   }
 
-  function renderProjectCardPreview(card) {
-    if (!card) {
-      preview.textContent = "案件カードとして読み取れませんでした。【案件カード】と、案件名・作業内容・納品物・チェック基準を確認してください。";
-      workbenchMoveBtn.disabled = true;
-      workbench.hidden = true;
-      return;
-    }
+  function resetProjectCardView() {
+    window.freelanceApp.currentProjectCard = null;
+    workbench.hidden = true;
+    workbenchMoveBtn.disabled = true;
+    workbenchMoveBtn.textContent = "案件作業台へ移動";
+    preview.classList.remove("pc-preview-warning", "pc-preview-ready", "pc-preview-checking");
+    preview.textContent = "案件カードを確認しています。";
+  }
 
-    const missing = ["案件名", "作業内容", "納品物", "チェック基準"]
-      .filter(key => !String(card[key] || "").trim());
+  function showCardWarning(message) {
+    preview.textContent = message;
+    preview.classList.add("pc-preview-warning");
+    workbench.hidden = true;
+    workbenchMoveBtn.disabled = true;
+  }
 
+  function renderProjectCardPreview(card, mode) {
     const lines = [
+      `カード状態：${valueOrMissing(card["カード状態"])}`,
       `案件名：${valueOrMissing(card["案件名"])}`,
       `作業内容：\n${valueOrMissing(card["作業内容"])}`,
       `納品物：\n${valueOrMissing(card["納品物"])}`,
       `チェック基準：\n${valueOrMissing(card["チェック基準"])}`
     ];
-
-    preview.textContent = missing.length
-      ? lines.join("\n\n") + `\n\n⚠️ 足りない項目：${missing.join("、")}\n入口アプリへ戻って案件カードを補ってください。`
-      : lines.join("\n\n") + "\n\n✅ 作業台を作れます。";
-
-    workbenchMoveBtn.disabled = missing.length > 0;
+    preview.textContent = lines.join("\n\n") + (mode === "checking"
+      ? "\n\n⚠️ 確認作業台を作ります。実制作は開始しません。"
+      : "\n\n✅ 制作作業台を作れます。");
+    preview.classList.add(mode === "checking" ? "pc-preview-checking" : "pc-preview-ready");
+    workbenchMoveBtn.disabled = false;
   }
 
   function checklistMarkup(items, group) {
@@ -1895,19 +1927,83 @@ window.freelanceApp.currentProjectCard = null;
     if (progress) progress.textContent = `${done}/${checks.length}`;
   }
 
+  function setWorkbenchSection(id, title, content, asChecklist = false) {
+    const target = document.getElementById(id);
+    const section = target.closest(".workbench-section");
+    section.hidden = false;
+    section.querySelector("h4").textContent = title;
+    if (asChecklist) {
+      target.className = "workbench-checklist";
+      target.innerHTML = checklistMarkup(content, id);
+    } else {
+      target.className = "workbench-box";
+      target.textContent = content;
+    }
+  }
+
+  function renderConfirmationWorkbench(card) {
+    document.getElementById("workbenchProjectName").textContent = card["案件名"] || "案件名未記載";
+    document.getElementById("workbenchProgress").textContent = "確認中";
+    const summary = document.getElementById("workbenchWorkSummary");
+    summary.textContent = "この案件は確認中です。まだ実制作を始めません。";
+
+    setWorkbenchSection("workbenchToday", "① 今日確認すること", [
+      "未確定事項を確認する",
+      "相手へ聞く質問を整理する",
+      "募集文を読み直す",
+      "必要なら不足情報を追記する"
+    ], true);
+
+    const unknown = normalizeNewlines(card["未確定事項"]);
+    setWorkbenchSection("workbenchLearning", "② 未確定事項",
+      !unknown || unknown === "なし" ? "未確定事項はカードに記載されていません。" : unknown);
+
+    const questions = normalizeNewlines(card["相手へ聞く質問"]);
+    setWorkbenchSection("workbenchSteps", "③ 相手へ聞く質問",
+      !questions || questions === "なし" ? "相手へ聞く質問はカードに記載されていません。" : questions);
+
+    const knownKeys = ["案件名", "入口タイプ", "掲載場所", "募集URL", "報酬", "納期", "必要技術", "不足技術", "今使える装備", "到達判定"];
+    const known = knownKeys.map(key => `${key}：${normalizeNewlines(card[key]) || "未記載"}`).join("\n\n");
+    const mission = normalizeNewlines(card["次の学習ミッション"]);
+    setWorkbenchSection("workbenchInspection", "④ 現在分かっていること",
+      mission ? `${known}\n\n次の学習ミッション（確認情報）：${mission}` : known);
+
+    setWorkbenchSection("workbenchDone", "⑤ 次へ進める条件", [
+      "・作業内容が具体化されている",
+      "・納品物が具体化されている",
+      "・チェック基準が具体化されている",
+      "・相手へ聞く質問が解消されている",
+      "・受注済み、または制作開始許可済み"
+    ].join("\n"));
+
+    document.getElementById("workbenchGear").closest(".workbench-section").hidden = true;
+    workbench.querySelector(".workbench-actions").hidden = true;
+    workbench.querySelector(".pc-note").hidden = true;
+    workbench.hidden = false;
+    workbench.querySelectorAll('input[data-workbench-check]').forEach(check => {
+      check.addEventListener("change", updateWorkbenchProgress);
+    });
+    updateWorkbenchProgress();
+  }
+
   function renderWorkbench(card) {
     const data = buildWorkbenchData(card);
     document.getElementById("workbenchProjectName").textContent = card["案件名"];
     document.getElementById("workbenchWorkSummary").textContent = card["作業内容"];
-    document.getElementById("workbenchToday").innerHTML = checklistMarkup(data.today, "today");
-    document.getElementById("workbenchLearning").textContent = data.learning;
-    document.getElementById("workbenchSteps").innerHTML = checklistMarkup(data.steps, "step");
-    document.getElementById("workbenchInspection").innerHTML = checklistMarkup(data.inspection, "inspection");
-    document.getElementById("workbenchDone").textContent = data.done;
+    setWorkbenchSection("workbenchToday", "① 今日やること", data.today, true);
+    setWorkbenchSection("workbenchLearning", "② 今回学ぶこと", data.learning);
+    setWorkbenchSection("workbenchSteps", "③ 制作手順", data.steps, true);
+    setWorkbenchSection("workbenchInspection", "④ 検品すること", data.inspection, true);
+    setWorkbenchSection("workbenchDone", "⑤ 完成条件", data.done);
+    const gearSection = document.getElementById("workbenchGear").closest(".workbench-section");
+    gearSection.hidden = false;
+    gearSection.querySelector("h4").textContent = "今回使う装備";
     document.getElementById("workbenchGear").innerHTML = data.gear
       .map(label => `<span class="workbench-tag">${escapeHtml(label)}</span>`)
       .join("");
 
+    workbench.querySelector(".workbench-actions").hidden = false;
+    workbench.querySelector(".pc-note").hidden = false;
     workbench.hidden = false;
     workbench.querySelectorAll('input[data-workbench-check]').forEach(check => {
       check.addEventListener("change", updateWorkbenchProgress);
@@ -1945,21 +2041,48 @@ ${card["チェック基準"]}
   }
 
   loadBtn.addEventListener("click", () => {
+    resetProjectCardView();
     const card = window.freelanceApp.parseProjectCard(input.value);
-    window.freelanceApp.currentProjectCard = card;
-    renderProjectCardPreview(card);
-
     if (!card) {
+      showCardWarning("案件カードとして読み取れませんでした。入口アプリで最新の案件カードを作り直してください。");
       showToast("案件カードを確認してください");
       return;
     }
-    if (!cardHasMinimum(card)) {
-      showToast("案件カードに不足があります");
+
+    const state = normalizeNewlines(card["カード状態"]);
+    if (!state) {
+      showCardWarning("カード状態がありません。入口アプリで最新の案件カードを作り直してください。");
+      showToast("カード状態がありません");
+      return;
+    }
+    if (state !== "確認中" && state !== "制作可能") {
+      showCardWarning("カード状態を読み取れません。確認中 または 制作可能 のカードを使用してください。");
+      showToast("カード状態を読み取れません");
       return;
     }
 
+    if (state === "確認中") {
+      window.freelanceApp.currentProjectCard = card;
+      renderProjectCardPreview(card, "checking");
+      workbenchMoveBtn.textContent = "確認作業台へ移動";
+      renderConfirmationWorkbench(card);
+      showToast("確認作業台を作りました");
+      return;
+    }
+
+    const uncertainRequired = ["作業内容", "納品物", "チェック基準"]
+      .filter(key => isUncertainValue(card[key]));
+    if (uncertainRequired.length) {
+      showCardWarning("制作可能カードですが、作業内容・納品物・チェック基準のいずれかが未確定です。入口アプリで情報を確認してください。");
+      showToast("制作可能カードの必須情報が未確定です");
+      return;
+    }
+
+    window.freelanceApp.currentProjectCard = card;
+    renderProjectCardPreview(card, "ready");
+    workbenchMoveBtn.textContent = "制作作業台へ移動";
     renderWorkbench(card);
-    showToast("案件カードを作業化しました");
+    showToast("制作作業台を作りました");
   });
 
   workbenchMoveBtn.addEventListener("click", () => {

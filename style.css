@@ -1876,7 +1876,33 @@ main { margin-top: 18px; }
 }
 
 
-/* v2.2 案件カード作業化 */
+/* v2.3 カード状態による案件カード作業化 */
+.pc-preview-warning,
+.pc-preview-checking,
+.pc-preview-ready {
+  white-space: pre-wrap;
+  border-radius: 14px;
+  padding: 13px;
+}
+
+.pc-preview-warning {
+  color: #ffe4e6;
+  background: rgba(190, 24, 93, .18);
+  border: 1px solid rgba(251, 113, 133, .55);
+}
+
+.pc-preview-checking {
+  color: #fef3c7;
+  background: rgba(180, 83, 9, .18);
+  border: 1px solid rgba(251, 191, 36, .5);
+}
+
+.pc-preview-ready {
+  color: #dcfce7;
+  background: rgba(21, 128, 61, .18);
+  border: 1px solid rgba(74, 222, 128, .45);
+}
+
 .project-workbench {
   margin-top: 14px;
   padding: 16px;
