@@ -1992,6 +1992,58 @@ main { margin-top: 18px; }
   gap: 8px;
 }
 
+.confirmation-note {
+  margin: 0 0 10px;
+  padding: 10px;
+  border-radius: 11px;
+  color: #fef3c7;
+  background: rgba(180, 83, 9, .18);
+  border: 1px solid rgba(251, 191, 36, .36);
+  line-height: 1.6;
+  font-size: .88rem;
+}
+
+.confirmation-exit-guide {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(114, 255, 185, .08);
+  border: 1px solid rgba(114, 255, 185, .3);
+}
+
+.confirmation-exit-guide > h4,
+.confirmation-finish h4 { margin: 0 0 9px; }
+
+.confirmation-exit-guide ol {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding-left: 1.5em;
+  line-height: 1.55;
+}
+
+.confirmation-return-link {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.confirmation-finish {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .07);
+}
+
+.confirmation-finish p { margin: 0; line-height: 1.65; }
+
+.confirmation-note[hidden],
+.confirmation-exit-guide[hidden] { display: none !important; }
+
 .workbench-check-item {
   display: grid;
   grid-template-columns: 26px 1fr;
@@ -2062,4 +2114,5 @@ main { margin-top: 18px; }
     white-space: normal;
     line-height: 1.35;
   }
+  .confirmation-exit-guide { padding: 13px; margin-bottom: 80px; }
 }

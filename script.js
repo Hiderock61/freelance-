@@ -1660,6 +1660,9 @@ window.freelanceApp.currentProjectCard = null;
   const workbenchMoveBtn = document.getElementById("projectCardToDeliveryBtn");
   const nextButtonHint = document.getElementById("projectCardNextHint");
   const workbench = document.getElementById("projectWorkbench");
+  const confirmationChecklistNote = document.getElementById("confirmationChecklistNote");
+  const confirmationQuestionNote = document.getElementById("confirmationQuestionNote");
+  const confirmationExitGuide = document.getElementById("confirmationExitGuide");
   const copyWorkbenchPromptBtn = document.getElementById("copyWorkbenchPromptBtn");
   const goDeliveryAfterWorkBtn = document.getElementById("goDeliveryAfterWorkBtn");
 
@@ -1814,6 +1817,13 @@ window.freelanceApp.currentProjectCard = null;
     if (nextButtonHint) nextButtonHint.hidden = false;
     preview.classList.remove("pc-preview-warning", "pc-preview-ready", "pc-preview-checking");
     preview.textContent = "案件カードを確認しています。";
+    setConfirmationGuidesVisible(false);
+  }
+
+  function setConfirmationGuidesVisible(visible) {
+    [confirmationChecklistNote, confirmationQuestionNote, confirmationExitGuide].forEach(element => {
+      if (element) element.hidden = !visible;
+    });
   }
 
   function showCardWarning(message) {
@@ -1955,7 +1965,8 @@ window.freelanceApp.currentProjectCard = null;
     document.getElementById("workbenchProjectName").textContent = card["案件名"] || "案件名未記載";
     document.getElementById("workbenchProgress").textContent = "確認中";
     const summary = document.getElementById("workbenchWorkSummary");
-    summary.textContent = "この案件は確認中です。まだ実制作を始めません。\n\nここでは制作を始めません。未確定事項と依頼主へ聞く内容を整理し、回答を受け取った後に入口アプリで案件カードを更新します。";
+    summary.textContent = "ここでは制作を始めません。\n未確定事項と依頼主へ聞く内容を整理し、質問を自分で送る準備をします。\n回答を受け取った後は、入口アプリへ戻って案件カードを更新します。";
+    setConfirmationGuidesVisible(true);
 
     setWorkbenchSection("workbenchToday", "① 今日確認すること", [
       "未確定事項を確認する",
@@ -1997,6 +2008,7 @@ window.freelanceApp.currentProjectCard = null;
   }
 
   function renderWorkbench(card) {
+    setConfirmationGuidesVisible(false);
     const data = buildWorkbenchData(card);
     document.getElementById("workbenchProjectName").textContent = card["案件名"];
     document.getElementById("workbenchWorkSummary").textContent = card["作業内容"];

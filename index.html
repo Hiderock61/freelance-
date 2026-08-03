@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.1</title>
-  <link rel="stylesheet" href="style.css?v=2311" />
+  <title>フリーランス装備庫 v2.3.2</title>
+  <link rel="stylesheet" href="style.css?v=232" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.1</span>
+        <span class="badge">v2.3.2</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.1では、案件カード受け取り口の操作案内を分かりやすくしました。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.2では、確認作業台の目的と入口アプリへ戻る流れを整理しました。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -180,6 +180,7 @@
 
           <section class="workbench-section">
             <h4>① 今日やること</h4>
+            <p id="confirmationChecklistNote" class="confirmation-note" hidden>下のチェックは、制作完了を示すものではありません。依頼主へ質問を送る前に、確認内容を整理できたかを確かめるためのチェックです。</p>
             <div id="workbenchToday" class="workbench-checklist"></div>
           </section>
 
@@ -191,6 +192,7 @@
           <section class="workbench-section">
             <h4>③ 制作手順</h4>
             <div id="workbenchSteps" class="workbench-checklist"></div>
+            <p id="confirmationQuestionNote" class="confirmation-note" hidden>この画面から質問は自動送信されません。表示された質問を確認し、必要なら整えて、依頼主へ自分で送ってください。</p>
           </section>
 
           <section class="workbench-section">
@@ -206,6 +208,25 @@
           <section class="workbench-section">
             <h4>今回使う装備</h4>
             <div id="workbenchGear" class="workbench-tags"></div>
+          </section>
+
+          <section id="confirmationExitGuide" class="confirmation-exit-guide" hidden>
+            <h4>次の流れ</h4>
+            <ol>
+              <li>未確定事項を確認する</li>
+              <li>相手へ聞く質問を整理する</li>
+              <li>依頼主へ質問を自分で送る</li>
+              <li>依頼主から回答を受け取る</li>
+              <li>入口アプリへ戻る</li>
+              <li>回答内容を使って案件カードを更新する</li>
+              <li>条件が揃ったら「制作可能」の案件カードを作り直す</li>
+              <li>新しい案件カードをコピーして、装備庫へもう一度貼る</li>
+            </ol>
+            <a class="primary-button confirmation-return-link" href="https://hiderock61.github.io/anken-jirai-map/">入口アプリへ戻って案件カードを更新する</a>
+            <div class="confirmation-finish">
+              <h4>この画面での完了</h4>
+              <p>この画面で終えるのは、制作ではありません。依頼主へ聞く内容が整理でき、次に送る質問と、回答後に更新する項目が分かったら完了です。</p>
+            </div>
           </section>
 
           <div class="workbench-actions">
@@ -408,6 +429,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2311"></script>
+  <script src="script.js?v=232"></script>
 </body>
 </html>
