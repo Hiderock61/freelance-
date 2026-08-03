@@ -1788,6 +1788,43 @@ main { margin-top: 18px; }
   line-height: 1.6;
 }
 
+.pc-state-guide {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.pc-state-guide p {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.pc-state-guide strong { color: var(--accent); }
+
+.pc-howto {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0;
+  padding-left: 1.6em;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.pc-next-hint {
+  margin: 8px 2px 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pc-next-hint[hidden] { display: none !important; }
+
 .pc-input {
   width: 100%;
   min-height: 130px;
@@ -2012,5 +2049,17 @@ main { margin-top: 18px; }
 @media (min-width: 560px) {
   .workbench-actions {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .project-card-import { padding: 13px; }
+  .pc-import-title { font-size: 18px; line-height: 1.45; }
+  .pc-controls { display: grid; grid-template-columns: 1fr; }
+  .pc-controls > button {
+    width: 100%;
+    min-height: 48px;
+    white-space: normal;
+    line-height: 1.35;
   }
 }

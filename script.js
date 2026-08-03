@@ -1658,6 +1658,7 @@ window.freelanceApp.currentProjectCard = null;
   const loadBtn = document.getElementById("projectCardLoadBtn");
   const preview = document.getElementById("projectCardPreview");
   const workbenchMoveBtn = document.getElementById("projectCardToDeliveryBtn");
+  const nextButtonHint = document.getElementById("projectCardNextHint");
   const workbench = document.getElementById("projectWorkbench");
   const copyWorkbenchPromptBtn = document.getElementById("copyWorkbenchPromptBtn");
   const goDeliveryAfterWorkBtn = document.getElementById("goDeliveryAfterWorkBtn");
@@ -1810,6 +1811,7 @@ window.freelanceApp.currentProjectCard = null;
     workbench.hidden = true;
     workbenchMoveBtn.disabled = true;
     workbenchMoveBtn.textContent = "案件作業台へ移動";
+    if (nextButtonHint) nextButtonHint.hidden = false;
     preview.classList.remove("pc-preview-warning", "pc-preview-ready", "pc-preview-checking");
     preview.textContent = "案件カードを確認しています。";
   }
@@ -1822,6 +1824,9 @@ window.freelanceApp.currentProjectCard = null;
   }
 
   function renderProjectCardPreview(card, mode) {
+    const successMessage = mode === "checking"
+      ? "案件カードを読み取りました。\nこのカードは「確認中」です。\nまだ制作は始めません。\n次に、未確定事項と依頼主へ聞く内容を確認します。"
+      : "案件カードを読み取りました。\nこのカードは「制作可能」です。\n次に、今日やることと制作手順を確認します。";
     const lines = [
       `カード状態：${valueOrMissing(card["カード状態"])}`,
       `案件名：${valueOrMissing(card["案件名"])}`,
@@ -1829,11 +1834,12 @@ window.freelanceApp.currentProjectCard = null;
       `納品物：\n${valueOrMissing(card["納品物"])}`,
       `チェック基準：\n${valueOrMissing(card["チェック基準"])}`
     ];
-    preview.textContent = lines.join("\n\n") + (mode === "checking"
+    preview.textContent = successMessage + "\n\n" + lines.join("\n\n") + (mode === "checking"
       ? "\n\n⚠️ 確認作業台を作ります。実制作は開始しません。"
       : "\n\n✅ 制作作業台を作れます。");
     preview.classList.add(mode === "checking" ? "pc-preview-checking" : "pc-preview-ready");
     workbenchMoveBtn.disabled = false;
+    if (nextButtonHint) nextButtonHint.hidden = true;
   }
 
   function checklistMarkup(items, group) {
@@ -1949,7 +1955,7 @@ window.freelanceApp.currentProjectCard = null;
     document.getElementById("workbenchProjectName").textContent = card["案件名"] || "案件名未記載";
     document.getElementById("workbenchProgress").textContent = "確認中";
     const summary = document.getElementById("workbenchWorkSummary");
-    summary.textContent = "この案件は確認中です。まだ実制作を始めません。";
+    summary.textContent = "この案件は確認中です。まだ実制作を始めません。\n\nここでは制作を始めません。未確定事項と依頼主へ聞く内容を整理し、回答を受け取った後に入口アプリで案件カードを更新します。";
 
     setWorkbenchSection("workbenchToday", "① 今日確認すること", [
       "未確定事項を確認する",
@@ -2068,7 +2074,7 @@ ${card["チェック基準"]}
     if (state === "確認中") {
       window.freelanceApp.currentProjectCard = card;
       renderProjectCardPreview(card, "checking");
-      workbenchMoveBtn.textContent = "確認作業台へ移動";
+      workbenchMoveBtn.textContent = "依頼主へ確認する内容を見る";
       renderConfirmationWorkbench(card);
       showToast("確認作業台を作りました");
       return;
@@ -2084,7 +2090,7 @@ ${card["チェック基準"]}
 
     window.freelanceApp.currentProjectCard = card;
     renderProjectCardPreview(card, "ready");
-    workbenchMoveBtn.textContent = "制作作業台へ移動";
+    workbenchMoveBtn.textContent = "今日の作業手順を見る";
     renderWorkbench(card);
     showToast("制作作業台を作りました");
   });
