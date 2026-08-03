@@ -2003,6 +2003,59 @@ main { margin-top: 18px; }
   font-size: .88rem;
 }
 
+.confirmation-note p { margin: 0; }
+.confirmation-note p + p { margin-top: 9px; }
+
+.confirmation-after-note {
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, .86);
+  line-height: 1.6;
+  font-size: .88rem;
+}
+
+.confirmation-compare-guide {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(96, 165, 250, .1);
+  border: 1px solid rgba(96, 165, 250, .3);
+}
+
+.confirmation-compare-guide h4 { margin: 0 0 7px; color: #bfdbfe; }
+.confirmation-compare-guide p { margin: 0; line-height: 1.65; }
+
+.confirmation-unknown-list {
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: rgba(251, 191, 36, .08);
+  overflow-wrap: anywhere;
+}
+
+.confirmation-unknown-list ul {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding-left: 1.35em;
+}
+
+.confirmation-unknown-list li { line-height: 1.6; }
+
+.confirmation-question-list {
+  display: grid;
+  gap: 9px;
+  background: transparent;
+  overflow-wrap: anywhere;
+}
+
+.confirmation-question-list p {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: rgba(96, 165, 250, .09);
+  border-left: 3px solid rgba(96, 165, 250, .7);
+  line-height: 1.6;
+}
+
 .confirmation-exit-guide {
   margin-top: 14px;
   padding: 14px;
@@ -2042,6 +2095,8 @@ main { margin-top: 18px; }
 .confirmation-finish p { margin: 0; line-height: 1.65; }
 
 .confirmation-note[hidden],
+.confirmation-after-note[hidden],
+.confirmation-compare-guide[hidden],
 .confirmation-exit-guide[hidden] { display: none !important; }
 
 .workbench-check-item {

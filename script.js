@@ -1661,6 +1661,8 @@ window.freelanceApp.currentProjectCard = null;
   const nextButtonHint = document.getElementById("projectCardNextHint");
   const workbench = document.getElementById("projectWorkbench");
   const confirmationChecklistNote = document.getElementById("confirmationChecklistNote");
+  const confirmationChecklistAfter = document.getElementById("confirmationChecklistAfter");
+  const confirmationCompareGuide = document.getElementById("confirmationCompareGuide");
   const confirmationQuestionNote = document.getElementById("confirmationQuestionNote");
   const confirmationExitGuide = document.getElementById("confirmationExitGuide");
   const copyWorkbenchPromptBtn = document.getElementById("copyWorkbenchPromptBtn");
@@ -1821,7 +1823,7 @@ window.freelanceApp.currentProjectCard = null;
   }
 
   function setConfirmationGuidesVisible(visible) {
-    [confirmationChecklistNote, confirmationQuestionNote, confirmationExitGuide].forEach(element => {
+    [confirmationChecklistNote, confirmationChecklistAfter, confirmationCompareGuide, confirmationQuestionNote, confirmationExitGuide].forEach(element => {
       if (element) element.hidden = !visible;
     });
   }
@@ -1961,6 +1963,17 @@ window.freelanceApp.currentProjectCard = null;
     }
   }
 
+  function renderConfirmationItems(id, items, kind, emptyMessage) {
+    const target = document.getElementById(id);
+    const values = (items.length ? items : [emptyMessage])
+      .map(item => String(item).replace(/^\s*[-・●○□✓✔︎]\s*/, "").trim())
+      .filter(Boolean);
+    target.className = `workbench-box confirmation-${kind}-list`;
+    target.innerHTML = kind === "unknown"
+      ? `<ul>${values.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+      : values.map(item => `<p>${escapeHtml(item)}</p>`).join("");
+  }
+
   function renderConfirmationWorkbench(card) {
     document.getElementById("workbenchProjectName").textContent = card["案件名"] || "案件名未記載";
     document.getElementById("workbenchProgress").textContent = "確認中";
@@ -1968,20 +1981,23 @@ window.freelanceApp.currentProjectCard = null;
     summary.textContent = "ここでは制作を始めません。\n未確定事項と依頼主へ聞く内容を整理し、質問を自分で送る準備をします。\n回答を受け取った後は、入口アプリへ戻って案件カードを更新します。";
     setConfirmationGuidesVisible(true);
 
-    setWorkbenchSection("workbenchToday", "① 今日確認すること", [
-      "未確定事項を確認する",
-      "相手へ聞く質問を整理する",
-      "募集文を読み直す",
-      "必要なら不足情報を追記する"
+    setWorkbenchSection("workbenchToday", "① 依頼主へ質問する前に整理すること", [
+      "募集文を読み直し、すでに書かれている答えがないか確認する",
+      "未確定事項の一覧を読む",
+      "未確定事項と相手へ聞く質問を見比べる",
+      "足りない質問があれば追加する",
+      "依頼主へ送る質問を、分かりやすい順番に整理する"
     ], true);
 
     const unknown = normalizeNewlines(card["未確定事項"]);
     setWorkbenchSection("workbenchLearning", "② 未確定事項",
       !unknown || unknown === "なし" ? "未確定事項はカードに記載されていません。" : unknown);
+    renderConfirmationItems("workbenchLearning", splitItems(unknown === "なし" ? "" : unknown), "unknown", "未確定事項はカードに記載されていません。");
 
     const questions = normalizeNewlines(card["相手へ聞く質問"]);
     setWorkbenchSection("workbenchSteps", "③ 相手へ聞く質問",
       !questions || questions === "なし" ? "相手へ聞く質問はカードに記載されていません。" : questions);
+    renderConfirmationItems("workbenchSteps", splitItems(questions === "なし" ? "" : questions), "question", "相手へ聞く質問はカードに記載されていません。");
 
     const knownKeys = ["案件名", "入口タイプ", "掲載場所", "募集URL", "報酬", "納期", "必要技術", "不足技術", "今使える装備", "到達判定"];
     const known = knownKeys.map(key => `${key}：${normalizeNewlines(card[key]) || "未記載"}`).join("\n\n");

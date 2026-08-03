@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.2</title>
-  <link rel="stylesheet" href="style.css?v=232" />
+  <title>フリーランス装備庫 v2.3.3</title>
+  <link rel="stylesheet" href="style.css?v=233" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.2</span>
+        <span class="badge">v2.3.3</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.2では、確認作業台の目的と入口アプリへ戻る流れを整理しました。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.3では、確認作業台のチェック文言と見比べやすさを整理しました。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -180,14 +180,23 @@
 
           <section class="workbench-section">
             <h4>① 今日やること</h4>
-            <p id="confirmationChecklistNote" class="confirmation-note" hidden>下のチェックは、制作完了を示すものではありません。依頼主へ質問を送る前に、確認内容を整理できたかを確かめるためのチェックです。</p>
+            <div id="confirmationChecklistNote" class="confirmation-note" hidden>
+              <p>このチェックは、依頼主から回答をもらった印ではありません。</p>
+              <p>未確定事項の一覧を読み、相手へ聞く質問に抜けがないかを整理できたらチェックしてください。</p>
+            </div>
             <div id="workbenchToday" class="workbench-checklist"></div>
+            <p id="confirmationChecklistAfter" class="confirmation-after-note" hidden>全部整理できたら、下の「相手へ聞く質問」を確認し、依頼主へ自分で送ります。</p>
           </section>
 
           <section class="workbench-section">
             <h4>② 今回学ぶこと</h4>
             <div id="workbenchLearning" class="workbench-box"></div>
           </section>
+
+          <aside id="confirmationCompareGuide" class="confirmation-compare-guide" hidden>
+            <h4>見比べ方</h4>
+            <p>未確定事項を1つずつ見て、それに対応する質問が「相手へ聞く質問」に入っているか確認してください。質問がない項目は、依頼主へ聞く質問として追加します。</p>
+          </aside>
 
           <section class="workbench-section">
             <h4>③ 制作手順</h4>
@@ -225,7 +234,7 @@
             <a class="primary-button confirmation-return-link" href="https://hiderock61.github.io/anken-jirai-map/">入口アプリへ戻って案件カードを更新する</a>
             <div class="confirmation-finish">
               <h4>この画面での完了</h4>
-              <p>この画面で終えるのは、制作ではありません。依頼主へ聞く内容が整理でき、次に送る質問と、回答後に更新する項目が分かったら完了です。</p>
+              <p>この画面で終えるのは、案件や制作ではありません。依頼主へ送る質問が整理でき、どの回答を受け取ったら案件カードを更新できるか分かったら、この画面での作業は完了です。</p>
             </div>
           </section>
 
@@ -429,6 +438,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=232"></script>
+  <script src="script.js?v=233"></script>
 </body>
 </html>
