@@ -1580,6 +1580,10 @@ function bindTabs() {
       const viewId = tab.dataset.view;
       const alreadyActive = tab.classList.contains("active");
       switchView(viewId);
+      if (!alreadyActive && viewId === "viewToday") {
+        const view = document.getElementById(viewId);
+        if (view) view.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
       if (alreadyActive) {
         const view = document.getElementById(viewId);
         if (view) view.scrollIntoView({ behavior: "smooth", block: "start" });

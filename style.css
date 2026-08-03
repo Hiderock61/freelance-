@@ -2003,6 +2003,12 @@ main { margin-top: 18px; }
   margin-top: 14px;
 }
 
+.workbench-actions[hidden],
+.project-workbench .pc-note[hidden],
+.project-workbench .workbench-section[hidden] {
+  display: none !important;
+}
+
 @media (min-width: 560px) {
   .workbench-actions {
     grid-template-columns: 1fr 1fr;
