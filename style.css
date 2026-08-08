@@ -2171,3 +2171,99 @@ main { margin-top: 18px; }
   }
   .confirmation-exit-guide { padding: 13px; margin-bottom: 80px; }
 }
+
+
+/* v2.3.4 確認中導線・iPhone UXヤスリ */
+.confirmation-panel {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  color: #f8fafc;
+  background: linear-gradient(180deg, rgba(38, 43, 54, .98), rgba(22, 27, 36, .98));
+  border: 1px solid rgba(251, 191, 36, .34);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .24);
+  min-width: 0;
+  overflow: hidden;
+}
+.confirmation-panel[hidden] { display: none !important; }
+.confirmation-state,
+.confirmation-simple-section {
+  min-width: 0;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .065);
+  border: 1px solid rgba(255, 255, 255, .09);
+}
+.confirmation-state {
+  background: rgba(180, 83, 9, .16);
+  border-color: rgba(251, 191, 36, .34);
+}
+.confirmation-simple-section { margin-top: 12px; }
+.confirmation-state h3,
+.confirmation-simple-section h4 { margin: 4px 0 9px; }
+.confirmation-state p,
+.confirmation-simple-section p {
+  margin: 0;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+.confirmation-panel .confirmation-unknown-list,
+.confirmation-panel .confirmation-question-list { min-width: 0; }
+.confirmation-copy-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 13px;
+  white-space: normal;
+  line-height: 1.35;
+}
+.confirmation-copy-status {
+  min-height: 22px;
+  margin-top: 8px !important;
+  color: var(--accent);
+  font-weight: 800;
+  text-align: center;
+}
+.confirmation-send-note {
+  margin-top: 8px !important;
+  color: rgba(255, 255, 255, .72);
+  font-size: 12px;
+}
+.confirmation-next .confirmation-return-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+}
+.intro-tabs-list li {
+  grid-template-columns: 28px minmax(0, 1fr);
+  min-width: 0;
+}
+.intro-tab-copy {
+  display: block;
+  min-width: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+main {
+  min-width: 0;
+  padding-bottom: calc(132px + var(--safe-bottom));
+}
+.view {
+  min-width: 0;
+  padding-bottom: calc(148px + var(--safe-bottom));
+}
+@media (max-width: 420px) {
+  .app-shell {
+    overflow-x: clip;
+    padding-bottom: calc(176px + var(--safe-bottom));
+  }
+  #viewToday,
+  #viewTour,
+  #viewDelivery {
+    padding-bottom: calc(176px + var(--safe-bottom));
+  }
+  .confirmation-panel { padding: 12px; }
+  .confirmation-state,
+  .confirmation-simple-section { padding: 13px; }
+}
