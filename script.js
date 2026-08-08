@@ -1660,6 +1660,11 @@ window.freelanceApp.currentProjectCard = null;
   const workbenchMoveBtn = document.getElementById("projectCardToDeliveryBtn");
   const nextButtonHint = document.getElementById("projectCardNextHint");
   const workbench = document.getElementById("projectWorkbench");
+  const confirmationPanel = document.getElementById("confirmationPanel");
+  const confirmationUnknownItems = document.getElementById("confirmationUnknownItems");
+  const confirmationQuestionItems = document.getElementById("confirmationQuestionItems");
+  const copyConfirmationQuestionsBtn = document.getElementById("copyConfirmationQuestionsBtn");
+  const confirmationCopyStatus = document.getElementById("confirmationCopyStatus");
   const confirmationChecklistNote = document.getElementById("confirmationChecklistNote");
   const confirmationChecklistAfter = document.getElementById("confirmationChecklistAfter");
   const confirmationCompareGuide = document.getElementById("confirmationCompareGuide");
@@ -1814,6 +1819,9 @@ window.freelanceApp.currentProjectCard = null;
   function resetProjectCardView() {
     window.freelanceApp.currentProjectCard = null;
     workbench.hidden = true;
+    if (confirmationPanel) confirmationPanel.hidden = true;
+    preview.hidden = false;
+    workbenchMoveBtn.hidden = false;
     workbenchMoveBtn.disabled = true;
     workbenchMoveBtn.textContent = "案件作業台へ移動";
     if (nextButtonHint) nextButtonHint.hidden = false;
@@ -1829,6 +1837,9 @@ window.freelanceApp.currentProjectCard = null;
   }
 
   function showCardWarning(message) {
+    preview.hidden = false;
+    if (confirmationPanel) confirmationPanel.hidden = true;
+    workbenchMoveBtn.hidden = false;
     preview.textContent = message;
     preview.classList.add("pc-preview-warning");
     workbench.hidden = true;
@@ -1974,6 +1985,27 @@ window.freelanceApp.currentProjectCard = null;
       : values.map(item => `<p>${escapeHtml(item)}</p>`).join("");
   }
 
+
+  function renderSimpleItems(target, value, kind, emptyMessage) {
+    if (!target) return;
+    const items = splitItems(value);
+    const values = items.length ? items : [emptyMessage];
+    target.innerHTML = kind === "unknown"
+      ? `<ul>${values.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+      : values.map(item => `<p>${escapeHtml(item)}</p>`).join("");
+  }
+
+  function renderConfirmationPanel(card) {
+    const unknown = normalizeNewlines(card["未確定事項"]);
+    const questions = normalizeNewlines(card["相手へ聞く質問"]);
+    renderSimpleItems(confirmationUnknownItems, unknown === "なし" ? "" : unknown, "unknown", "未確定事項はカードに記載されていません。");
+    renderSimpleItems(confirmationQuestionItems, questions === "なし" ? "" : questions, "question", "相手へ聞く質問はカードに記載されていません。");
+    if (confirmationCopyStatus) confirmationCopyStatus.textContent = "";
+    workbench.hidden = true;
+    setConfirmationGuidesVisible(false);
+    if (confirmationPanel) confirmationPanel.hidden = false;
+  }
+
   function renderConfirmationWorkbench(card) {
     document.getElementById("workbenchProjectName").textContent = card["案件名"] || "案件名未記載";
     document.getElementById("workbenchProgress").textContent = "確認中";
@@ -2102,9 +2134,10 @@ ${card["チェック基準"]}
     if (state === "確認中") {
       window.freelanceApp.currentProjectCard = card;
       renderProjectCardPreview(card, "checking");
-      workbenchMoveBtn.textContent = "依頼主へ確認する内容を見る";
-      renderConfirmationWorkbench(card);
-      showToast("確認作業台を作りました");
+      preview.hidden = true;
+      workbenchMoveBtn.hidden = true;
+      renderConfirmationPanel(card);
+      showToast("確認・質問画面を表示しました");
       return;
     }
 
@@ -2117,6 +2150,9 @@ ${card["チェック基準"]}
     }
 
     window.freelanceApp.currentProjectCard = card;
+    if (confirmationPanel) confirmationPanel.hidden = true;
+    preview.hidden = false;
+    workbenchMoveBtn.hidden = false;
     renderProjectCardPreview(card, "ready");
     workbenchMoveBtn.textContent = "今日の作業手順を見る";
     renderWorkbench(card);
@@ -2127,6 +2163,21 @@ ${card["チェック基準"]}
     if (!window.freelanceApp.currentProjectCard || workbench.hidden) return;
     workbench.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  if (copyConfirmationQuestionsBtn) {
+    copyConfirmationQuestionsBtn.addEventListener("click", () => {
+      const card = window.freelanceApp.currentProjectCard;
+      const questions = card ? normalizeNewlines(card["相手へ聞く質問"]) : "";
+      if (!questions || questions === "なし") {
+        if (confirmationCopyStatus) confirmationCopyStatus.textContent = "コピーできる質問がありません";
+        showToast("コピーできる質問がありません");
+        return;
+      }
+      copyText(questions);
+      if (confirmationCopyStatus) confirmationCopyStatus.textContent = "質問をコピーしました";
+      showToast("質問をコピーしました");
+    });
+  }
 
   if (copyWorkbenchPromptBtn) {
     copyWorkbenchPromptBtn.addEventListener("click", () => {
