@@ -92,6 +92,19 @@ main { margin-top: 18px; }
 .view.active { display: block; animation: rise 210ms ease both; }
 @keyframes rise { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 
+/* v2.3.5 入口アプリからの着地点ヤスリ */
+.intake-landing-guide {
+  margin-bottom: 16px;
+  padding: 18px;
+  border: 1px solid rgba(114, 255, 185, .46);
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(114, 255, 185, .15), rgba(255, 211, 110, .1));
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .22);
+}
+.intake-landing-guide h2 { margin: 5px 0 8px; font-size: 21px; line-height: 1.4; }
+.intake-landing-guide > p:not(.eyebrow) { margin: 0; color: var(--muted); line-height: 1.65; }
+.intake-landing-button { width: 100%; min-height: 54px; margin-top: 14px; white-space: normal; line-height: 1.35; }
+
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 22px 2px 12px; }
 .section-heading h2 { margin: 2px 0 0; font-size: 24px; letter-spacing: -0.03em; }
 .eyebrow { margin: 0; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 800; }
@@ -1840,6 +1853,14 @@ main { margin-top: 18px; }
   background: #fff;
 }
 
+.pc-input-label {
+  display: block;
+  margin: 13px 2px 7px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .pc-controls {
   margin-top: 10px;
   display: flex;
@@ -2229,6 +2250,20 @@ main { margin-top: 18px; }
   color: rgba(255, 255, 255, .72);
   font-size: 12px;
 }
+.confirmation-details-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 13px;
+  white-space: normal;
+}
+.confirmation-project-summary { display: grid; gap: 9px; margin: 0; }
+.confirmation-project-summary div { min-width: 0; padding: 10px 12px; border-radius: 11px; background: rgba(255, 255, 255, .06); }
+.confirmation-project-summary dt { color: #fcd34d; font-size: 12px; font-weight: 800; }
+.confirmation-project-summary dd { margin: 4px 0 0; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.confirmation-card-next { margin-top: 12px !important; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .12); }
+.confirmation-card-next strong,
+.confirmation-card-next span { display: block; }
+.confirmation-card-next span { margin-top: 4px; overflow-wrap: anywhere; }
 .confirmation-next .confirmation-return-link {
   display: inline-flex;
   align-items: center;
@@ -2266,4 +2301,5 @@ main {
   .confirmation-panel { padding: 12px; }
   .confirmation-state,
   .confirmation-simple-section { padding: 13px; }
+  .pc-input { min-height: 170px; max-width: 100%; overflow-x: hidden; }
 }

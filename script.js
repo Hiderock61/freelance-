@@ -1594,6 +1594,8 @@ function bindTabs() {
 }
 
 function bindButtons() {
+  const goToCardIntakeBtn = document.getElementById("goToCardIntakeBtn");
+  if (goToCardIntakeBtn) goToCardIntakeBtn.addEventListener("click", () => openCardIntake(true));
   document.getElementById("tourPrevBtn").addEventListener("click", () => {
     currentTourIndex = Math.max(0, currentTourIndex - 1);
     renderTour();
@@ -1649,6 +1651,24 @@ function init() {
 
 init();
 
+function openCardIntake(shouldUpdateHash = false) {
+  switchView("viewToday");
+  if (shouldUpdateHash && window.location.hash !== "#card-intake") {
+    history.replaceState(null, "", "#card-intake");
+  }
+  window.setTimeout(() => {
+    const intake = document.getElementById("project-card-import");
+    if (intake) intake.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 0);
+}
+
+function applyLandingHash() {
+  const hash = window.location.hash.toLowerCase();
+  if (hash === "#today" || hash === "#card-intake") openCardIntake(false);
+}
+
+window.addEventListener("hashchange", applyLandingHash);
+
 /* v2.3 カード状態による案件カード作業化 */
 window.freelanceApp = window.freelanceApp || {};
 window.freelanceApp.currentProjectCard = null;
@@ -1663,6 +1683,7 @@ window.freelanceApp.currentProjectCard = null;
   const confirmationPanel = document.getElementById("confirmationPanel");
   const confirmationUnknownItems = document.getElementById("confirmationUnknownItems");
   const confirmationQuestionItems = document.getElementById("confirmationQuestionItems");
+  const showConfirmationDetailsBtn = document.getElementById("showConfirmationDetailsBtn");
   const copyConfirmationQuestionsBtn = document.getElementById("copyConfirmationQuestionsBtn");
   const confirmationCopyStatus = document.getElementById("confirmationCopyStatus");
   const confirmationChecklistNote = document.getElementById("confirmationChecklistNote");
@@ -2001,6 +2022,18 @@ window.freelanceApp.currentProjectCard = null;
     renderSimpleItems(confirmationUnknownItems, unknown === "なし" ? "" : unknown, "unknown", "未確定事項はカードに記載されていません。");
     renderSimpleItems(confirmationQuestionItems, questions === "なし" ? "" : questions, "question", "相手へ聞く質問はカードに記載されていません。");
     if (confirmationCopyStatus) confirmationCopyStatus.textContent = "";
+    const summaryValues = {
+      confirmationCardState: card["カード状態"],
+      confirmationProjectName: card["案件名"],
+      confirmationWork: card["作業内容"],
+      confirmationDelivery: card["納品物"],
+      confirmationCriteria: card["チェック基準"],
+      confirmationNextAction: card["次の行動"] || "依頼主へ確認する"
+    };
+    Object.entries(summaryValues).forEach(([id, value]) => {
+      const target = document.getElementById(id);
+      if (target) target.textContent = isUncertainValue(value) ? "未確定" : normalizeNewlines(value);
+    });
     workbench.hidden = true;
     setConfirmationGuidesVisible(false);
     if (confirmationPanel) confirmationPanel.hidden = false;
@@ -2179,6 +2212,12 @@ ${card["チェック基準"]}
     });
   }
 
+  if (showConfirmationDetailsBtn) {
+    showConfirmationDetailsBtn.addEventListener("click", () => {
+      document.getElementById("confirmationDetails")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   if (copyWorkbenchPromptBtn) {
     copyWorkbenchPromptBtn.addEventListener("click", () => {
       const card = window.freelanceApp.currentProjectCard;
@@ -2196,3 +2235,5 @@ ${card["チェック基準"]}
     });
   }
 })();
+
+applyLandingHash();
