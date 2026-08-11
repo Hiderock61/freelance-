@@ -2032,7 +2032,11 @@ window.freelanceApp.currentProjectCard = null;
     };
     Object.entries(summaryValues).forEach(([id, value]) => {
       const target = document.getElementById(id);
-      if (target) target.textContent = isUncertainValue(value) ? "未確定" : normalizeNewlines(value);
+      if (!target) return;
+      const normalizedValue = normalizeNewlines(value);
+      target.textContent = id === "confirmationCardState"
+        ? normalizedValue
+        : (isUncertainValue(normalizedValue) ? "未確定" : normalizedValue);
     });
     workbench.hidden = true;
     setConfirmationGuidesVisible(false);
