@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.7</title>
-  <link rel="stylesheet" href="style.css?v=235" />
+  <title>フリーランス装備庫 v2.3.8</title>
+  <link rel="stylesheet" href="style.css?v=238" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.7</span>
+        <span class="badge">v2.3.8</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.7では、未確定事項と依頼主へ聞く質問の表示を一致させました。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.8では、内部情報を普通の仕事の言葉へ翻訳して案内します。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -29,9 +29,9 @@
       <section id="viewTour" class="view active" aria-labelledby="tourTitle">
         <aside class="intake-landing-guide" aria-labelledby="intakeLandingTitle">
           <p class="eyebrow">入口アプリから来た場合</p>
-          <h2 id="intakeLandingTitle">案件カードをコピーしてきましたか？</h2>
-          <p>下のボタンを押すと「今日」タブを開き、白い案件カード受付欄へ移動します。</p>
-          <button id="goToCardIntakeBtn" class="primary-button intake-landing-button" type="button">入口アプリの案件カードを貼る</button>
+          <h2 id="intakeLandingTitle">入口アプリで仕事情報を整理しましたか？</h2>
+          <p>下のボタンを押すと「今日」タブを開き、白い仕事情報の貼り付け欄へ移動します。</p>
+          <button id="goToCardIntakeBtn" class="primary-button intake-landing-button" type="button">入口アプリの仕事情報を貼る</button>
         </aside>
         <div id="roadmapContainer" class="roadmap-container" aria-label="フリーランスAI仕事ロードマップ"></div>
 
@@ -147,47 +147,47 @@
 
         <!-- v2.3 カード状態による案件カード作業化 -->
         <div id="project-card-import" class="project-card-import">
-          <p class="eyebrow">v2.3.7 Project Card Workbench</p>
-          <h3 class="pc-import-title">📋 入口アプリの案件カードを受け取る</h3>
-          <p class="pc-lead">入口アプリで作った正式案件カードをここへ貼ると、カード状態に合わせて次にやることを整理します。</p>
+          <p class="eyebrow">v2.3.8 WORK INTAKE</p>
+          <h3 class="pc-import-title">📋 入口アプリの仕事情報を受け取る</h3>
+          <p class="pc-lead">入口アプリで整理した仕事情報をここへ貼ると、今の状態と次にやることを普通の言葉で案内します。</p>
           <div class="pc-state-guide" aria-label="カード状態による違い">
-            <p><strong>確認中のカード</strong><span>→ 依頼主へ確認する内容を表示します。</span></p>
-            <p><strong>制作可能のカード</strong><span>→ 今日やることと制作手順を表示します。</span></p>
+            <p><strong>まだ確認が必要な場合</strong><span>→ 依頼主へ確認する内容を表示します。</span></p>
+            <p><strong>制作を始められる場合</strong><span>→ 今日やることと制作手順を表示します。</span></p>
           </div>
           <ol class="pc-howto" aria-label="案件カードの受け取り手順">
-            <li>入口アプリで「正式案件カードをコピー」を押す</li>
-            <li>この下の白い欄を長押しして、全文を貼り付ける</li>
-            <li>「貼った案件カードを読み取る」を押す</li>
-            <li>確認中なら、依頼主へ聞く内容を確認する</li>
-            <li>制作可能なら、今日やることと制作手順へ進む</li>
+            <li>入口アプリで「この仕事を装備庫へ持っていく」を押す</li>
+            <li>この下の白い欄を長押しして、仕事情報の全文を貼り付ける</li>
+            <li>「貼った仕事情報を確認する」を押す</li>
+            <li>確認が必要なら、依頼主へ聞く内容を確認する</li>
+            <li>制作を始められるなら、今日やることと制作手順へ進む</li>
           </ol>
-          <label class="pc-input-label" for="projectCardInput">白い欄へ長押しして貼り付け</label>
-          <textarea id="projectCardInput" class="pc-input" placeholder="入口アプリでコピーした正式案件カードをここに貼ります。"></textarea>
+          <label class="pc-input-label" for="projectCardInput">仕事情報を白い欄へ長押しして貼り付け</label>
+          <textarea id="projectCardInput" class="pc-input" placeholder="入口アプリでコピーした仕事情報の全文をここに貼ります。"></textarea>
           <div class="pc-controls">
-            <button id="projectCardLoadBtn" class="primary-button" type="button">貼った案件カードを読み取る</button>
-            <button id="projectCardToDeliveryBtn" class="ghost-button" type="button" disabled>案件作業台へ移動</button>
+            <button id="projectCardLoadBtn" class="primary-button" type="button">貼った仕事情報を確認する</button>
+            <button id="projectCardToDeliveryBtn" class="ghost-button" type="button" disabled>次へ進む</button>
           </div>
-          <p id="projectCardNextHint" class="pc-next-hint">案件カードを読み取ると、次のボタンが使えるようになります。</p>
-          <div id="projectCardPreview" class="pc-preview" aria-live="polite">案件カードを貼ると、内容を確認してから案件作業台を作ります。</div>
-          <p class="pc-note">※案件カードの内容だけを使います。納品文を勝手に作ったり、クライアントへ送ったりしません。</p>
+          <p id="projectCardNextHint" class="pc-next-hint">仕事情報を確認すると、次の案内が表示されます。</p>
+          <div id="projectCardPreview" class="pc-preview" aria-live="polite">仕事情報を貼ると、今の状態と次にやることを確認できます。</div>
+          <p class="pc-note">※貼り付けた仕事情報だけを使います。納品文を勝手に作ったり、依頼主へ送ったりしません。</p>
         </div>
 
 
         <section id="confirmationPanel" class="confirmation-panel" hidden aria-live="polite">
           <div class="confirmation-state">
-            <p class="eyebrow">確認・質問画面</p>
-            <h3>🟡 この案件は確認中です</h3>
-            <p>まだ制作は始めません。<br>まず、依頼主へ確認する内容を整理します。</p>
-            <button id="showConfirmationDetailsBtn" class="primary-button confirmation-details-button" type="button">依頼主へ確認する内容を見る</button>
+            <p class="eyebrow">仕事情報の確認結果</p>
+            <h3>この仕事はまだ確認が必要です</h3>
+            <p>制作を始めるために必要な情報がまだ揃っていないため、今は制作を止めています。</p>
+            <p id="confirmationUnknownCount" class="confirmation-unknown-count">まだ確認が必要なことは0件です。</p>
+            <button id="showConfirmationDetailsBtn" class="primary-button confirmation-details-button" type="button">不足項目と質問を見る</button>
           </div>
           <section id="confirmationDetails" class="confirmation-simple-section confirmation-details">
-            <h4>読み取った案件</h4>
+            <h4>仕事の内容を確認しました</h4>
             <dl class="confirmation-project-summary">
-              <div><dt>カード状態</dt><dd id="confirmationCardState">確認中</dd></div>
-              <div><dt>案件名</dt><dd id="confirmationProjectName">未確定</dd></div>
+              <div><dt>仕事名</dt><dd id="confirmationProjectName">未確定</dd></div>
               <div><dt>作業内容</dt><dd id="confirmationWork">未確定</dd></div>
               <div><dt>納品物</dt><dd id="confirmationDelivery">未確定</dd></div>
-              <div><dt>チェック基準</dt><dd id="confirmationCriteria">未確定</dd></div>
+              <div><dt>完成条件</dt><dd id="confirmationCriteria">未確定</dd></div>
             </dl>
           </section>
           <section class="confirmation-simple-section">
@@ -200,20 +200,20 @@
             <dl id="confirmationKnownFacts" class="confirmation-project-summary confirmation-known-facts"></dl>
           </section>
           <section class="confirmation-simple-section">
-            <h4>まだ確認が必要です</h4>
+            <h4>まだ確認が必要なこと</h4>
             <div id="confirmationUnknownItems" class="confirmation-unknown-list"></div>
           </section>
           <section class="confirmation-simple-section">
             <h4>依頼主へ聞く質問</h4>
             <div id="confirmationQuestionItems" class="confirmation-question-list"></div>
-            <button id="copyConfirmationQuestionsBtn" class="primary-button confirmation-copy-button" type="button">質問だけコピー</button>
+            <button id="copyConfirmationQuestionsBtn" class="primary-button confirmation-copy-button" type="button">この質問をまとめてコピー</button>
             <p id="confirmationCopyStatus" class="confirmation-copy-status" role="status" aria-live="polite"></p>
-            <p class="confirmation-send-note">質問は自動送信されません。コピー後、自分で依頼主へ送ります。</p>
+            <p class="confirmation-send-note">コピーした質問を募集サイトなどで依頼主へ自分で送ってください。質問は自動送信されません。</p>
           </section>
           <section class="confirmation-simple-section confirmation-next">
             <h4>回答が来たら</h4>
             <p>入口アプリへ戻り、回答内容を反映して案件カードを更新します。</p>
-            <a class="primary-button confirmation-return-link" href="https://hiderock61.github.io/anken-jirai-map/">入口アプリへ戻って案件カードを更新する</a>
+            <a class="primary-button confirmation-return-link" href="https://hiderock61.github.io/anken-jirai-map/">回答を反映するため入口アプリへ戻る</a>
           </section>
         </section>
 
@@ -284,7 +284,7 @@
               <li>条件が揃ったら「制作可能」の案件カードを作り直す</li>
               <li>新しい案件カードをコピーして、装備庫へもう一度貼る</li>
             </ol>
-            <a class="primary-button confirmation-return-link" href="https://hiderock61.github.io/anken-jirai-map/">入口アプリへ戻って案件カードを更新する</a>
+            <a class="primary-button confirmation-return-link" href="https://hiderock61.github.io/anken-jirai-map/">回答を反映するため入口アプリへ戻る</a>
             <div class="confirmation-finish">
               <h4>この画面での完了</h4>
               <p>この画面で終えるのは、案件や制作ではありません。依頼主へ送る質問が整理でき、どの回答を受け取ったら案件カードを更新できるか分かったら、この画面での作業は完了です。</p>
@@ -491,6 +491,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=237"></script>
+  <script src="script.js?v=238"></script>
 </body>
 </html>
