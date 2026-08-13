@@ -1682,6 +1682,7 @@ window.freelanceApp.currentProjectCard = null;
   const workbench = document.getElementById("projectWorkbench");
   const confirmationPanel = document.getElementById("confirmationPanel");
   const confirmationUnknownItems = document.getElementById("confirmationUnknownItems");
+  const confirmationUnknownCount = document.getElementById("confirmationUnknownCount");
   const confirmationKnownFacts = document.getElementById("confirmationKnownFacts");
   const confirmationQuestionItems = document.getElementById("confirmationQuestionItems");
   const showConfirmationDetailsBtn = document.getElementById("showConfirmationDetailsBtn");
@@ -1851,10 +1852,10 @@ window.freelanceApp.currentProjectCard = null;
     preview.hidden = false;
     workbenchMoveBtn.hidden = false;
     workbenchMoveBtn.disabled = true;
-    workbenchMoveBtn.textContent = "案件作業台へ移動";
+    workbenchMoveBtn.textContent = "次へ進む";
     if (nextButtonHint) nextButtonHint.hidden = false;
     preview.classList.remove("pc-preview-warning", "pc-preview-ready", "pc-preview-checking");
-    preview.textContent = "案件カードを確認しています。";
+    preview.textContent = "仕事の内容を確認しています。";
     setConfirmationGuidesVisible(false);
   }
 
@@ -1875,20 +1876,30 @@ window.freelanceApp.currentProjectCard = null;
   }
 
   function renderProjectCardPreview(card, mode) {
-    const successMessage = mode === "checking"
-      ? "案件カードを読み取りました。\nこのカードは「確認中」です。\nまだ制作は始めません。\n次に、未確定事項と依頼主へ聞く内容を確認します。"
-      : "案件カードを読み取りました。\nこのカードは「制作可能」です。\n次に、今日やることと制作手順を確認します。";
-    const lines = [
-      `カード状態：${valueOrMissing(card["カード状態"])}`,
-      `案件名：${valueOrMissing(card["案件名"])}`,
-      `作業内容：\n${valueOrMissing(card["作業内容"])}`,
-      `納品物：\n${valueOrMissing(card["納品物"])}`,
-      `チェック基準：\n${valueOrMissing(card["チェック基準"])}`
+    const checking = mode === "checking";
+    const stateTitle = checking
+      ? "この仕事はまだ確認が必要です"
+      : "この仕事は制作を始められます";
+    const reason = checking
+      ? "制作を始めるために必要な情報がまだ揃っていないため、今は制作を止めています。"
+      : "必要な情報が揃いました。作業内容・納品物・完成条件など、制作を始めるために必要な情報を確認できました。";
+    const rows = [
+      ["仕事名", card["案件名"]],
+      ["作業内容", card["作業内容"]],
+      ["納品物", card["納品物"]],
+      ["完成条件", card["チェック基準"]]
     ];
-    preview.textContent = successMessage + "\n\n" + lines.join("\n\n") + (mode === "checking"
-      ? "\n\n⚠️ 確認作業台を作ります。実制作は開始しません。"
-      : "\n\n✅ 制作作業台を作れます。");
-    preview.classList.add(mode === "checking" ? "pc-preview-checking" : "pc-preview-ready");
+    preview.innerHTML = `
+      <div class="pc-human-result">
+        <p class="pc-human-kicker">仕事の内容を確認しました</p>
+        <h3 class="pc-human-state-title">${escapeHtml(stateTitle)}</h3>
+        <p class="pc-human-reason">${escapeHtml(reason)}</p>
+        <dl class="pc-human-summary">
+          ${rows.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(valueOrMissing(value))}</dd></div>`).join("")}
+        </dl>
+      </div>
+    `;
+    preview.classList.add(checking ? "pc-preview-checking" : "pc-preview-ready");
     workbenchMoveBtn.disabled = false;
     if (nextButtonHint) nextButtonHint.hidden = true;
   }
@@ -2062,6 +2073,9 @@ window.freelanceApp.currentProjectCard = null;
   function renderConfirmationPanel(card) {
     const questions = normalizeNewlines(card["相手へ聞く質問"]);
     const unknownItems = alignedUnknownItems(card);
+    if (confirmationUnknownCount) {
+      confirmationUnknownCount.textContent = `まだ確認が必要なことは${unknownItems.length}件です。`;
+    }
     renderKnownFacts(card);
     renderSimpleItems(confirmationUnknownItems, unknownItems.join("\n"), "unknown", "確認が必要な項目はカードに記載されていません。");
     renderSimpleItems(confirmationQuestionItems, questions === "なし" ? "" : questions, "question", "相手へ聞く質問はカードに記載されていません。");
@@ -2235,9 +2249,9 @@ ${card["チェック基準"]}
     preview.hidden = false;
     workbenchMoveBtn.hidden = false;
     renderProjectCardPreview(card, "ready");
-    workbenchMoveBtn.textContent = "今日の作業手順を見る";
+    workbenchMoveBtn.textContent = "今日やる作業を見る";
     renderWorkbench(card);
-    showToast("制作作業台を作りました");
+    showToast("今日やる作業を表示しました");
   });
 
   workbenchMoveBtn.addEventListener("click", () => {
@@ -2255,7 +2269,7 @@ ${card["チェック基準"]}
         return;
       }
       copyText(questions);
-      if (confirmationCopyStatus) confirmationCopyStatus.textContent = "質問をコピーしました";
+      if (confirmationCopyStatus) confirmationCopyStatus.textContent = "質問をコピーしました。募集サイトなどで依頼主へ自分で送ってください。回答が来たら入口アプリへ戻って反映してください。";
       showToast("質問をコピーしました");
     });
   }
