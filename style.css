@@ -2365,6 +2365,13 @@ main {
   min-width: 0;
 }
 
+.confirmation-complete {
+  margin: 0 0 8px;
+  font-size: .92rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, .88);
+}
+
 .confirmation-unknown-count {
   margin: 12px 0;
   padding: 11px 13px;
