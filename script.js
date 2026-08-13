@@ -1980,9 +1980,10 @@ window.freelanceApp.currentProjectCard = null;
 
     const flow = [
       `制作に着手する：${firstWorkItem}`,
-      ...steps.slice(1),
+      ...workItems.slice(1).map(item => `制作を進める：${item}`),
       `完成条件で検品する：${inspection.join("／")}`,
-      `納品物を確認する：${deliveryItems.join("／") || card["納品物"]}`
+      `納品物を用意する：${deliveryItems.join("／") || card["納品物"]}`,
+      "作業後の事実を、納品タブへ自分で入力する"
     ].filter((item, index, items) => item && items.indexOf(item) === index);
 
     return {
