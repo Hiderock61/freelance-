@@ -1956,14 +1956,10 @@ window.freelanceApp.currentProjectCard = null;
     const checkItems = splitItems(card["チェック基準"]);
     const deliveryItems = splitItems(card["納品物"]);
 
+    const firstWorkItem = workItems[0] || card["作業内容"];
     const today = [];
     today.push(`案件の目的を確認する：${card["作業内容"]}`);
-    if (card["次の学習ミッション"]) {
-      today.push(`先に学ぶ：${card["次の学習ミッション"]}`);
-    } else if (card["不足技術"]) {
-      today.push(`不足技術を確認する：${card["不足技術"]}`);
-    }
-    today.push(`制作を始める：${workItems[0] || card["作業内容"]}`);
+    today.push(`制作を始める：${firstWorkItem}`);
     today.push(`納品物の形を確認する：${card["納品物"]}`);
 
     const steps = [];
@@ -1982,10 +1978,19 @@ window.freelanceApp.currentProjectCard = null;
       card["必要技術"] ? `使う技術：${card["必要技術"]}` : ""
     ].filter(Boolean);
 
+    const flow = [
+      `制作に着手する：${firstWorkItem}`,
+      ...steps.slice(1),
+      `完成条件で検品する：${inspection.join("／")}`,
+      `納品物を確認する：${deliveryItems.join("／") || card["納品物"]}`
+    ].filter((item, index, items) => item && items.indexOf(item) === index);
+
     return {
       today,
       steps,
       inspection,
+      firstAction: `最初の制作手順に着手します：${firstWorkItem}`,
+      flow,
       learning: learningParts.length ? learningParts.join("\n\n") : "この案件カードには学習項目がありません。入口アプリで不足技術と学習ミッションを追加してください。",
       done: `「${card["納品物"]}」が用意され、次の基準を満たした状態。\n\n${card["チェック基準"]}`,
       gear: chooseGear(card)
@@ -2102,6 +2107,8 @@ window.freelanceApp.currentProjectCard = null;
   }
 
   function renderConfirmationWorkbench(card) {
+    const productionStartGuide = document.getElementById("productionStartGuide");
+    if (productionStartGuide) productionStartGuide.hidden = true;
     document.getElementById("workbenchProjectName").textContent = card["案件名"] || "案件名未記載";
     document.getElementById("workbenchProgress").textContent = "確認中";
     const summary = document.getElementById("workbenchWorkSummary");
@@ -2155,6 +2162,16 @@ window.freelanceApp.currentProjectCard = null;
     const data = buildWorkbenchData(card);
     document.getElementById("workbenchProjectName").textContent = card["案件名"];
     document.getElementById("workbenchWorkSummary").textContent = card["作業内容"];
+
+    const productionStartGuide = document.getElementById("productionStartGuide");
+    const productionFirstAction = document.getElementById("productionFirstAction");
+    const productionFlowList = document.getElementById("productionFlowList");
+    if (productionFirstAction) productionFirstAction.textContent = data.firstAction;
+    if (productionFlowList) {
+      productionFlowList.innerHTML = data.flow.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+    if (productionStartGuide) productionStartGuide.hidden = false;
+
     setWorkbenchSection("workbenchToday", "① 今日やること", data.today, true);
     setWorkbenchSection("workbenchLearning", "② 今回学ぶこと", data.learning);
     setWorkbenchSection("workbenchSteps", "③ 制作手順", data.steps, true);
