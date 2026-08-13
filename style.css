@@ -2260,6 +2260,7 @@ main { margin-top: 18px; }
 .confirmation-project-summary div { min-width: 0; padding: 10px 12px; border-radius: 11px; background: rgba(255, 255, 255, .06); }
 .confirmation-project-summary dt { color: #fcd34d; font-size: 12px; font-weight: 800; }
 .confirmation-project-summary dd { margin: 4px 0 0; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.confirmation-known-facts:empty::before { content: "確定情報はカードに記載されていません。"; color: rgba(255, 255, 255, .72); line-height: 1.6; }
 .confirmation-card-next { margin-top: 12px !important; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .12); }
 .confirmation-card-next strong,
 .confirmation-card-next span { display: block; }

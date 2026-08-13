@@ -1682,6 +1682,7 @@ window.freelanceApp.currentProjectCard = null;
   const workbench = document.getElementById("projectWorkbench");
   const confirmationPanel = document.getElementById("confirmationPanel");
   const confirmationUnknownItems = document.getElementById("confirmationUnknownItems");
+  const confirmationKnownFacts = document.getElementById("confirmationKnownFacts");
   const confirmationQuestionItems = document.getElementById("confirmationQuestionItems");
   const showConfirmationDetailsBtn = document.getElementById("showConfirmationDetailsBtn");
   const copyConfirmationQuestionsBtn = document.getElementById("copyConfirmationQuestionsBtn");
@@ -1717,6 +1718,9 @@ window.freelanceApp.currentProjectCard = null;
     "今使える装備": "",
     "学習ミッションの完成条件": "",
     "次の行動": ""
+    ,"素材": ""
+    ,"修正回数": ""
+    ,"制作開始許可": ""
   });
 
   function normalizeNewlines(text) {
@@ -1761,6 +1765,9 @@ window.freelanceApp.currentProjectCard = null;
       ,"今使える装備": "今使える装備"
       ,"学習ミッションの完成条件": "学習ミッションの完成条件"
       ,"次の行動": "次の行動"
+      ,"素材": "素材"
+      ,"修正回数": "修正回数"
+      ,"制作開始許可": "制作開始許可"
     };
 
     return Object.prototype.hasOwnProperty.call(map, cleaned) ? map[cleaned] : null;
@@ -2016,10 +2023,47 @@ window.freelanceApp.currentProjectCard = null;
       : values.map(item => `<p>${escapeHtml(item)}</p>`).join("");
   }
 
+  function unknownLabelFromQuestion(question) {
+    const text = String(question || "").trim();
+    if (!text) return "";
+    if (/対象ページ.*URL|対象URL/.test(text)) return "対象ページのURL";
+    if (/修正対象ファイル.*(共有|受け渡し)|ファイル.*受け渡し/.test(text)) return "修正対象ファイルの受け渡し方法";
+    if (/確認用URL.*(どちら|誰|用意|作成)/.test(text)) return "確認用URLをどちらが用意するか";
+    if (/納品.*方法|どの方法で.*(渡|納品)/.test(text)) return "納品方法";
+    if (/素材/.test(text)) return "素材の支給有無";
+    if (/修正回数/.test(text)) return /修正範囲/.test(text) ? "修正回数と修正範囲" : "修正回数";
+    if (/修正範囲/.test(text)) return "修正範囲";
+    if (/制作.*開始|作業.*開始/.test(text)) return "制作開始許可";
+    if (/チェック基準|完成.*基準/.test(text)) return "完成後のチェック基準";
+    if (/作業範囲|担当.*範囲/.test(text)) return "担当する作業範囲";
+    if (/納品物/.test(text)) return "納品物";
+    return text.replace(/[。？?]$/, "");
+  }
+
+  function alignedUnknownItems(card) {
+    const questions = splitItems(card["相手へ聞く質問"] === "なし" ? "" : card["相手へ聞く質問"]);
+    if (questions.length) return [...new Set(questions.map(unknownLabelFromQuestion).filter(Boolean))];
+    return splitItems(card["未確定事項"] === "なし" ? "" : card["未確定事項"]);
+  }
+
+  function renderKnownFacts(card) {
+    if (!confirmationKnownFacts) return;
+    const facts = [
+      ["作業内容", card["作業内容"]],
+      ["納品物", card["納品物"]],
+      ["チェック基準", card["チェック基準"]],
+      ["素材", card["素材"]],
+      ["修正回数", card["修正回数"]],
+      ["制作開始許可", card["制作開始許可"]]
+    ].filter(([, value]) => value && !isUncertainValue(value));
+    confirmationKnownFacts.innerHTML = facts.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(normalizeNewlines(value))}</dd></div>`).join("");
+  }
+
   function renderConfirmationPanel(card) {
-    const unknown = normalizeNewlines(card["未確定事項"]);
     const questions = normalizeNewlines(card["相手へ聞く質問"]);
-    renderSimpleItems(confirmationUnknownItems, unknown === "なし" ? "" : unknown, "unknown", "未確定事項はカードに記載されていません。");
+    const unknownItems = alignedUnknownItems(card);
+    renderKnownFacts(card);
+    renderSimpleItems(confirmationUnknownItems, unknownItems.join("\n"), "unknown", "確認が必要な項目はカードに記載されていません。");
     renderSimpleItems(confirmationQuestionItems, questions === "なし" ? "" : questions, "question", "相手へ聞く質問はカードに記載されていません。");
     if (confirmationCopyStatus) confirmationCopyStatus.textContent = "";
     const summaryValues = {
@@ -2058,7 +2102,7 @@ window.freelanceApp.currentProjectCard = null;
       "依頼主へ送る質問を、分かりやすい順番に整理する"
     ], true);
 
-    const unknown = normalizeNewlines(card["未確定事項"]);
+    const unknown = alignedUnknownItems(card).join("\n");
     setWorkbenchSection("workbenchLearning", "② 未確定事項",
       !unknown || unknown === "なし" ? "未確定事項はカードに記載されていません。" : unknown);
     renderConfirmationItems("workbenchLearning", splitItems(unknown === "なし" ? "" : unknown), "unknown", "未確定事項はカードに記載されていません。");
