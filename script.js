@@ -1951,6 +1951,31 @@ window.freelanceApp.currentProjectCard = null;
     return found.slice(0, 4);
   }
 
+  function buildFirstExecutableAction(card) {
+    const work = normalizeNewlines(card["作業内容"]);
+    const delivery = normalizeNewlines(card["納品物"]);
+    const skills = normalizeNewlines(card["必要技術"]);
+    const gear = normalizeNewlines(card["今使える装備"]);
+    const source = [work, delivery, skills, gear].join(" ");
+
+    const hasHtmlCss = /HTML|CSS|コーディング|コード/i.test(source);
+    const hasWebTarget = /Web|ウェブ|サイト|ページ|LP|スマホ表示|レスポンシブ/i.test(source);
+    const hasFile = /ファイル|HTML|CSS|コード/i.test(source);
+    const hasWriting = /文章|文言|原稿|記事|テキスト|校正|リライト|執筆/i.test(source);
+    const hasImage = /画像|写真|バナー|サムネ|アイキャッチ|イラスト/i.test(source);
+
+    if (hasHtmlCss && hasFile) return "修正対象のHTML/CSSファイルを開きます。";
+    if (hasWriting) return "作業対象の文章を開きます。";
+    if (hasImage) return "作業対象の画像を開きます。";
+    if (hasWebTarget) return "作業対象のページを開きます。";
+    if (hasFile) return "作業対象として受け取ったファイルを開きます。";
+    return "作業内容に書かれた対象を確認します。";
+  }
+
+  function actionAsFlowItem(action) {
+    return String(action || "").replace(/[。.]$/, "");
+  }
+
   function buildWorkbenchData(card) {
     const workItems = splitItems(card["作業内容"]);
     const checkItems = splitItems(card["チェック基準"]);
@@ -1978,19 +2003,20 @@ window.freelanceApp.currentProjectCard = null;
       card["必要技術"] ? `使う技術：${card["必要技術"]}` : ""
     ].filter(Boolean);
 
+    const firstAction = buildFirstExecutableAction(card);
     const flow = [
-      `制作に着手する：${firstWorkItem}`,
-      ...workItems.slice(1).map(item => `制作を進める：${item}`),
-      `完成条件で検品する：${inspection.join("／")}`,
-      `納品物を用意する：${deliveryItems.join("／") || card["納品物"]}`,
-      "作業後の事実を、納品タブへ自分で入力する"
-    ].filter((item, index, items) => item && items.indexOf(item) === index);
+      actionAsFlowItem(firstAction),
+      "開いた対象の現在の状態を確認する",
+      "カードに書かれた作業内容を進める",
+      "完成条件で検品する",
+      "納品物を用意して納品準備へ進む"
+    ];
 
     return {
       today,
       steps,
       inspection,
-      firstAction: `最初の制作手順に着手します：${firstWorkItem}`,
+      firstAction,
       flow,
       learning: learningParts.length ? learningParts.join("\n\n") : "この案件カードには学習項目がありません。入口アプリで不足技術と学習ミッションを追加してください。",
       done: `「${card["納品物"]}」が用意され、次の基準を満たした状態。\n\n${card["チェック基準"]}`,
