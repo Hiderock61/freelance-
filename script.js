@@ -1695,6 +1695,17 @@ window.freelanceApp.currentProjectCard = null;
   const confirmationExitGuide = document.getElementById("confirmationExitGuide");
   const copyWorkbenchPromptBtn = document.getElementById("copyWorkbenchPromptBtn");
   const goDeliveryAfterWorkBtn = document.getElementById("goDeliveryAfterWorkBtn");
+  const productionAssetGate = document.getElementById("productionAssetGate");
+  const productionAssetQuestion = document.getElementById("productionAssetQuestion");
+  const productionAssetReason = document.getElementById("productionAssetReason");
+  const productionAssetChoices = document.getElementById("productionAssetChoices");
+  const productionAssetMissingBtn = document.getElementById("productionAssetMissingBtn");
+  const productionAssetReadyBtn = document.getElementById("productionAssetReadyBtn");
+  const productionAssetWaiting = document.getElementById("productionAssetWaiting");
+  const productionAssetReceived = document.getElementById("productionAssetReceived");
+  const productionAssetReceiveGuide = document.getElementById("productionAssetReceiveGuide");
+  const productionAssetStartPlace = document.getElementById("productionAssetStartPlace");
+  const productionAssetResumeBtn = document.getElementById("productionAssetResumeBtn");
 
   if (!input || !loadBtn || !preview || !workbenchMoveBtn || !workbench) return;
 
@@ -1847,6 +1858,7 @@ window.freelanceApp.currentProjectCard = null;
 
   function resetProjectCardView() {
     window.freelanceApp.currentProjectCard = null;
+    window.freelanceApp.currentProductionAsset = null;
     workbench.hidden = true;
     if (confirmationPanel) confirmationPanel.hidden = true;
     preview.hidden = false;
@@ -1856,6 +1868,10 @@ window.freelanceApp.currentProjectCard = null;
     if (nextButtonHint) nextButtonHint.hidden = false;
     preview.classList.remove("pc-preview-warning", "pc-preview-ready", "pc-preview-checking");
     preview.textContent = "仕事の内容を確認しています。";
+    workbench.classList.remove("asset-checking", "asset-waiting");
+    if (productionAssetGate) productionAssetGate.hidden = true;
+    if (productionAssetWaiting) productionAssetWaiting.hidden = true;
+    if (productionAssetReceived) productionAssetReceived.hidden = true;
     setConfirmationGuidesVisible(false);
   }
 
@@ -1951,6 +1967,57 @@ window.freelanceApp.currentProjectCard = null;
     return found.slice(0, 4);
   }
 
+  function productionAssetInfo(card) {
+    const work = normalizeNewlines(card["作業内容"]);
+    const delivery = normalizeNewlines(card["納品物"]);
+    const material = normalizeNewlines(card["素材"]);
+    const next = normalizeNewlines(card["次の行動"]);
+    const source = [work, delivery, material, next].join(" ");
+
+    const hasHtmlCss = /HTML|CSS|コーディング|コード/i.test(source);
+    const hasWriting = /文章|文言|原稿|記事|テキスト|校正|リライト|執筆/i.test(source);
+    const hasImage = /画像|写真|バナー|サムネ|アイキャッチ|イラスト/i.test(source);
+    const hasData = /共有データ|CSV|JSON|データファイル/i.test(source);
+    const hasFile = /修正対象.{0,8}ファイル|作業対象.{0,8}ファイル|既存.{0,8}ファイル/i.test(source);
+    const transferStated = /(支給|提供|共有|送付|受け取|受領|渡され|依頼主.{0,12}(ファイル|文章|画像|素材|データ))/i.test(source);
+    const existingTargetWork = /(修正|編集|校正|リライト|加工|差し替え|更新).{0,24}(ファイル|文章|文言|原稿|記事|テキスト|画像|写真|バナー|データ)|(?:ファイル|文章|文言|原稿|記事|テキスト|画像|写真|バナー|データ).{0,24}(修正|編集|校正|リライト|加工|差し替え|更新)/i.test(source);
+    const required = transferStated || hasFile || existingTargetWork;
+    if (!required) return { required: false };
+
+    let target = "制作素材";
+    if (hasHtmlCss || hasFile) target = "修正対象ファイル";
+    else if (hasWriting) target = "作業対象の文章";
+    else if (hasImage) target = "作業対象の画像";
+    else if (hasData) target = "共有データ";
+
+    let method = "";
+    if (/ZIP/i.test(source)) method = "ZIP";
+    else if (/Google\s*Drive|Googleドライブ/i.test(source)) method = "Google Drive";
+    else if (/Dropbox/i.test(source)) method = "Dropbox";
+    else if (/GitHub/i.test(source)) method = "GitHub";
+    else if (/チャット.{0,8}添付|添付.{0,8}チャット/i.test(source)) method = "チャット添付";
+    else if (/メール.{0,8}(共有|送付|添付)|(?:共有|送付|添付).{0,8}メール/i.test(source)) method = "メール";
+
+    let receiveGuide = `依頼主から${target}を受け取ってください。`;
+    let openAction = "受け取った場所を開きます。";
+    if (method === "ZIP") {
+      receiveGuide = "依頼主からZIPファイルを受け取ってください。";
+      openAction = "受け取ったZIPファイルを開きます。";
+    } else if (method) {
+      receiveGuide = `依頼主から${method}で${target}を受け取ってください。`;
+      openAction = `受け取った${method}の共有先を開きます。`;
+    }
+
+    return {
+      required: true,
+      target,
+      method,
+      question: `${target}は手元にありますか？`,
+      receiveGuide,
+      openAction
+    };
+  }
+
   function buildFirstExecutableAction(card) {
     const work = normalizeNewlines(card["作業内容"]);
     const delivery = normalizeNewlines(card["納品物"]);
@@ -1976,7 +2043,7 @@ window.freelanceApp.currentProjectCard = null;
     return String(action || "").replace(/[。.]$/, "");
   }
 
-  function buildWorkbenchData(card) {
+  function buildWorkbenchData(card, assetInfo = { required: false }) {
     const workItems = splitItems(card["作業内容"]);
     const checkItems = splitItems(card["チェック基準"]);
     const deliveryItems = splitItems(card["納品物"]);
@@ -2003,9 +2070,11 @@ window.freelanceApp.currentProjectCard = null;
       card["必要技術"] ? `使う技術：${card["必要技術"]}` : ""
     ].filter(Boolean);
 
-    const firstAction = buildFirstExecutableAction(card);
+    const targetAction = buildFirstExecutableAction(card);
+    const firstAction = assetInfo.required ? assetInfo.openAction : targetAction;
     const flow = [
       actionAsFlowItem(firstAction),
+      ...(assetInfo.required ? [actionAsFlowItem(targetAction)] : []),
       "開いた対象の現在の状態を確認する",
       "カードに書かれた作業内容を進める",
       "完成条件で検品する",
@@ -2184,9 +2253,35 @@ window.freelanceApp.currentProjectCard = null;
     updateWorkbenchProgress();
   }
 
+  function showProductionAssetStage(stage, assetInfo) {
+    if (!productionAssetGate || !assetInfo?.required) return;
+    const blocked = stage !== "received";
+    workbench.classList.toggle("asset-checking", stage === "checking");
+    workbench.classList.toggle("asset-waiting", stage === "waiting");
+    productionAssetChoices.hidden = stage !== "checking";
+    productionAssetWaiting.hidden = stage !== "waiting";
+    productionAssetReceived.hidden = stage !== "received";
+    if (productionAssetReceiveGuide) productionAssetReceiveGuide.textContent = assetInfo.receiveGuide;
+    if (productionAssetStartPlace) productionAssetStartPlace.textContent = assetInfo.openAction;
+    const productionStartGuide = document.getElementById("productionStartGuide");
+    if (productionStartGuide) productionStartGuide.hidden = blocked;
+  }
+
+  function prepareProductionAssetGate(assetInfo) {
+    workbench.classList.remove("asset-checking", "asset-waiting");
+    if (!productionAssetGate) return;
+    productionAssetGate.hidden = !assetInfo.required;
+    if (!assetInfo.required) return;
+    productionAssetQuestion.textContent = assetInfo.question;
+    productionAssetReason.textContent = `${assetInfo.target}を実際に受け取ったか、ここで確認します。カードに共有条件が書かれていても、受取済みとはみなしません。`;
+    showProductionAssetStage("checking", assetInfo);
+  }
+
   function renderWorkbench(card) {
     setConfirmationGuidesVisible(false);
-    const data = buildWorkbenchData(card);
+    const assetInfo = productionAssetInfo(card);
+    const data = buildWorkbenchData(card, assetInfo);
+    window.freelanceApp.currentProductionAsset = assetInfo;
     document.getElementById("workbenchProjectName").textContent = card["案件名"];
     document.getElementById("workbenchWorkSummary").textContent = card["作業内容"];
 
@@ -2197,7 +2292,7 @@ window.freelanceApp.currentProjectCard = null;
     if (productionFlowList) {
       productionFlowList.innerHTML = data.flow.map(item => `<li>${escapeHtml(item)}</li>`).join("");
     }
-    if (productionStartGuide) productionStartGuide.hidden = false;
+    if (productionStartGuide) productionStartGuide.hidden = assetInfo.required;
 
     setWorkbenchSection("workbenchToday", "① 今日やること", data.today, true);
     setWorkbenchSection("workbenchLearning", "② 今回学ぶこと", data.learning);
@@ -2214,6 +2309,7 @@ window.freelanceApp.currentProjectCard = null;
     workbench.querySelector(".workbench-actions").hidden = false;
     workbench.querySelector(".pc-note").hidden = false;
     workbench.hidden = false;
+    prepareProductionAssetGate(assetInfo);
     workbench.querySelectorAll('input[data-workbench-check]').forEach(check => {
       check.addEventListener("change", updateWorkbenchProgress);
     });
@@ -2302,6 +2398,26 @@ ${card["チェック基準"]}
     if (!window.freelanceApp.currentProjectCard || workbench.hidden) return;
     workbench.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  if (productionAssetMissingBtn) {
+    productionAssetMissingBtn.addEventListener("click", () => {
+      const assetInfo = window.freelanceApp.currentProductionAsset;
+      if (!assetInfo?.required) return;
+      showProductionAssetStage("waiting", assetInfo);
+      productionAssetGate.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function continueAfterAssetReceipt() {
+    const assetInfo = window.freelanceApp.currentProductionAsset;
+    if (!assetInfo?.required) return;
+    showProductionAssetStage("received", assetInfo);
+    const productionStartGuide = document.getElementById("productionStartGuide");
+    if (productionStartGuide) productionStartGuide.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  if (productionAssetReadyBtn) productionAssetReadyBtn.addEventListener("click", continueAfterAssetReceipt);
+  if (productionAssetResumeBtn) productionAssetResumeBtn.addEventListener("click", continueAfterAssetReceipt);
 
   if (copyConfirmationQuestionsBtn) {
     copyConfirmationQuestionsBtn.addEventListener("click", () => {

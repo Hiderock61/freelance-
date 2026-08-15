@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.10</title>
-  <link rel="stylesheet" href="style.css?v=2310-final" />
+  <title>フリーランス装備庫 v2.3.11</title>
+  <link rel="stylesheet" href="style.css?v=2311-final" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.10</span>
+        <span class="badge">v2.3.11</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.10では、制作作業台の入口を実行できる1操作まで小さく案内します。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.11では、制作素材が必要な仕事で、現物の受取確認から最初の1操作まで案内します。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -225,6 +225,27 @@
               <h3 id="workbenchProjectName">未読み込み</h3>
             </div>
           </div>
+
+          <section id="productionAssetGate" class="production-asset-gate" hidden aria-live="polite">
+            <p class="production-asset-label">制作を始める前に確認</p>
+            <h4 id="productionAssetQuestion">制作素材は手元にありますか？</h4>
+            <p id="productionAssetReason" class="production-asset-reason">この仕事は、依頼主から受け取る制作対象が必要です。</p>
+            <div id="productionAssetChoices" class="production-asset-choices">
+              <button id="productionAssetMissingBtn" class="ghost-button production-asset-choice" type="button">まだ受け取っていない</button>
+              <button id="productionAssetReadyBtn" class="primary-button production-asset-choice" type="button">受け取っている</button>
+            </div>
+            <div id="productionAssetWaiting" class="production-asset-result production-asset-waiting" hidden>
+              <h4>今は制作を始めません</h4>
+              <p id="productionAssetReceiveGuide">依頼主から制作素材を受け取ってください。</p>
+              <p>受け取るまでは制作を始めません。仕事条件は制作可能のままです。</p>
+              <p class="production-asset-resume-note">受け取ったら、ここから制作を続けてください。</p>
+              <button id="productionAssetResumeBtn" class="primary-button production-asset-choice" type="button">受け取っている</button>
+            </div>
+            <div id="productionAssetReceived" class="production-asset-result production-asset-received" hidden>
+              <h4>受取を確認しました</h4>
+              <p id="productionAssetStartPlace">受け取った場所を開きます。</p>
+            </div>
+          </section>
 
           <section id="productionStartGuide" class="production-start-guide" hidden>
             <p class="production-start-label">今やること</p>
@@ -507,6 +528,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2310-final"></script>
+  <script src="script.js?v=2311-final"></script>
 </body>
 </html>
