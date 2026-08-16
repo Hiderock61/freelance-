@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.12</title>
-  <link rel="stylesheet" href="style.css?v=2312-final" />
+  <title>フリーランス装備庫 v2.3.13</title>
+  <link rel="stylesheet" href="style.css?v=2313-final" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.12</span>
+        <span class="badge">v2.3.13</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.12では、受け取った制作素材へ到達し、対象を開くまでを1操作ずつ案内します。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.13では、分かっている受取場所名を具体表示し、最初の主操作を1か所へ集約します。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -243,12 +243,6 @@
             </div>
             <div id="productionAssetReceived" class="production-asset-result production-asset-received" hidden>
               <h4>受取を確認しました</h4>
-              <div id="productionAssetLocationCheck" class="production-location-check" hidden>
-                <p class="production-arrival-label">まず確認すること</p>
-                <h5 id="productionAssetLocationQuestion">どこで制作素材を受け取ったか確認してください。</h5>
-                <p>受け取った場所が分かったら、そこから制作を続けられます。カード状態は制作可能のままです。</p>
-                <button id="productionAssetLocationConfirmedBtn" class="primary-button production-asset-choice" type="button">受け取った場所を確認した</button>
-              </div>
               <div id="productionAssetArrivalGuide" class="production-arrival-guide" hidden>
                 <section>
                   <p class="production-arrival-label">1｜どこへ行く？</p>
@@ -550,6 +544,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2312-final"></script>
+  <script src="script.js?v=2313-final"></script>
 </body>
 </html>

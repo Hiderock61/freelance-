@@ -1706,9 +1706,6 @@ window.freelanceApp.currentProjectCard = null;
   const productionAssetReceiveGuide = document.getElementById("productionAssetReceiveGuide");
   const productionAssetStartPlace = document.getElementById("productionAssetStartPlace");
   const productionAssetResumeBtn = document.getElementById("productionAssetResumeBtn");
-  const productionAssetLocationCheck = document.getElementById("productionAssetLocationCheck");
-  const productionAssetLocationQuestion = document.getElementById("productionAssetLocationQuestion");
-  const productionAssetLocationConfirmedBtn = document.getElementById("productionAssetLocationConfirmedBtn");
   const productionAssetArrivalGuide = document.getElementById("productionAssetArrivalGuide");
   const productionAssetSearchTarget = document.getElementById("productionAssetSearchTarget");
   const productionAssetOpenTarget = document.getElementById("productionAssetOpenTarget");
@@ -1878,7 +1875,6 @@ window.freelanceApp.currentProjectCard = null;
     if (productionAssetGate) productionAssetGate.hidden = true;
     if (productionAssetWaiting) productionAssetWaiting.hidden = true;
     if (productionAssetReceived) productionAssetReceived.hidden = true;
-    if (productionAssetLocationCheck) productionAssetLocationCheck.hidden = true;
     if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = true;
     setConfirmationGuidesVisible(false);
   }
@@ -2021,10 +2017,10 @@ window.freelanceApp.currentProjectCard = null;
       receiveGuide = `依頼主から${location}で${target}を受け取ってください。`;
     }
 
-    let locationAction = "確認した受取場所を開きます。";
-    if (location === "メール") locationAction = "依頼主から届いたメールを開きます。";
+    let locationAction = "どこで素材を受け取ったか確認してください。\n場所を確認できたら、その場所を開いてください。";
+    if (location === "メール") locationAction = "依頼主から受け取ったメールを開きます。";
     else if (location === "チャット添付") locationAction = "依頼主とのチャットを開きます。";
-    else if (location === "共有URL") locationAction = "カードに書かれた共有URLを開きます。";
+    else if (location === "共有URL") locationAction = "共有URLを開きます。";
     else if (location) locationAction = `${location}を開きます。`;
 
     let searchAction = `${searchTarget}を探します。`;
@@ -2032,15 +2028,15 @@ window.freelanceApp.currentProjectCard = null;
     const arrivalFlow = [];
     arrivalFlow.push(locationAction);
     if (packageKind === "ZIP") {
-      arrivalFlow.push("ZIPファイルを探します。");
-      arrivalFlow.push("ZIPファイルを開きます。");
-      arrivalFlow.push(`ZIPの中の${searchTarget}を確認します。`);
-      searchAction = `ZIPファイルを探して開き、中の${searchTarget}を確認します。`;
-      openTargetAction = `ZIPの中の${searchTarget}を開きます。`;
+      searchAction = "ZIPファイルを探します。";
+      openTargetAction = `見つけたZIPファイルを開き、中の${searchTarget}を確認します。`;
+      arrivalFlow.push(searchAction);
+      arrivalFlow.push(openTargetAction);
+      arrivalFlow.push(`ZIPの中の${searchTarget}を開きます。`);
     } else {
       arrivalFlow.push(searchAction);
+      arrivalFlow.push(openTargetAction);
     }
-    arrivalFlow.push(openTargetAction);
 
     return {
       required: true,
@@ -2051,7 +2047,6 @@ window.freelanceApp.currentProjectCard = null;
       searchTarget,
       question: `${target}は手元にありますか？`,
       receiveGuide,
-      locationQuestion: `どこで${packageKind === "ZIP" ? "ZIPファイル" : target}を受け取ったか確認してください。`,
       locationAction,
       searchAction,
       openTargetAction,
@@ -2295,10 +2290,9 @@ window.freelanceApp.currentProjectCard = null;
 
   function showProductionAssetStage(stage, assetInfo) {
     if (!productionAssetGate || !assetInfo?.required) return;
-    const blocked = stage !== "received";
     workbench.classList.toggle("asset-checking", stage === "checking");
     workbench.classList.toggle("asset-waiting", stage === "waiting");
-    workbench.classList.toggle("asset-location-checking", stage === "received" && !assetInfo.locationKnown);
+    workbench.classList.remove("asset-location-checking");
     productionAssetChoices.hidden = stage !== "checking";
     productionAssetWaiting.hidden = stage !== "waiting";
     productionAssetReceived.hidden = stage !== "received";
@@ -2306,22 +2300,9 @@ window.freelanceApp.currentProjectCard = null;
     if (productionAssetStartPlace) productionAssetStartPlace.textContent = assetInfo.locationAction;
     if (productionAssetSearchTarget) productionAssetSearchTarget.textContent = assetInfo.searchAction;
     if (productionAssetOpenTarget) productionAssetOpenTarget.textContent = assetInfo.openTargetAction;
-    if (productionAssetLocationQuestion) productionAssetLocationQuestion.textContent = assetInfo.locationQuestion;
-    if (productionAssetLocationCheck) productionAssetLocationCheck.hidden = stage !== "received" || assetInfo.locationKnown;
-    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = stage !== "received" || !assetInfo.locationKnown;
+    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = stage !== "received";
     const productionStartGuide = document.getElementById("productionStartGuide");
-    if (productionStartGuide) productionStartGuide.hidden = blocked || (stage === "received" && !assetInfo.locationKnown);
-  }
-
-  function continueFromConfirmedLocation() {
-    const assetInfo = window.freelanceApp.currentProductionAsset;
-    if (!assetInfo?.required) return;
-    workbench.classList.remove("asset-location-checking");
-    if (productionAssetLocationCheck) productionAssetLocationCheck.hidden = true;
-    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = false;
-    const productionStartGuide = document.getElementById("productionStartGuide");
-    if (productionStartGuide) productionStartGuide.hidden = false;
-    if (productionAssetArrivalGuide) productionAssetArrivalGuide.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (productionStartGuide) productionStartGuide.hidden = true;
   }
 
   function prepareProductionAssetGate(assetInfo) {
@@ -2475,8 +2456,6 @@ ${card["チェック基準"]}
 
   if (productionAssetReadyBtn) productionAssetReadyBtn.addEventListener("click", continueAfterAssetReceipt);
   if (productionAssetResumeBtn) productionAssetResumeBtn.addEventListener("click", continueAfterAssetReceipt);
-  if (productionAssetLocationConfirmedBtn) productionAssetLocationConfirmedBtn.addEventListener("click", continueFromConfirmedLocation);
-
   if (copyConfirmationQuestionsBtn) {
     copyConfirmationQuestionsBtn.addEventListener("click", () => {
       const card = window.freelanceApp.currentProjectCard;

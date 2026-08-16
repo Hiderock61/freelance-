@@ -2518,6 +2518,11 @@ main {
   word-break: normal;
 }
 
+/* v2.3.13 場所確認の2操作を、iPhoneでも順番どおり読ませる */
+.production-arrival-guide h5 {
+  white-space: pre-line;
+}
+
 .production-arrival-guide section {
   display: grid;
   gap: 7px;
