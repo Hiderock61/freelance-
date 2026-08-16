@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.11</title>
-  <link rel="stylesheet" href="style.css?v=2311-final" />
+  <title>フリーランス装備庫 v2.3.12</title>
+  <link rel="stylesheet" href="style.css?v=2312-final" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.11</span>
+        <span class="badge">v2.3.12</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.11では、制作素材が必要な仕事で、現物の受取確認から最初の1操作まで案内します。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.12では、受け取った制作素材へ到達し、対象を開くまでを1操作ずつ案内します。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -243,7 +243,29 @@
             </div>
             <div id="productionAssetReceived" class="production-asset-result production-asset-received" hidden>
               <h4>受取を確認しました</h4>
-              <p id="productionAssetStartPlace">受け取った場所を開きます。</p>
+              <div id="productionAssetLocationCheck" class="production-location-check" hidden>
+                <p class="production-arrival-label">まず確認すること</p>
+                <h5 id="productionAssetLocationQuestion">どこで制作素材を受け取ったか確認してください。</h5>
+                <p>受け取った場所が分かったら、そこから制作を続けられます。カード状態は制作可能のままです。</p>
+                <button id="productionAssetLocationConfirmedBtn" class="primary-button production-asset-choice" type="button">受け取った場所を確認した</button>
+              </div>
+              <div id="productionAssetArrivalGuide" class="production-arrival-guide" hidden>
+                <section>
+                  <p class="production-arrival-label">1｜どこへ行く？</p>
+                  <h5 id="productionAssetStartPlace">受け取った場所を開きます。</h5>
+                  <p>その場所を開けたら、この操作は完了です。</p>
+                </section>
+                <section>
+                  <p class="production-arrival-label">2｜何を探す？</p>
+                  <h5 id="productionAssetSearchTarget">制作素材を探します。</h5>
+                  <p>対象を見つけたら、この操作は完了です。</p>
+                </section>
+                <section>
+                  <p class="production-arrival-label">3｜何を開く？</p>
+                  <h5 id="productionAssetOpenTarget">見つけた制作素材を開きます。</h5>
+                  <p>対象を開けたら、この操作は完了です。次に現在状態を確認します。</p>
+                </section>
+              </div>
             </div>
           </section>
 
@@ -528,6 +550,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2311-final"></script>
+  <script src="script.js?v=2312-final"></script>
 </body>
 </html>
