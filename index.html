@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.14</title>
-  <link rel="stylesheet" href="style.css?v=2314-final" />
+  <title>フリーランス装備庫 v2.3.15</title>
+  <link rel="stylesheet" href="style.css?v=2315-final" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.14</span>
+        <span class="badge">v2.3.15</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.14では、カードに受取場所がないとき、人間が作業上の現在地を1タップで選べます。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.15では、素材の場所が分からないときも、確認する順番を1操作ずつ案内します。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -255,6 +255,7 @@
                   <button class="ghost-button production-location-choice" type="button" data-current-location="iphone-files">iPhoneの「ファイル」</button>
                   <button class="ghost-button production-location-choice" type="button" data-current-location="github">GitHub</button>
                   <button class="ghost-button production-location-choice" type="button" data-current-location="other">その他</button>
+                  <button class="ghost-button production-location-choice production-location-unknown" type="button" data-current-location="unknown">どこにあるか分からない</button>
                 </div>
                 <div id="productionOtherLocation" class="production-other-location" hidden>
                   <label for="productionOtherLocationInput">どこから作業を始めますか？</label>
@@ -263,7 +264,41 @@
                   <p id="productionOtherLocationStatus" class="production-location-status" role="status" aria-live="polite"></p>
                 </div>
               </div>
-              <p id="productionCurrentLocationSummary" class="production-current-location-summary" hidden>現在地：<strong id="productionCurrentLocationName"></strong></p>
+              <div id="productionAssetSearchNavigator" class="production-search-navigator" hidden>
+                <p class="production-arrival-label">素材を探しています</p>
+                <h5>素材を探します</h5>
+                <ol id="productionSearchProgress" class="production-search-progress" aria-label="素材探索の進み具合">
+                  <li data-search-step="1">iPhoneの「ファイル」</li>
+                  <li data-search-step="2">メール</li>
+                  <li data-search-step="3">チャット</li>
+                  <li data-search-step="4">依頼主へ確認</li>
+                </ol>
+                <section id="productionSearchStepPanel" class="production-search-step-panel">
+                  <p id="productionSearchStepLabel" class="production-arrival-label">探索STEP 1</p>
+                  <h5 id="productionSearchTitle">1｜まずiPhoneの「ファイル」を確認</h5>
+                  <p id="productionSearchAction" class="production-search-action">iPhoneの「ファイル」アプリを開いてください。</p>
+                  <p id="productionSearchChecks">最近使った項目、ダウンロード、保存先などに素材がないか確認してください。</p>
+                  <div id="productionSearchResultChoices" class="production-search-result-choices">
+                    <button id="productionSearchFoundBtn" class="primary-button" type="button">見つかった</button>
+                    <button id="productionSearchNotFoundBtn" class="ghost-button" type="button">見つからない</button>
+                  </div>
+                </section>
+                <section id="productionSearchFinal" class="production-search-final" hidden>
+                  <p class="production-arrival-label">安全停止</p>
+                  <h5>素材の場所を依頼主へ確認してください</h5>
+                  <p>制作に必要な素材の場所を確認できませんでした。素材の場所が分かるまでは制作を始めません。仕事条件は制作可能のままです。</p>
+                  <div class="production-search-question">
+                    <p id="productionSearchQuestion">制作素材はどこから確認できますか？<br>ファイルまたは共有リンクの場所を教えてください。</p>
+                    <button id="productionSearchCopyBtn" class="ghost-button" type="button">確認文をコピー</button>
+                    <p id="productionSearchCopyStatus" class="production-location-status" role="status" aria-live="polite"></p>
+                  </div>
+                </section>
+                <button id="productionSearchReselectBtn" class="ghost-button production-search-reselect" type="button">場所が分かったので選び直す</button>
+              </div>
+              <div id="productionCurrentLocationSummary" class="production-current-location-summary" hidden>
+                <p>現在地：<strong id="productionCurrentLocationName"></strong></p>
+                <button id="productionCurrentLocationChangeBtn" class="link-button" type="button">現在地を選び直す</button>
+              </div>
               <div id="productionAssetArrivalGuide" class="production-arrival-guide" hidden>
                 <section>
                   <p class="production-arrival-label">1｜どこへ行く？</p>
@@ -565,6 +600,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2314-final"></script>
+  <script src="script.js?v=2315-final"></script>
 </body>
 </html>

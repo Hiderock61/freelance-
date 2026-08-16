@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 32651)
+Total output lines: 2699
+
 const STORE_KEY = "freelanceGearLearning_v01";
 
 const categories = ["全部", "連絡", "図解", "開発", "納品", "書庫", "AI指揮"];
@@ -1123,303 +1126,7 @@ function renderGear() {
       </div>
       <div class="card-actions">
         <button type="button" data-open="${gear.id}">説明を見る</button>
-        <button type="button" data-toggle="${gear.id}" data-key="understood" class="${s.understood ? "done" : ""}">${s.understood ? "理解済み" : "わかった"}</button>
-        ${storyButtonHTML}
-      </div>
-    `;
-    card.querySelector("[data-open]").addEventListener("click", () => openGearDialog(gear.id));
-    card.querySelector("[data-toggle]").addEventListener("click", event => {
-      setGearStatus(event.currentTarget.dataset.toggle, event.currentTarget.dataset.key);
-    });
-    const storyButton = card.querySelector("[data-story-key]");
-    if (storyButton) {
-      storyButton.addEventListener("click", event => openStory(event.currentTarget.dataset.storyKey));
-    }
-    grid.appendChild(card);
-  });
-}
-
-function openGearDialog(id) {
-  const gear = gears.find(g => g.id === id);
-  const s = gearStatus(id);
-  const dialog = document.getElementById("gearDialog");
-  const content = document.getElementById("dialogContent");
-  content.innerHTML = `
-    <div class="dialog-inner">
-      <div class="dialog-title">
-        <span class="gear-icon">${gear.icon}</span>
-        <div>
-          <p class="eyebrow">${gear.category}</p>
-          <h2>${gear.name}</h2>
-          <p>${gear.label}</p>
-        </div>
-      </div>
-      <div class="button-row">
-        <button class="ghost-button" type="button" data-status="installed">${s.installed ? "入れた済み" : "入れた"}</button>
-        <button class="ghost-button" type="button" data-status="understood">${s.understood ? "理解済み" : "何に使うかわかった"}</button>
-        <button class="ghost-button" type="button" data-status="used">${s.used ? "使用済み" : "1回使った"}</button>
-      </div>
-      <section class="dialog-section">
-        <h3>これは何？</h3>
-        <p>${gear.summary}</p>
-      </section>
-      <section class="dialog-section">
-        <h3>なぜ必要？</h3>
-        <p>${gear.why}</p>
-      </section>
-      <section class="dialog-section">
-        <h3>最初の一手</h3>
-        <p>${gear.first}</p>
-      </section>
-      <section class="dialog-section">
-        <h3>使用例</h3>
-        <p>${gear.usecase}</p>
-      </section>
-      <section class="dialog-section">
-        <h3>今日の小ミッション</h3>
-        <p>${gear.mission}</p>
-      </section>
-      <section class="dialog-section">
-        <h3>公式リンク</h3>
-        <div class="dialog-links">
-          ${gear.links.map(link => `<a href="${link[1]}" target="_blank" rel="noopener noreferrer">${link[0]} ↗</a>`).join("")}
-        </div>
-      </section>
-      <section class="dialog-section">
-        <h3>AIに聞く文</h3>
-        <p>私は${gear.name}をフリーランス装備として覚えたいです。目的、最初に押す場所、1回目の練習、納品での使い方を短く分けてください。</p>
-        <button class="primary-button" type="button" data-copy-gear="${gear.id}">この文をコピー</button>
-      </section>
-    </div>
-  `;
-  content.querySelectorAll("[data-status]").forEach(button => {
-    button.addEventListener("click", event => {
-      setGearStatus(id, event.currentTarget.dataset.status);
-      openGearDialog(id);
-    });
-  });
-  content.querySelector("[data-copy-gear]").addEventListener("click", () => {
-    copyText(`私は${gear.name}をフリーランス装備として覚えたいです。目的、最初に押す場所、1回目の練習、納品での使い方を短く分けてください。`);
-  });
-  dialog.showModal();
-}
-
-function renderConditions() {
-  const box = document.getElementById("conditionButtons");
-  box.innerHTML = "";
-  conditions.forEach(condition => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = selectedCondition === condition.id ? "active" : "";
-    button.textContent = condition.label;
-    button.addEventListener("click", () => {
-      selectedCondition = condition.id;
-      document.getElementById("todayOutputTitle").textContent = condition.title;
-      document.getElementById("todayOutputText").textContent = condition.text;
-      renderConditions();
-    });
-    box.appendChild(button);
-  });
-}
-
-
-
-function renderDailyRouteSteps(routeKey) {
-  const route = dailyRoutes[routeKey];
-  const container = document.getElementById("dailyRouteSteps");
-  if (!route || !container) return;
-
-  document.querySelectorAll(".daily-route-btn").forEach(button => {
-    button.classList.toggle("active", button.dataset.route === routeKey);
-  });
-
-  container.innerHTML = "";
-
-  const summary = document.createElement("div");
-  summary.className = "daily-route-summary";
-  summary.innerHTML = `<h4>${route.title}</h4><p>${route.description}</p>`;
-  container.appendChild(summary);
-
-  route.steps.forEach((step, index) => {
-    const card = document.createElement("article");
-    card.className = "daily-step-card";
-
-    const head = document.createElement("div");
-    head.className = "daily-step-head";
-
-    const num = document.createElement("span");
-    num.className = "daily-step-num";
-    num.textContent = String(index + 1);
-    head.appendChild(num);
-
-    const label = document.createElement("span");
-    label.className = `daily-step-label label-${route.id}`;
-    label.textContent = step.label;
-    head.appendChild(label);
-
-    card.appendChild(head);
-
-    const title = document.createElement("p");
-    title.className = "daily-step-title";
-    title.textContent = step.text;
-    card.appendChild(title);
-
-    if (step.storyKey && operationStories[step.storyKey]) {
-      const storyButton = document.createElement("button");
-      storyButton.type = "button";
-      storyButton.className = "daily-step-story-btn";
-      storyButton.textContent = "紙芝居を見る";
-      storyButton.addEventListener("click", () => openStory(step.storyKey));
-      card.appendChild(storyButton);
-    }
-
-    container.appendChild(card);
-  });
-}
-
-function bindDailyRouteButtons() {
-  document.querySelectorAll(".daily-route-btn").forEach(button => {
-    button.addEventListener("click", () => renderDailyRouteSteps(button.dataset.route));
-  });
-}
-
-
-
-function updateDeliveryPreview() {
-  const urlEl = document.getElementById("input-url");
-  const oneWordEl = document.getElementById("input-oneword");
-  const previewEl = document.getElementById("deliveryPreviewText");
-
-  if (!urlEl || !oneWordEl || !previewEl) return;
-
-  const getValue = (id) => {
-    const el = document.getElementById(id);
-    return el ? el.value : "";
-  };
-
-  deliveryDraft.url = urlEl.value;
-  deliveryDraft.oneWord = oneWordEl.value;
-  deliveryDraft.features = [getValue("input-feature1"), getValue("input-feature2"), getValue("input-feature3")];
-  deliveryDraft.updates = [getValue("input-update1"), getValue("input-update2"), getValue("input-update3")];
-  deliveryDraft.focusPoints = [getValue("input-focus1"), getValue("input-focus2"), getValue("input-focus3")];
-  deliveryDraft.nextQuestions = [getValue("input-next1"), getValue("input-next2"), getValue("input-next3")];
-
-  previewEl.textContent = buildDeliveryDraftText(deliveryDraft, deliveryMode);
-}
-
-function safeDeliveryValue(value) {
-  return value && value.trim() ? value.trim() : "（未入力）";
-}
-
-function safeDeliveryList(items) {
-  const cleaned = items.filter(x => x && x.trim()).map(x => x.trim());
-  return cleaned.length ? "- " + cleaned.join("\n- ") : "（未入力）";
-}
-
-function buildDeliveryDraftText(draft, mode = deliveryMode) {
-  if (mode === "fix") return buildFixLetter(draft);
-  if (mode === "share") return buildShareLetter(draft);
-  return buildInitialLetter(draft);
-}
-
-function buildInitialLetter(draft) {
-  return `お疲れ様です！制作物が確認できる状態になりましたので、お渡しいたします。
-
-🌐 成果物のURL
-${safeDeliveryValue(draft.url)}
-
-📝 どんな作品？
-${safeDeliveryValue(draft.oneWord)}
-
-✨ 確認できること
-${safeDeliveryList(draft.features)}
-
-👀 特にチェックしてほしい場所
-${safeDeliveryList(draft.focusPoints)}
-
-🙋 次のステップ（ご相談）
-${safeDeliveryList(draft.nextQuestions)}
-
-お手すきの際にご確認をお願いいたします！`.trim();
-}
-
-function buildFixLetter(draft) {
-  return `お疲れ様です！ご指摘いただいた箇所の修正が完了しましたので、再提出いたします。
-
-🛠 今回直したところ（差分）
-${safeDeliveryList(draft.updates)}
-
-👀 修正後のチェック場所
-${safeDeliveryList(draft.focusPoints)}
-
-🌐 最新の確認URL
-${safeDeliveryValue(draft.url)}
-
-🙋 次のステップ（ご相談）
-${safeDeliveryList(draft.nextQuestions)}
-
-イメージ通りに仕上がっているか、ご確認いただけますと幸いです。よろしくお願いいたします！`.trim();
-}
-
-function buildShareLetter(draft) {
-  return `お疲れ様です！現在の進捗を中間共有させていただきます。
-※こちらはまだ制作途中のプレビューです。
-
-🚧 現在の状態
-${safeDeliveryValue(draft.oneWord)}
-
-✨ 現段階でチェックできること
-${safeDeliveryList(draft.features)}
-
-🙋 次に進めたいこと・ご相談
-${safeDeliveryList(draft.nextQuestions)}
-
-🌐 現在の確認リンク
-${safeDeliveryValue(draft.url)}
-
-方向性にズレがないか、現段階で一度見ていただけますと幸いです。よろしくお願いいたします！`.trim();
-}
-
-function setDeliveryMode(mode) {
-  deliveryMode = mode || "initial";
-
-  document.querySelectorAll(".delivery-mode-btn").forEach(button => {
-    button.classList.toggle("active", button.dataset.mode === deliveryMode);
-  });
-
-  updateDeliveryPreview();
-}
-
-function showInputView() {
-  const inputView = document.getElementById("deliveryInputView");
-  const previewView = document.getElementById("deliveryPreviewView");
-  const inputBtn = document.getElementById("deliveryInputBtn");
-  const previewBtn = document.getElementById("deliveryPreviewBtn");
-
-  if (!inputView || !previewView || !inputBtn || !previewBtn) return;
-
-  inputView.style.display = "block";
-  previewView.style.display = "none";
-  inputBtn.classList.add("active");
-  previewBtn.classList.remove("active");
-}
-
-function showPreviewView() {
-  const inputView = document.getElementById("deliveryInputView");
-  const previewView = document.getElementById("deliveryPreviewView");
-  const inputBtn = document.getElementById("deliveryInputBtn");
-  const previewBtn = document.getElementById("deliveryPreviewBtn");
-
-  if (!inputView || !previewView || !inputBtn || !previewBtn) return;
-
-  updateDeliveryPreview();
-  inputView.style.display = "none";
-  previewView.style.display = "block";
-  inputBtn.classList.remove("active");
-  previewBtn.classList.add("active");
-}
-
-async function copyDeliveryDraftText() {
+        <button type="button" data-toggle="${gear.id}" data-key="understood" class="${s.understood ? "d…2651 tokens truncated…opyDeliveryDraftText() {
   updateDeliveryPreview();
   const text = buildDeliveryDraftText(deliveryDraft, deliveryMode);
   const statusEl = document.getElementById("deliveryDraftCopyStatus");
@@ -1712,10 +1419,25 @@ window.freelanceApp.currentProjectCard = null;
   const productionCurrentLocationChooser = document.getElementById("productionCurrentLocationChooser");
   const productionCurrentLocationSummary = document.getElementById("productionCurrentLocationSummary");
   const productionCurrentLocationName = document.getElementById("productionCurrentLocationName");
+  const productionCurrentLocationChangeBtn = document.getElementById("productionCurrentLocationChangeBtn");
   const productionOtherLocation = document.getElementById("productionOtherLocation");
   const productionOtherLocationInput = document.getElementById("productionOtherLocationInput");
   const productionOtherLocationConfirmBtn = document.getElementById("productionOtherLocationConfirmBtn");
   const productionOtherLocationStatus = document.getElementById("productionOtherLocationStatus");
+  const productionAssetSearchNavigator = document.getElementById("productionAssetSearchNavigator");
+  const productionSearchProgress = document.getElementById("productionSearchProgress");
+  const productionSearchStepPanel = document.getElementById("productionSearchStepPanel");
+  const productionSearchStepLabel = document.getElementById("productionSearchStepLabel");
+  const productionSearchTitle = document.getElementById("productionSearchTitle");
+  const productionSearchAction = document.getElementById("productionSearchAction");
+  const productionSearchChecks = document.getElementById("productionSearchChecks");
+  const productionSearchResultChoices = document.getElementById("productionSearchResultChoices");
+  const productionSearchFoundBtn = document.getElementById("productionSearchFoundBtn");
+  const productionSearchNotFoundBtn = document.getElementById("productionSearchNotFoundBtn");
+  const productionSearchFinal = document.getElementById("productionSearchFinal");
+  const productionSearchCopyBtn = document.getElementById("productionSearchCopyBtn");
+  const productionSearchCopyStatus = document.getElementById("productionSearchCopyStatus");
+  const productionSearchReselectBtn = document.getElementById("productionSearchReselectBtn");
 
   if (!input || !loadBtn || !preview || !workbenchMoveBtn || !workbench) return;
 
@@ -1870,6 +1592,7 @@ window.freelanceApp.currentProjectCard = null;
     window.freelanceApp.currentProjectCard = null;
     window.freelanceApp.currentProductionAsset = null;
     window.freelanceApp.currentProductionLocation = null;
+    window.freelanceApp.currentProductionSearchStep = null;
     workbench.hidden = true;
     if (confirmationPanel) confirmationPanel.hidden = true;
     preview.hidden = false;
@@ -1889,6 +1612,10 @@ window.freelanceApp.currentProjectCard = null;
     if (productionOtherLocation) productionOtherLocation.hidden = true;
     if (productionOtherLocationInput) productionOtherLocationInput.value = "";
     if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
+    if (productionAssetSearchNavigator) productionAssetSearchNavigator.hidden = true;
+    if (productionSearchFinal) productionSearchFinal.hidden = true;
+    if (productionSearchStepPanel) productionSearchStepPanel.hidden = false;
+    if (productionSearchCopyStatus) productionSearchCopyStatus.textContent = "";
     setConfirmationGuidesVisible(false);
   }
 
@@ -2320,6 +2047,11 @@ window.freelanceApp.currentProjectCard = null;
     if (productionOtherLocationInput) productionOtherLocationInput.value = "";
     if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
     window.freelanceApp.currentProductionLocation = null;
+    window.freelanceApp.currentProductionSearchStep = null;
+    if (productionAssetSearchNavigator) productionAssetSearchNavigator.hidden = true;
+    if (productionSearchFinal) productionSearchFinal.hidden = true;
+    if (productionSearchStepPanel) productionSearchStepPanel.hidden = false;
+    if (productionSearchCopyStatus) productionSearchCopyStatus.textContent = "";
     if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = stage !== "received" || needsCurrentLocation;
     const productionStartGuide = document.getElementById("productionStartGuide");
     if (productionStartGuide) productionStartGuide.hidden = true;
@@ -2329,14 +2061,83 @@ window.freelanceApp.currentProjectCard = null;
     const assetInfo = window.freelanceApp.currentProductionAsset;
     if (!assetInfo?.required || assetInfo.locationKnown) return;
     window.freelanceApp.currentProductionLocation = { label, action };
+    window.freelanceApp.currentProductionSearchStep = null;
     if (productionCurrentLocationName) productionCurrentLocationName.textContent = label;
     if (productionCurrentLocationSummary) productionCurrentLocationSummary.hidden = false;
     if (productionCurrentLocationChooser) productionCurrentLocationChooser.hidden = true;
     if (productionOtherLocation) productionOtherLocation.hidden = true;
+    if (productionAssetSearchNavigator) productionAssetSearchNavigator.hidden = true;
     if (productionAssetStartPlace) productionAssetStartPlace.textContent = action;
     if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = false;
     workbench.classList.remove("asset-location-checking");
     productionAssetArrivalGuide?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  const productionSearchSteps = {
+    1: {
+      title: "1｜まずiPhoneの「ファイル」を確認",
+      action: "iPhoneの「ファイル」アプリを開いてください。",
+      checks: "最近使った項目、ダウンロード、保存先などに素材がないか確認してください。必ずそこにあるとは限りません。",
+      location: ["iPhoneの「ファイル」", "iPhoneの「ファイル」アプリを開きます。"]
+    },
+    2: {
+      title: "2｜依頼主とのメールを確認",
+      action: "依頼主から届いたメールを確認してください。",
+      checks: "添付ファイル、共有リンク、素材について書かれた案内がないか確認してください。メールがあるとは限りません。",
+      location: ["メール", "メールを開きます。"]
+    },
+    3: {
+      title: "3｜依頼主とのチャットを確認",
+      action: "依頼主とのチャットを開いてください。",
+      checks: "添付ファイル、共有リンク、素材送付のメッセージ、保存場所についての案内がないか確認してください。",
+      location: ["チャット", "依頼主とのチャットを開きます。"]
+    }
+  };
+
+  function showProductionSearchStep(step) {
+    if (!productionAssetSearchNavigator || step < 1 || step > 4) return;
+    window.freelanceApp.currentProductionSearchStep = step;
+    productionAssetSearchNavigator.hidden = false;
+    if (productionCurrentLocationChooser) productionCurrentLocationChooser.hidden = true;
+    if (productionCurrentLocationSummary) productionCurrentLocationSummary.hidden = true;
+    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = true;
+    if (productionOtherLocation) productionOtherLocation.hidden = true;
+    workbench.classList.add("asset-location-checking");
+    productionSearchProgress?.querySelectorAll("[data-search-step]").forEach(item => {
+      const itemStep = Number(item.dataset.searchStep);
+      item.classList.toggle("is-current", itemStep === step);
+      item.classList.toggle("is-checked", itemStep < step);
+      if (itemStep === step) item.setAttribute("aria-current", "step");
+      else item.removeAttribute("aria-current");
+    });
+    const isFinal = step === 4;
+    if (productionSearchStepPanel) productionSearchStepPanel.hidden = isFinal;
+    if (productionSearchFinal) productionSearchFinal.hidden = !isFinal;
+    if (productionSearchCopyStatus) productionSearchCopyStatus.textContent = "";
+    if (!isFinal) {
+      const details = productionSearchSteps[step];
+      if (productionSearchStepLabel) productionSearchStepLabel.textContent = `探索STEP ${step}`;
+      if (productionSearchTitle) productionSearchTitle.textContent = details.title;
+      if (productionSearchAction) productionSearchAction.textContent = details.action;
+      if (productionSearchChecks) productionSearchChecks.textContent = details.checks;
+      if (productionSearchResultChoices) productionSearchResultChoices.hidden = false;
+    }
+    productionAssetSearchNavigator.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function returnToProductionLocationChooser() {
+    window.freelanceApp.currentProductionSearchStep = null;
+    window.freelanceApp.currentProductionLocation = null;
+    if (productionAssetSearchNavigator) productionAssetSearchNavigator.hidden = true;
+    if (productionSearchFinal) productionSearchFinal.hidden = true;
+    if (productionSearchStepPanel) productionSearchStepPanel.hidden = false;
+    if (productionCurrentLocationChooser) productionCurrentLocationChooser.hidden = false;
+    if (productionCurrentLocationSummary) productionCurrentLocationSummary.hidden = true;
+    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = true;
+    if (productionOtherLocation) productionOtherLocation.hidden = true;
+    if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
+    workbench.classList.add("asset-location-checking");
+    productionCurrentLocationChooser?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function prepareProductionAssetGate(assetInfo) {
@@ -2507,6 +2308,10 @@ ${card["チェック基準"]}
         productionOtherLocationInput?.focus();
         return;
       }
+      if (key === "unknown") {
+        showProductionSearchStep(1);
+        return;
+      }
       const selected = options[key];
       if (selected) confirmCurrentProductionLocation(selected[0], selected[1]);
     });
@@ -2527,6 +2332,36 @@ ${card["チェック基準"]}
   if (productionOtherLocationInput) {
     productionOtherLocationInput.addEventListener("input", () => {
       if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
+    });
+  }
+
+  if (productionSearchFoundBtn) {
+    productionSearchFoundBtn.addEventListener("click", () => {
+      const step = window.freelanceApp.currentProductionSearchStep;
+      const selected = productionSearchSteps[step]?.location;
+      if (selected) confirmCurrentProductionLocation(selected[0], selected[1]);
+    });
+  }
+
+  if (productionSearchNotFoundBtn) {
+    productionSearchNotFoundBtn.addEventListener("click", () => {
+      const step = Number(window.freelanceApp.currentProductionSearchStep) || 1;
+      showProductionSearchStep(Math.min(step + 1, 4));
+    });
+  }
+
+  if (productionSearchReselectBtn) {
+    productionSearchReselectBtn.addEventListener("click", returnToProductionLocationChooser);
+  }
+
+  if (productionCurrentLocationChangeBtn) {
+    productionCurrentLocationChangeBtn.addEventListener("click", returnToProductionLocationChooser);
+  }
+
+  if (productionSearchCopyBtn) {
+    productionSearchCopyBtn.addEventListener("click", async () => {
+      await copyText("制作素材はどこから確認できますか？\nファイルまたは共有リンクの場所を教えてください。");
+      if (productionSearchCopyStatus) productionSearchCopyStatus.textContent = "コピーしました。自動送信はしていません。";
     });
   }
   if (copyConfirmationQuestionsBtn) {
