@@ -1709,6 +1709,13 @@ window.freelanceApp.currentProjectCard = null;
   const productionAssetArrivalGuide = document.getElementById("productionAssetArrivalGuide");
   const productionAssetSearchTarget = document.getElementById("productionAssetSearchTarget");
   const productionAssetOpenTarget = document.getElementById("productionAssetOpenTarget");
+  const productionCurrentLocationChooser = document.getElementById("productionCurrentLocationChooser");
+  const productionCurrentLocationSummary = document.getElementById("productionCurrentLocationSummary");
+  const productionCurrentLocationName = document.getElementById("productionCurrentLocationName");
+  const productionOtherLocation = document.getElementById("productionOtherLocation");
+  const productionOtherLocationInput = document.getElementById("productionOtherLocationInput");
+  const productionOtherLocationConfirmBtn = document.getElementById("productionOtherLocationConfirmBtn");
+  const productionOtherLocationStatus = document.getElementById("productionOtherLocationStatus");
 
   if (!input || !loadBtn || !preview || !workbenchMoveBtn || !workbench) return;
 
@@ -1862,6 +1869,7 @@ window.freelanceApp.currentProjectCard = null;
   function resetProjectCardView() {
     window.freelanceApp.currentProjectCard = null;
     window.freelanceApp.currentProductionAsset = null;
+    window.freelanceApp.currentProductionLocation = null;
     workbench.hidden = true;
     if (confirmationPanel) confirmationPanel.hidden = true;
     preview.hidden = false;
@@ -1876,6 +1884,11 @@ window.freelanceApp.currentProjectCard = null;
     if (productionAssetWaiting) productionAssetWaiting.hidden = true;
     if (productionAssetReceived) productionAssetReceived.hidden = true;
     if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = true;
+    if (productionCurrentLocationChooser) productionCurrentLocationChooser.hidden = true;
+    if (productionCurrentLocationSummary) productionCurrentLocationSummary.hidden = true;
+    if (productionOtherLocation) productionOtherLocation.hidden = true;
+    if (productionOtherLocationInput) productionOtherLocationInput.value = "";
+    if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
     setConfirmationGuidesVisible(false);
   }
 
@@ -2292,7 +2305,8 @@ window.freelanceApp.currentProjectCard = null;
     if (!productionAssetGate || !assetInfo?.required) return;
     workbench.classList.toggle("asset-checking", stage === "checking");
     workbench.classList.toggle("asset-waiting", stage === "waiting");
-    workbench.classList.remove("asset-location-checking");
+    const needsCurrentLocation = stage === "received" && !assetInfo.locationKnown;
+    workbench.classList.toggle("asset-location-checking", needsCurrentLocation);
     productionAssetChoices.hidden = stage !== "checking";
     productionAssetWaiting.hidden = stage !== "waiting";
     productionAssetReceived.hidden = stage !== "received";
@@ -2300,9 +2314,29 @@ window.freelanceApp.currentProjectCard = null;
     if (productionAssetStartPlace) productionAssetStartPlace.textContent = assetInfo.locationAction;
     if (productionAssetSearchTarget) productionAssetSearchTarget.textContent = assetInfo.searchAction;
     if (productionAssetOpenTarget) productionAssetOpenTarget.textContent = assetInfo.openTargetAction;
-    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = stage !== "received";
+    if (productionCurrentLocationChooser) productionCurrentLocationChooser.hidden = !needsCurrentLocation;
+    if (productionCurrentLocationSummary) productionCurrentLocationSummary.hidden = true;
+    if (productionOtherLocation) productionOtherLocation.hidden = true;
+    if (productionOtherLocationInput) productionOtherLocationInput.value = "";
+    if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
+    window.freelanceApp.currentProductionLocation = null;
+    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = stage !== "received" || needsCurrentLocation;
     const productionStartGuide = document.getElementById("productionStartGuide");
     if (productionStartGuide) productionStartGuide.hidden = true;
+  }
+
+  function confirmCurrentProductionLocation(label, action) {
+    const assetInfo = window.freelanceApp.currentProductionAsset;
+    if (!assetInfo?.required || assetInfo.locationKnown) return;
+    window.freelanceApp.currentProductionLocation = { label, action };
+    if (productionCurrentLocationName) productionCurrentLocationName.textContent = label;
+    if (productionCurrentLocationSummary) productionCurrentLocationSummary.hidden = false;
+    if (productionCurrentLocationChooser) productionCurrentLocationChooser.hidden = true;
+    if (productionOtherLocation) productionOtherLocation.hidden = true;
+    if (productionAssetStartPlace) productionAssetStartPlace.textContent = action;
+    if (productionAssetArrivalGuide) productionAssetArrivalGuide.hidden = false;
+    workbench.classList.remove("asset-location-checking");
+    productionAssetArrivalGuide?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function prepareProductionAssetGate(assetInfo) {
@@ -2450,12 +2484,51 @@ ${card["チェック基準"]}
     const assetInfo = window.freelanceApp.currentProductionAsset;
     if (!assetInfo?.required) return;
     showProductionAssetStage("received", assetInfo);
-    const productionStartGuide = document.getElementById("productionStartGuide");
-    if (productionStartGuide) productionStartGuide.scrollIntoView({ behavior: "smooth", block: "start" });
+    const nextGuide = assetInfo.locationKnown ? productionAssetArrivalGuide : productionCurrentLocationChooser;
+    nextGuide?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   if (productionAssetReadyBtn) productionAssetReadyBtn.addEventListener("click", continueAfterAssetReceipt);
   if (productionAssetResumeBtn) productionAssetResumeBtn.addEventListener("click", continueAfterAssetReceipt);
+  document.querySelectorAll("[data-current-location]").forEach(button => {
+    button.addEventListener("click", () => {
+      const options = {
+        mail: ["メール", "メールを開きます。"],
+        chat: ["チャット", "依頼主とのチャットを開きます。"],
+        drive: ["Google Drive", "Google Driveを開きます。"],
+        dropbox: ["Dropbox", "Dropboxを開きます。"],
+        "iphone-files": ["iPhoneの「ファイル」", "iPhoneの「ファイル」アプリを開きます。"],
+        github: ["GitHub", "GitHubを開きます。"]
+      };
+      const key = button.dataset.currentLocation;
+      if (key === "other") {
+        if (productionOtherLocation) productionOtherLocation.hidden = false;
+        if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
+        productionOtherLocationInput?.focus();
+        return;
+      }
+      const selected = options[key];
+      if (selected) confirmCurrentProductionLocation(selected[0], selected[1]);
+    });
+  });
+
+  if (productionOtherLocationConfirmBtn) {
+    productionOtherLocationConfirmBtn.addEventListener("click", () => {
+      const label = normalizeNewlines(productionOtherLocationInput?.value);
+      if (!label) {
+        if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "場所名を入力してください。";
+        productionOtherLocationInput?.focus();
+        return;
+      }
+      confirmCurrentProductionLocation(label, `${label}を開きます。`);
+    });
+  }
+
+  if (productionOtherLocationInput) {
+    productionOtherLocationInput.addEventListener("input", () => {
+      if (productionOtherLocationStatus) productionOtherLocationStatus.textContent = "";
+    });
+  }
   if (copyConfirmationQuestionsBtn) {
     copyConfirmationQuestionsBtn.addEventListener("click", () => {
       const card = window.freelanceApp.currentProjectCard;

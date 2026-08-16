@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>フリーランス装備庫 v2.3.13</title>
-  <link rel="stylesheet" href="style.css?v=2313-final" />
+  <title>フリーランス装備庫 v2.3.14</title>
+  <link rel="stylesheet" href="style.css?v=2314-final" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="badge">v2.3.13</span>
+        <span class="badge">v2.3.14</span>
         <span class="badge soft">GitHub Pages ready</span>
       </div>
       <h1>フリーランス装備庫</h1>
-      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.13では、分かっている受取場所名を具体表示し、最初の主操作を1か所へ集約します。全部やらなくてOK。</p>
+      <p>フリーランス装備庫は、AI時代の仕事道具を全部覚えるためのアプリではありません。Slack、GitHub、Figma、Canvaなどの道具を、iPhoneだけで「見学する」「今日の一手を選ぶ」「相手に渡す形にする」ための訓練アプリです。v2.3.14では、カードに受取場所がないとき、人間が作業上の現在地を1タップで選べます。全部やらなくてOK。</p>
       <div class="progress-box" aria-label="進捗">
         <div class="progress-meta">
           <span id="progressText">進捗を読み込み中</span>
@@ -243,6 +243,27 @@
             </div>
             <div id="productionAssetReceived" class="production-asset-result production-asset-received" hidden>
               <h4>受取を確認しました</h4>
+              <div id="productionCurrentLocationChooser" class="production-current-location" hidden>
+                <p class="production-arrival-label">作業上の現在地を選ぶ</p>
+                <h5>素材はどこで届きましたか？<br>または、どこに保存しましたか？</h5>
+                <p>正式な共有方法ではなく、今どこから作業を始めるかを選びます。</p>
+                <div class="production-location-choices" aria-label="作業を始める現在地">
+                  <button class="ghost-button production-location-choice" type="button" data-current-location="mail">メール</button>
+                  <button class="ghost-button production-location-choice" type="button" data-current-location="chat">チャット</button>
+                  <button class="ghost-button production-location-choice" type="button" data-current-location="drive">Google Drive</button>
+                  <button class="ghost-button production-location-choice" type="button" data-current-location="dropbox">Dropbox</button>
+                  <button class="ghost-button production-location-choice" type="button" data-current-location="iphone-files">iPhoneの「ファイル」</button>
+                  <button class="ghost-button production-location-choice" type="button" data-current-location="github">GitHub</button>
+                  <button class="ghost-button production-location-choice" type="button" data-current-location="other">その他</button>
+                </div>
+                <div id="productionOtherLocation" class="production-other-location" hidden>
+                  <label for="productionOtherLocationInput">どこから作業を始めますか？</label>
+                  <input id="productionOtherLocationInput" type="text" maxlength="60" autocomplete="off" placeholder="場所名を入力" />
+                  <button id="productionOtherLocationConfirmBtn" class="primary-button" type="button">この場所から進む</button>
+                  <p id="productionOtherLocationStatus" class="production-location-status" role="status" aria-live="polite"></p>
+                </div>
+              </div>
+              <p id="productionCurrentLocationSummary" class="production-current-location-summary" hidden>現在地：<strong id="productionCurrentLocationName"></strong></p>
               <div id="productionAssetArrivalGuide" class="production-arrival-guide" hidden>
                 <section>
                   <p class="production-arrival-label">1｜どこへ行く？</p>
@@ -544,6 +565,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2313-final"></script>
+  <script src="script.js?v=2314-final"></script>
 </body>
 </html>
