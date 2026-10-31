@@ -1424,14 +1424,8 @@ async function copyDeliveryDraftText() {
   updateDeliveryPreview();
   const text = buildDeliveryDraftText(deliveryDraft, deliveryMode);
   const statusEl = document.getElementById("deliveryDraftCopyStatus");
-  try {
-    await navigator.clipboard.writeText(text);
-    if (statusEl) statusEl.textContent = "コピーしました";
-    showToast("提出文をコピーした");
-  } catch {
-    copyText(text);
-    if (statusEl) statusEl.textContent = "コピーしました";
-  }
+  const copied = await copyText(text);
+  if (statusEl) statusEl.textContent = copied ? "コピーしました" : "自動コピーできません。表示した文章を手動でコピーしてください。";
 }
 
 function bindDeliveryDraftButtons() {
