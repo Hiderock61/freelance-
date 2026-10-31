@@ -2271,6 +2271,20 @@ window.freelanceApp.currentProjectCard = null;
   function renderConfirmationPanel(card) {
     const questions = normalizeNewlines(card["相手へ聞く質問"]);
     const unknownItems = alignedUnknownItems(card);
+    const quickFirst = document.getElementById("quickCheckFirst");
+    const quickCount = document.getElementById("quickCheckCount");
+    const quickCopyStatus = document.getElementById("quickCopyStatus");
+    const quickCopyButton = document.getElementById("quickCopyQuestionsBtn");
+    const quickDetails = document.getElementById("quickShowDetailsBtn");
+    if (quickFirst) quickFirst.textContent = unknownItems[0] || (questions && questions !== "なし" ? questions.split("\n")[0] : "依頼主への確認事項を確認する");
+    if (quickCount) quickCount.textContent = unknownItems.length ? "確認すること：" + unknownItems.length + "件" : "制作条件の確認が必要です";
+    if (quickCopyStatus) quickCopyStatus.textContent = "質問をコピーしても、自動送信はしません。";
+    if (quickCopyButton) quickCopyButton.disabled = !questions || questions === "なし";
+    if (quickDetails) {
+      quickDetails.setAttribute("aria-expanded", "false");
+      quickDetails.textContent = "詳しい内容・残りの質問を表示";
+    }
+    if (confirmationPanel) confirmationPanel.dataset.simple = "true";
     if (confirmationUnknownCount) {
       confirmationUnknownCount.textContent = `まだ確認が必要なことは${unknownItems.length}件です。`;
     }
@@ -2297,6 +2311,10 @@ window.freelanceApp.currentProjectCard = null;
     workbench.hidden = true;
     setConfirmationGuidesVisible(false);
     if (confirmationPanel) confirmationPanel.hidden = false;
+    window.setTimeout(() => {
+      const quick = document.getElementById("quickCheckPanel");
+      if (quick && confirmationPanel && !confirmationPanel.hidden) quick.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
   }
 
   function renderConfirmationWorkbench(card) {
@@ -2626,7 +2644,7 @@ ${card["チェック基準"]}
       input.value = DEMO_CHECKING_CARD;
       loadBtn.click();
       if (gearDemoStatus) gearDemoStatus.textContent = "🧪 架空の「確認中」カードを読み込みました。実制作には進みません。";
-      document.getElementById("projectCardPreview")?.scrollIntoView({behavior:"smooth",block:"start"});
+      document.getElementById("quickCheckPanel")?.scrollIntoView({behavior:"smooth",block:"start"});
     });
   }
 
@@ -2725,6 +2743,38 @@ ${card["チェック基準"]}
     productionSearchCopyBtn.addEventListener("click", async () => {
       const copied = await copyText("制作素材はどこから確認できますか？\nファイルまたは共有リンクの場所を教えてください。");
       if (productionSearchCopyStatus) productionSearchCopyStatus.textContent = copied ? "コピーしました。自動送信はしていません。" : "コピーできませんでした。表示された文章を長押ししてください。";
+    });
+  }
+  const quickCopyQuestionsBtn = document.getElementById("quickCopyQuestionsBtn");
+  const quickShowDetailsBtn = document.getElementById("quickShowDetailsBtn");
+  const quickCopyStatus = document.getElementById("quickCopyStatus");
+  if (quickCopyQuestionsBtn) {
+    quickCopyQuestionsBtn.addEventListener("click", async () => {
+      const card = window.freelanceApp.currentProjectCard;
+      if (!card || normalizeNewlines(card["カード状態"]) !== "確認中") {
+        if (quickCopyStatus) quickCopyStatus.textContent = "確認中のカードを読み込んでください。";
+        return;
+      }
+      const questions = normalizeNewlines(card["相手へ聞く質問"]);
+      if (!questions || questions === "なし") {
+        if (quickCopyStatus) quickCopyStatus.textContent = "質問がありません。詳細を表示して未確定事項を確認してください。";
+        return;
+      }
+      const copied = await copyText(questions);
+      if (quickCopyStatus) quickCopyStatus.textContent = copied
+        ? "コピーしました。依頼主への送信は自分で行い、回答を受け取ったら入口アプリに戻ってください。"
+        : "自動コピーできませんでした。表示された選択欄から手動でコピーしてください。";
+    });
+  }
+  if (quickShowDetailsBtn) {
+    quickShowDetailsBtn.addEventListener("click", () => {
+      if (!confirmationPanel || confirmationPanel.hidden) return;
+      const expand = confirmationPanel.dataset.simple !== "false";
+      confirmationPanel.dataset.simple = expand ? "false" : "true";
+      quickShowDetailsBtn.setAttribute("aria-expanded", String(expand));
+      quickShowDetailsBtn.textContent = expand ? "かんたん表示に戻す" : "詳しい内容・残りの質問を表示";
+      if (expand) document.getElementById("confirmationDetails")?.scrollIntoView({behavior:"smooth", block:"start"});
+      else document.getElementById("quickCheckPanel")?.scrollIntoView({behavior:"smooth", block:"start"});
     });
   }
   if (copyConfirmationQuestionsBtn) {
