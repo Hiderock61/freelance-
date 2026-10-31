@@ -32,6 +32,7 @@
           <h2 id="intakeLandingTitle">入口アプリで仕事情報を整理しましたか？</h2>
           <p>下のボタンを押すと「今日」タブを開き、白い仕事情報の貼り付け欄へ移動します。</p>
           <button id="goToCardIntakeBtn" class="primary-button intake-landing-button" type="button">入口アプリの仕事情報を貼る</button>
+          <a class="ghost-button" href="https://hiderock61.github.io/anken-jirai-map/">📋 まだ仕事情報がない：入口アプリへ</a>
         </aside>
         <div id="roadmapContainer" class="roadmap-container" aria-label="フリーランスAI仕事ロードマップ"></div>
 
@@ -161,6 +162,12 @@
             <li>確認が必要なら、依頼主へ聞く内容を確認する</li>
             <li>制作を始められるなら、今日やることと制作手順へ進む</li>
           </ol>
+          <div class="practice-import" aria-labelledby="gearPracticeTitle">
+            <h4 id="gearPracticeTitle">🧪 はじめてなら架空カードで操作を試す</h4>
+            <p>「確認中」の架空カードを読み込んで、質問・不足事項が表示されることを体験します。実際の受注・制作・納品ではありません。今貼っているカードがあれば、置換前に確認します。</p>
+            <button id="gearDemoCardBtn" class="ghost-button" type="button">架空の「確認中」カードを読んでみる</button>
+            <p id="gearDemoStatus" class="pc-note" role="status" aria-live="polite"></p>
+          </div>
           <label class="pc-input-label" for="projectCardInput">仕事情報を白い欄へ長押しして貼り付け</label>
           <textarea id="projectCardInput" class="pc-input" placeholder="入口アプリでコピーした仕事情報の全文をここに貼ります。"></textarea>
           <div class="pc-controls">
@@ -600,6 +607,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2315-safe1101b"></script>
+  <script src="script.js?v=2315-usable1101"></script>
 </body>
 </html>
