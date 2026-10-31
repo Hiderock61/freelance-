@@ -2935,3 +2935,12 @@ main {
     overflow-wrap: anywhere;
   }
 }
+
+
+/* 2026-11-01 first-run practice import, no existing workbench changes */
+.practice-import{margin:15px 0 17px;padding:16px;border-radius:16px;background:rgba(114,255,185,.09);border:1.5px solid rgba(114,255,185,.53);}
+.practice-import h4{font-size:1.1rem;line-height:1.4;margin:0 0 8px;color:#c8ffe2;}
+.practice-import p{margin:0 0 13px;line-height:1.7;color:#e5f4ee;}
+.practice-import .ghost-button{display:block;width:100%;min-height:50px;text-align:center;padding:12px;white-space:normal;}
+.practice-import #gearDemoStatus{margin:11px 0 0;color:#d9ffef;}
+.intake-landing-guide>.ghost-button{display:block;margin-top:12px;text-align:center;min-height:48px;padding:12px;line-height:1.5;}
