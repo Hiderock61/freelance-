@@ -1859,6 +1859,7 @@ window.freelanceApp.currentProjectCard = null;
     let currentKey = null;
     let currentLines = [];
     let recognizedCount = 0;
+    const seenHeadings = new Set();
 
     const flush = () => {
       if (!currentKey) return;
@@ -1874,6 +1875,8 @@ window.freelanceApp.currentProjectCard = null;
       if (match) {
         const mapped = normalizeHeading(match[1]);
         if (mapped) {
+          if (seenHeadings.has(mapped)) return null;
+          seenHeadings.add(mapped);
           flush();
           currentKey = mapped;
           currentLines = [];
