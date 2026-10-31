@@ -1911,6 +1911,8 @@ window.freelanceApp.currentProjectCard = null;
   }
 
   function resetProjectCardView() {
+    const todayView = document.getElementById("viewToday");
+    if (todayView) todayView.removeAttribute("data-card-focus");
     window.freelanceApp.currentProjectCard = null;
     window.freelanceApp.currentProductionAsset = null;
     window.freelanceApp.currentProductionLocation = null;
@@ -2291,6 +2293,8 @@ window.freelanceApp.currentProjectCard = null;
       quickDetails.textContent = "詳しい内容・残りの質問を表示";
     }
     if (confirmationPanel) confirmationPanel.dataset.simple = "true";
+    const todayView = document.getElementById("viewToday");
+    if (todayView) todayView.dataset.cardFocus = "checking";
     if (confirmationUnknownCount) {
       confirmationUnknownCount.textContent = `まだ確認が必要なことは${unknownItems.length}件です。`;
     }
@@ -2753,7 +2757,15 @@ ${card["チェック基準"]}
   }
   const quickCopyQuestionsBtn = document.getElementById("quickCopyQuestionsBtn");
   const quickShowDetailsBtn = document.getElementById("quickShowDetailsBtn");
+  const quickSwitchJobBtn = document.getElementById("quickSwitchJobBtn");
   const quickCopyStatus = document.getElementById("quickCopyStatus");
+  if (quickSwitchJobBtn) {
+    quickSwitchJobBtn.addEventListener("click", () => {
+      resetProjectCardView();
+      document.getElementById("project-card-import")?.scrollIntoView({behavior:"smooth",block:"start"});
+      input.focus();
+    });
+  }
   if (quickCopyQuestionsBtn) {
     quickCopyQuestionsBtn.addEventListener("click", async () => {
       const card = window.freelanceApp.currentProjectCard;
