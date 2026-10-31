@@ -2955,7 +2955,7 @@ main {
   border-radius:18px;
   color:#f7fcff;
   margin-bottom:8px;
-  scroll-margin-top:16px;
+  scroll-margin-top:calc(100px + env(safe-area-inset-top));
 }
 .quick-check-panel .quick-check-label{font-size:13px;font-weight:800;color:#8af9c6;margin:0 0 10px;}
 .quick-check-panel h3{font-size:clamp(24px,6vw,31px);line-height:1.45;margin:0 0 14px;letter-spacing:-.03em;}
