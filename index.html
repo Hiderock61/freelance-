@@ -181,7 +181,20 @@
 
 
         <section id="confirmationPanel" class="confirmation-panel" hidden aria-live="polite">
-          <div class="confirmation-state">
+          <section id="quickCheckPanel" class="quick-check-panel" aria-labelledby="quickCheckTitle">
+            <p class="quick-check-label">📱 iPhoneかんたん表示｜確認中</p>
+            <h3 id="quickCheckTitle">今は制作しません。まず確認だけ。</h3>
+            <p id="quickCheckCount" class="quick-check-count">確認事項を読み込んでいます。</p>
+            <div class="quick-check-next">
+              <p class="quick-check-caption">最初に確かめること</p>
+              <p id="quickCheckFirst">未確定の内容を確認します。</p>
+            </div>
+            <button id="quickCopyQuestionsBtn" class="primary-button quick-check-primary" type="button">依頼主への質問をコピー</button>
+            <p id="quickCopyStatus" class="quick-check-note" role="status" aria-live="polite">質問は送信しません。コピー後、募集サイトなどで本人が送ります。</p>
+            <a class="ghost-button quick-check-return" href="https://hiderock61.github.io/anken-jirai-map/">回答が分かったら入口アプリへ戻る</a>
+            <button id="quickShowDetailsBtn" class="ghost-button quick-check-details" type="button" aria-expanded="false">詳しい内容・残りの質問を表示</button>
+          </section>
+          <div class="confirmation-state quick-check-extra">
             <p class="eyebrow">仕事情報の確認結果</p>
             <p class="confirmation-complete">仕事の内容を確認しました</p>
             <h3>この仕事はまだ確認が必要です</h3>
@@ -189,7 +202,7 @@
             <p id="confirmationUnknownCount" class="confirmation-unknown-count">まだ確認が必要なことは0件です。</p>
             <button id="showConfirmationDetailsBtn" class="primary-button confirmation-details-button" type="button">不足項目と質問を見る</button>
           </div>
-          <section id="confirmationDetails" class="confirmation-simple-section confirmation-details">
+          <section id="confirmationDetails" class="confirmation-simple-section confirmation-details quick-check-extra">
             <h4>確認できた仕事情報</h4>
             <dl class="confirmation-project-summary">
               <div><dt>仕事名</dt><dd id="confirmationProjectName">未確定</dd></div>
@@ -198,27 +211,27 @@
               <div><dt>完成条件</dt><dd id="confirmationCriteria">未確定</dd></div>
             </dl>
           </section>
-          <section class="confirmation-simple-section">
+          <section class="confirmation-simple-section quick-check-extra">
             <h4>今やること</h4>
             <p>依頼主へ聞く内容を確認し、必要ならコピーしてください。<br>回答が来たら入口アプリへ戻り、案件カードを更新します。</p>
             <p class="confirmation-card-next"><strong>カードに書かれた次の行動：</strong><span id="confirmationNextAction">依頼主へ確認する</span></p>
           </section>
-          <section class="confirmation-simple-section">
+          <section class="confirmation-simple-section quick-check-extra">
             <h4>ここまで分かっています</h4>
             <dl id="confirmationKnownFacts" class="confirmation-project-summary confirmation-known-facts"></dl>
           </section>
-          <section class="confirmation-simple-section">
+          <section class="confirmation-simple-section quick-check-extra">
             <h4>まだ確認が必要なこと</h4>
             <div id="confirmationUnknownItems" class="confirmation-unknown-list"></div>
           </section>
-          <section class="confirmation-simple-section">
+          <section class="confirmation-simple-section quick-check-extra">
             <h4>依頼主へ聞く質問</h4>
             <div id="confirmationQuestionItems" class="confirmation-question-list"></div>
             <button id="copyConfirmationQuestionsBtn" class="primary-button confirmation-copy-button" type="button">この質問をまとめてコピー</button>
             <p id="confirmationCopyStatus" class="confirmation-copy-status" role="status" aria-live="polite"></p>
             <p class="confirmation-send-note">コピーした質問を募集サイトなどで依頼主へ自分で送ってください。質問は自動送信されません。</p>
           </section>
-          <section class="confirmation-simple-section confirmation-next">
+          <section class="confirmation-simple-section quick-check-extra confirmation-next">
             <h4>回答が来たら</h4>
             <p>入口アプリへ戻り、回答内容を反映して案件カードを更新します。</p>
             <a class="primary-button confirmation-return-link" href="https://hiderock61.github.io/anken-jirai-map/">回答を反映するため入口アプリへ戻る</a>
@@ -607,6 +620,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2315-usable1101b"></script>
+  <script src="script.js?v=2315-simple1101"></script>
 </body>
 </html>
