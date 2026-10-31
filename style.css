@@ -2944,3 +2944,31 @@ main {
 .practice-import .ghost-button{display:block;width:100%;min-height:50px;text-align:center;padding:12px;white-space:normal;}
 .practice-import #gearDemoStatus{margin:11px 0 0;color:#d9ffef;}
 .intake-landing-guide>.ghost-button{display:block;margin-top:12px;text-align:center;min-height:48px;padding:12px;line-height:1.5;}
+
+
+/* 2026-11-01 iPhone one-action checking view. Old detail panels remain available. */
+.confirmation-panel[data-simple="true"] .quick-check-extra { display:none !important; }
+.quick-check-panel {
+  padding:20px 16px 22px;
+  background:#102a32;
+  border:2px solid rgba(114,255,185,.7);
+  border-radius:18px;
+  color:#f7fcff;
+  margin-bottom:8px;
+  scroll-margin-top:16px;
+}
+.quick-check-panel .quick-check-label{font-size:13px;font-weight:800;color:#8af9c6;margin:0 0 10px;}
+.quick-check-panel h3{font-size:clamp(24px,6vw,31px);line-height:1.45;margin:0 0 14px;letter-spacing:-.03em;}
+.quick-check-count{font-size:16px;font-weight:800;margin:0 0 14px;color:#ffdb8a;}
+.quick-check-next{padding:14px;border:1px solid rgba(255,255,255,.28);border-radius:12px;background:rgba(255,255,255,.06);margin-bottom:14px;}
+.quick-check-caption{font-size:13px;font-weight:700;color:#afe8cd;margin:0 0 7px;}
+#quickCheckFirst{font-size:17px;line-height:1.6;font-weight:750;margin:0;overflow-wrap:anywhere;}
+.quick-check-primary{display:block;width:100%;min-height:58px;font-size:17px;white-space:normal;line-height:1.4;}
+.quick-check-note{font-size:13px;line-height:1.7;margin:10px 0 14px;color:#e0eefa;overflow-wrap:anywhere;}
+.quick-check-return,.quick-check-details{display:block;width:100%;min-height:50px;margin-top:10px;text-align:center;white-space:normal;line-height:1.5;padding:12px;}
+.quick-check-details{background:transparent;color:#e6f5ff;border-color:#a5b9c7;}
+@media(max-width:640px){
+  .confirmation-panel{padding:10px;margin-bottom:calc(30px + env(safe-area-inset-bottom));}
+  .quick-check-panel{padding:18px 13px;}
+  .quick-check-panel h3{font-size:clamp(22px,6vw,29px);}
+}
