@@ -634,7 +634,8 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch { showToast("端末への保存はできません。現在の画面上では操作を続けられます。"); }
   renderProgress();
 }
 
@@ -1534,14 +1535,8 @@ function currentMissionText() {
 async function copyDeliveryText() {
   const text = buildDeliveryText();
   const statusEl = document.getElementById("deliveryCopyStatus");
-  try {
-    await navigator.clipboard.writeText(text);
-    if (statusEl) statusEl.textContent = "コピーしました";
-    showToast("提出文をコピーした");
-  } catch {
-    copyText(text);
-    if (statusEl) statusEl.textContent = "コピーしました";
-  }
+  const copied = await copyText(text);
+  if (statusEl) statusEl.textContent = copied ? "コピーしました" : "自動コピー不可。表示した文章を長押ししてコピーしてください。";
 }
 
 function copyAllGearText() {
@@ -1554,17 +1549,54 @@ function copyAllGearText() {
 
 async function copyText(text) {
   try {
+    if (!navigator.clipboard?.writeText) throw Error("clipboard_unavailable");
     await navigator.clipboard.writeText(text);
-    showToast("コピーした");
+    showToast("コピーしました");
+    return true;
   } catch {
     const area = document.createElement("textarea");
     area.value = text;
+    area.style.cssText = "position:fixed;opacity:0;top:0;left:0";
     document.body.appendChild(area);
-    area.select();
-    document.execCommand("copy");
+    area.focus(); area.select();
+    let copied = false;
+    try { copied = document.execCommand("copy") === true; } catch { copied = false; }
     area.remove();
-    showToast("コピーした");
+    if (copied) {
+      showToast("コピーしました");
+      return true;
+    }
+    showManualCopy(text);
+    showToast("自動コピー不可。表示された文章を選択してコピーしてください");
+    return false;
   }
+}
+function showManualCopy(text) {
+  let panel = document.getElementById("freelanceManualCopy");
+  if (!panel) {
+    panel = document.createElement("section");
+    panel.id = "freelanceManualCopy";
+    panel.setAttribute("aria-label","手動コピー");
+    panel.style.cssText="position:fixed;z-index:9999;left:10px;right:10px;bottom:12px;max-width:650px;margin:auto;background:#fff;color:#202a32;border:2px solid #24659c;border-radius:12px;box-shadow:0 4px 20px #0003;padding:14px";
+    const label = document.createElement("label");
+    label.htmlFor="freelanceManualCopyText";
+    label.textContent="自動コピーに失敗しました。下の文章を長押ししてコピーしてください。";
+    label.style.cssText="display:block;font-weight:bold;margin-bottom:8px";
+    const field = document.createElement("textarea");
+    field.id="freelanceManualCopyText";
+    field.readOnly=true;
+    field.style.cssText="display:block;width:100%;height:130px;color:#222;background:#fff;border:1px solid #777;padding:10px";
+    const close = document.createElement("button");
+    close.type="button";
+    close.textContent="閉じる";
+    close.style.cssText="display:block;margin-top:10px;min-height:44px;padding:8px 14px";
+    close.addEventListener("click",()=>panel.remove());
+    panel.appendChild(label);panel.appendChild(field);panel.appendChild(close);
+    document.body.appendChild(panel);
+  }
+  const field = panel.querySelector("#freelanceManualCopyText");
+  field.value = text;
+  field.focus();field.select();
 }
 
 function showToast(message) {
@@ -2653,12 +2685,12 @@ ${card["チェック基準"]}
 
   if (productionSearchCopyBtn) {
     productionSearchCopyBtn.addEventListener("click", async () => {
-      await copyText("制作素材はどこから確認できますか？\nファイルまたは共有リンクの場所を教えてください。");
-      if (productionSearchCopyStatus) productionSearchCopyStatus.textContent = "コピーしました。自動送信はしていません。";
+      const copied = await copyText("制作素材はどこから確認できますか？\nファイルまたは共有リンクの場所を教えてください。");
+      if (productionSearchCopyStatus) productionSearchCopyStatus.textContent = copied ? "コピーしました。自動送信はしていません。" : "コピーできませんでした。表示された文章を長押ししてください。";
     });
   }
   if (copyConfirmationQuestionsBtn) {
-    copyConfirmationQuestionsBtn.addEventListener("click", () => {
+    copyConfirmationQuestionsBtn.addEventListener("click", async () => {
       const card = window.freelanceApp.currentProjectCard;
       const questions = card ? normalizeNewlines(card["相手へ聞く質問"]) : "";
       if (!questions || questions === "なし") {
@@ -2666,9 +2698,8 @@ ${card["チェック基準"]}
         showToast("コピーできる質問がありません");
         return;
       }
-      copyText(questions);
-      if (confirmationCopyStatus) confirmationCopyStatus.textContent = "質問をコピーしました。募集サイトなどで依頼主へ自分で送ってください。回答が来たら入口アプリへ戻って反映してください。";
-      showToast("質問をコピーしました");
+      const copied = await copyText(questions);
+      if (confirmationCopyStatus) confirmationCopyStatus.textContent = copied ? "質問をコピーしました。募集サイトなどで依頼主へ自分で送ってください。回答が来たら入口アプリへ戻って反映してください。" : "コピーできませんでした。表示された文章を手動コピーしてください。";
     });
   }
 
@@ -2679,11 +2710,10 @@ ${card["チェック基準"]}
   }
 
   if (copyWorkbenchPromptBtn) {
-    copyWorkbenchPromptBtn.addEventListener("click", () => {
+    copyWorkbenchPromptBtn.addEventListener("click", async () => {
       const card = window.freelanceApp.currentProjectCard;
       if (!card) return;
-      copyText(buildWorkbenchPrompt(card));
-      showToast("作業開始文をコピーしました");
+      await copyText(buildWorkbenchPrompt(card));
     });
   }
 
