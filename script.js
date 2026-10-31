@@ -27,7 +27,7 @@ const gears = [
     label: "壁一面の作戦ボード",
     category: "図解",
     summary: "付箋、矢印、図解で頭の中を他人が見える板にする道具。",
-    why: "ヒデロック脳内の配線を、相手が見える地上図面に変換する場所。AI時代の共同作戦机。",
+    why: "考えや仕事の流れを、ほかの人にも見える図に整理するための道具。",
     first: "空白ボードを1枚作り、付箋を6枚置く。誰が困る、何に困る、押すボタン、AIに渡すもの、返るもの、完了形。",
     usecase: "AIリモコンや訪看トリセツを1枚の流れにする。相手に『これです』と見せるための作戦図。",
     mission: "今日のアプリ案を6付箋だけにする。きれいに作らない。置けたら勝ち。",
@@ -139,10 +139,10 @@ const gears = [
     label: "指揮と翻訳",
     category: "AI指揮",
     summary: "ChatGPT、Gemini、Copilot、Claudeを役割で使い分ける。全部に同じ質問をしない。",
-    why: "AIに作らせる時代でも、役割分担がないとAIちゃんこ鍋になる。誰に何を頼むかが仕事の芯。",
-    first: "明智君で構造、Geminiで外向き説明、Copilotで実装相談、Claudeで監査。この順番を1回だけ回す。",
+    why: "複数のAIを使うときに、担当する作業と確認する順番を決めるための例。",
+    first: "ChatGPTで仕事の構成を整理、Geminiで説明文、Copilotでコード、Claudeで確認。この順番を1回だけ回す。",
     usecase: "企画、仕様、コード、レビュー、納品説明の分業。ユーザーはプロトタイプ指揮者。",
-    mission: "同じアプリを4AIに投げず、まず明智君に『構造だけ』頼む。",
+    mission: "同じアプリを4AIに投げず、まずChatGPTに『仕事の構成だけ整理して』と頼む。",
     links: [
       ["ChatGPT", "https://chatgpt.com/"],
       ["Gemini", "https://gemini.google.com/"],
@@ -182,7 +182,7 @@ const gearAdviceTextMap = {
   canva: "1回さわる価値あり。テンプレでサムネや説明カードを作る感触を見る。",
   figma: "今は眺めるだけでOK。アプリ画面の設計図を見る道具として知る。",
   drive: "1回さわる価値あり。ファイルを置いて共有する感触を見る。",
-  "ai-team": "制作本線。明智君、Gemini、Copilot、Claudeの役割分担を扱う。"
+  "ai-team": "制作本線。ChatGPT、Gemini、Copilot、Claudeの役割分担を扱う。"
 };
 
 function getGearTemperatureKey(gear) {
