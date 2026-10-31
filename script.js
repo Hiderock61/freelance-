@@ -2576,6 +2576,17 @@ ${card["チェック基準"]}
       return;
     }
 
+    // Never infer production authorization from a user-editable state label alone.
+    // Old cards without explicit proof must be regenerated in the entrance app.
+    const permission = normalizeNewlines(card["制作開始許可"]);
+    const questions = normalizeNewlines(card["相手へ聞く質問"]);
+    const unknownItems = normalizeNewlines(card["未確定事項"]);
+    if (permission !== "確認済み" || questions !== "なし" || unknownItems !== "なし") {
+      showCardWarning("制作開始許可・依頼主への質問・未確定事項が確認できません。入口アプリで最新版の案件カードを作り直し、許可と条件を確認してください。");
+      showToast("制作条件の再確認が必要です");
+      return;
+    }
+
     window.freelanceApp.currentProjectCard = card;
     if (confirmationPanel) confirmationPanel.hidden = true;
     preview.hidden = false;
