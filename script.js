@@ -2600,6 +2600,35 @@ ${card["チェック基準"]}
     showToast("今日やる作業を表示しました");
   });
 
+  // First-run fictional sample. Never treat this as an actual client authorization.
+  const gearDemoCardBtn = document.getElementById("gearDemoCardBtn");
+  const gearDemoStatus = document.getElementById("gearDemoStatus");
+  const DEMO_CHECKING_CARD = [
+    "【案件カード】", "",
+    "【カード状態】", "確認中", "",
+    "【制作開始許可】", "未確認", "",
+    "【案件名】", "【練習】架空LPのスマホ表示修正（実在しません）", "",
+    "【入口タイプ】", "静的Web", "",
+    "【作業内容】", "架空の既存LPのCSSを修正する", "",
+    "【納品物】", "架空の修正済みHTML/CSSファイル", "",
+    "【必要技術】", "HTML、CSS", "",
+    "【不足技術】", "なし", "",
+    "【相手へ聞く質問】", "制作許可と作業ファイルの受渡し方法は確認できましたか？", "",
+    "【チェック基準】", "スマホ幅で横はみ出しがないこと", "",
+    "【未確定事項】", "・制作許可\n・修正対象ファイルの受渡し方法", "",
+    "【掲載場所】", "架空の練習用（実際の募集ではありません）", "",
+    "【次の行動】", "制作は始めず、依頼主に未確定事項を確認する"
+  ].join("\n");
+  if (gearDemoCardBtn) {
+    gearDemoCardBtn.addEventListener("click", () => {
+      if (input.value.trim() && !window.confirm("今貼っている仕事情報を、架空の練習用カードで置き換えますか？")) return;
+      input.value = DEMO_CHECKING_CARD;
+      loadBtn.click();
+      if (gearDemoStatus) gearDemoStatus.textContent = "🧪 架空の「確認中」カードを読み込みました。実制作には進みません。";
+      document.getElementById("projectCardPreview")?.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  }
+
   workbenchMoveBtn.addEventListener("click", () => {
     if (!window.freelanceApp.currentProjectCard || workbench.hidden) return;
     workbench.scrollIntoView({ behavior: "smooth", block: "start" });
