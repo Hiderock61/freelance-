@@ -2278,8 +2278,14 @@ window.freelanceApp.currentProjectCard = null;
     const quickDetails = document.getElementById("quickShowDetailsBtn");
     if (quickFirst) quickFirst.textContent = unknownItems[0] || (questions && questions !== "なし" ? questions.split("\n")[0] : "依頼主への確認事項を確認する");
     if (quickCount) quickCount.textContent = unknownItems.length ? "確認すること：" + unknownItems.length + "件" : "制作条件の確認が必要です";
-    if (quickCopyStatus) quickCopyStatus.textContent = "質問をコピーしても、自動送信はしません。";
-    if (quickCopyButton) quickCopyButton.disabled = !questions || questions === "なし";
+    const isPractice = /架空|練習/.test(normalizeNewlines(card["掲載場所"]) + " " + normalizeNewlines(card["案件名"]));
+    if (quickCopyStatus) quickCopyStatus.textContent = isPractice
+      ? "これは架空の練習です。質問は実在する依頼主へ送らないでください。"
+      : "質問をコピーしても、自動送信はしません。";
+    if (quickCopyButton) {
+      quickCopyButton.disabled = !questions || questions === "なし";
+      quickCopyButton.textContent = isPractice ? "練習用の質問をコピー（送信しない）" : "依頼主への質問をコピー";
+    }
     if (quickDetails) {
       quickDetails.setAttribute("aria-expanded", "false");
       quickDetails.textContent = "詳しい内容・残りの質問を表示";
@@ -2761,8 +2767,9 @@ ${card["チェック基準"]}
         return;
       }
       const copied = await copyText(questions);
+      const isPractice = /架空|練習/.test(normalizeNewlines(card["掲載場所"]) + " " + normalizeNewlines(card["案件名"]));
       if (quickCopyStatus) quickCopyStatus.textContent = copied
-        ? "コピーしました。依頼主への送信は自分で行い、回答を受け取ったら入口アプリに戻ってください。"
+        ? (isPractice ? "練習用の文章をコピーしました。実際の相手には送らないでください。" : "コピーしました。送信は自分で行い、回答後は入口アプリへ戻ってください。")
         : "自動コピーできませんでした。表示された選択欄から手動でコピーしてください。";
     });
   }
