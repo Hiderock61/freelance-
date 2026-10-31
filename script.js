@@ -2603,6 +2603,7 @@ ${card["チェック基準"]}
   // First-run fictional sample. Never treat this as an actual client authorization.
   const gearDemoCardBtn = document.getElementById("gearDemoCardBtn");
   const gearDemoStatus = document.getElementById("gearDemoStatus");
+  if (gearDemoStatus) input.addEventListener("input", () => { gearDemoStatus.textContent = ""; });
   const DEMO_CHECKING_CARD = [
     "【案件カード】", "",
     "【カード状態】", "確認中", "",
