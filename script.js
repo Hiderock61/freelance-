@@ -1902,12 +1902,15 @@ window.freelanceApp.currentProjectCard = null;
     return value && String(value).trim() ? String(value).trim() : "（未入力）";
   }
 
+
   function isUncertainValue(value) {
     const text = normalizeNewlines(value);
     if (!text) return true;
-    return /(未確定|未記載|不明|確認中|確認して記入)/.test(text)
-      || /^確認する[。.]?$/.test(text)
-      || /を確認する[。.]?$/.test(text);
+    if (/(未定|未確定|未確認|未記載|不明|調整中|相談中|検討中|未受領|未提供|未支給|決まっていない|決めていない|わからない|分からない|確認して記入|後で決める|あとで決める)/.test(text)) return true;
+    if (/(修正|制作|作成|実装|編集|更新|入力|翻訳|調査|撮影|執筆|校正|作業|対応)(?:は|を|が)?(?:しない|できない|出来ない|行わない|不可|不要)/.test(text)) return true;
+    if (/(?:納品|提出|成果物|ファイル).{0,16}(?:できない|出来ない|しない|渡せない|不可|不要)|(?:できない|出来ない|しない).{0,8}(?:納品|提出)/.test(text)) return true;
+    if (/(検査|検品|確認|チェック|判定)(?:は|を|が)?(?:しない|できない|出来ない|行わない|不可|不要)/.test(text)) return true;
+    return false;
   }
 
   function resetProjectCardView() {
