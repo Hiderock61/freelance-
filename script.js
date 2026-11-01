@@ -2631,6 +2631,41 @@ ${card["チェック基準"]}
     showToast("今日やる作業を表示しました");
   });
 
+  // Same-origin, same-tab beta handoff: the sender saves a one-use card to
+  // sessionStorage. This reader removes it before attempting any processing.
+  // Only text is imported; no application, contract, payment or delivery occurs.
+  const BETA_HANDOFF_KEY='freelance-beta-handoff-v1';
+  function receiveBetaHandoff(){
+    if(window.location.hash.toLowerCase()!=='#card-intake')return false;
+    let raw='';
+    try{
+      raw=sessionStorage.getItem(BETA_HANDOFF_KEY)||'';
+      if(raw)sessionStorage.removeItem(BETA_HANDOFF_KEY);
+    }catch(error){return false;}
+    if(!raw)return false;
+    const importStatus=document.getElementById('handoffImportStatus');
+    const receiptStatus=document.getElementById('handoffReceiptStatus');
+    try{
+      const packet=JSON.parse(raw);
+      const age=Date.now()-Number(packet.createdAt);
+      if(packet.version!==1||!Number.isFinite(age)||age< -60000||age>600000||
+         typeof packet.card!=='string'||packet.card.length>60000||
+         !packet.card.startsWith('【案件カード】'))throw Error('expired_or_invalid');
+      if(input.value.trim()){
+        if(importStatus)importStatus.textContent='入力欄にすでに仕事情報があるため、自動受取で上書きしませんでした。';
+        return false;
+      }
+      input.value=packet.card;
+      if(importStatus)importStatus.textContent='入口から仕事情報を一度だけ受け取りました。確認結果を表示します。';
+      loadBtn.click(); // Existing guarded card parser. This never starts actual production.
+      if(receiptStatus)receiptStatus.textContent='入口アプリから仕事情報を受け取りました。実際の応募・制作・納品は行いません。';
+      return true;
+    }catch(error){
+      if(importStatus)importStatus.textContent='一時受渡しを利用できませんでした。入口の仕事情報を手動コピーして貼り付けてください。';
+      return false;
+    }
+  }
+
   // First-run fictional sample. Never treat this as an actual client authorization.
   const gearDemoCardBtn = document.getElementById("gearDemoCardBtn");
   const gearDemoStatus = document.getElementById("gearDemoStatus");
@@ -2834,6 +2869,8 @@ ${card["チェック基準"]}
       showToast("実際に完成した内容を入力してください");
     });
   }
+  // The direct #card-intake URL is also usable without any handoff data.
+  receiveBetaHandoff();
 })();
 
 applyLandingHash();
