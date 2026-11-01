@@ -1683,8 +1683,13 @@ function openCardIntake(shouldUpdateHash = false) {
     history.replaceState(null, "", "#card-intake");
   }
   window.setTimeout(() => {
+    const confirmation = document.getElementById("confirmationPanel");
+    const quick = document.getElementById("quickCheckPanel");
     const intake = document.getElementById("project-card-import");
-    if (intake) intake.scrollIntoView({ behavior: "smooth", block: "start" });
+    // The direct hash may be applied after one-use handoff import. In that case,
+    // keep the actionable confirmation visible instead of scrolling back to the form.
+    const target = confirmation && !confirmation.hidden ? quick : intake;
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   }, 0);
 }
 
