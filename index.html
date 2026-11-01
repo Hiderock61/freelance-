@@ -157,8 +157,8 @@
           </div>
           <ol class="pc-howto" aria-label="案件カードの受け取り手順">
             <li>入口アプリで「この仕事を装備庫へ持っていく」を押す</li>
-            <li>この下の白い欄を長押しして、仕事情報の全文を貼り付ける</li>
-            <li>「貼った仕事情報を確認する」を押す</li>
+            <li>入口から来た場合は仕事情報を自動で受け取ります。直接来た場合は白い欄に貼り付けてください</li>
+            <li>入口から来た場合は確認結果が自動表示されます。手動で貼った場合は「貼った仕事情報を確認する」を押します</li>
             <li>確認が必要なら、依頼主へ聞く内容を確認する</li>
             <li>制作を始められるなら、今日やることと制作手順へ進む</li>
           </ol>
@@ -170,6 +170,7 @@
           </div>
           <label class="pc-input-label" for="projectCardInput">仕事情報を白い欄へ長押しして貼り付け</label>
           <textarea id="projectCardInput" class="pc-input" placeholder="入口アプリでコピーした仕事情報の全文をここに貼ります。"></textarea>
+          <p id="handoffImportStatus" class="pc-note" role="status" aria-live="polite"></p>
           <div class="pc-controls">
             <button id="projectCardLoadBtn" class="primary-button" type="button">貼った仕事情報を確認する</button>
             <button id="projectCardToDeliveryBtn" class="ghost-button" type="button" disabled>次へ進む</button>
@@ -184,6 +185,7 @@
           <section id="quickCheckPanel" class="quick-check-panel" aria-labelledby="quickCheckTitle">
             <p class="quick-check-label">📱 iPhoneかんたん表示｜確認中</p>
             <h3 id="quickCheckTitle">今は制作しません。まず確認だけ。</h3>
+            <p id="handoffReceiptStatus" class="quick-check-note" role="status" aria-live="polite"></p>
             <p id="quickCheckCount" class="quick-check-count">確認事項を読み込んでいます。</p>
             <div class="quick-check-next">
               <p class="quick-check-caption">最初に確かめること</p>
@@ -622,6 +624,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">コピーした</div>
 
-  <script src="script.js?v=2315-beta-safe1101a"></script>
+  <script src="script.js?v=2315-beta-handoff1101b"></script>
 </body>
 </html>
